@@ -42,6 +42,11 @@ public class CascadeEffectTeleop extends OpMode
 
 	}
 
+	public void init()
+	{
+
+	}
+
 	//Called once when robot is enabled
 	public void start()
 	{

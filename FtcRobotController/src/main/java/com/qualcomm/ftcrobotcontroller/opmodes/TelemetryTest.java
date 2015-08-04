@@ -11,6 +11,10 @@ public class TelemetryTest extends OpMode {
 
     }
 
+    public void init() {
+
+    }
+
     public void start() {
 
     }
