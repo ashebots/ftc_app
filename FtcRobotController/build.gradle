@@ -18,6 +18,8 @@ repositories {
 
 dependencies {
     compile files('libs/android-support-v4.jar')
+
+    //FTC core
     compile (name:'d2xx', ext:'jar')
     compile (name:'RobotCore-release', ext:'aar')
     compile (name:'ModernRobotics-release', ext:'aar')
