@@ -23,6 +23,9 @@ public class AtlasTeleop extends OpMode
         motorDriveRight = hardwareMap.dcMotor.get("motorDriveRight");
         motorLinearSlideLift = hardwareMap.dcMotor.get("motorLinearSlideLift");
 
+        motorLinearSlideLift = hardwareMap.dcMotor.get("motorLinearSlideLift");
+
+
         chassis = new ChassisArcade(motorDriveLeft, motorDriveRight);
     }
 
@@ -30,6 +33,8 @@ public class AtlasTeleop extends OpMode
     public void loop() {
         //Drive
         chassis.Drive(gamepad1.left_stick_x, gamepad1.left_stick_y);
+        motorLinearSlideLift.setPower(gamepad1.right_stick_y);
+
         motorLinearSlideLift.setPower(gamepad1.right_stick_y);
 
         telemetry.addData("motorDriveLeftEncoder", "Left Drive Encoder: " + motorDriveLeft.getCurrentPosition());
