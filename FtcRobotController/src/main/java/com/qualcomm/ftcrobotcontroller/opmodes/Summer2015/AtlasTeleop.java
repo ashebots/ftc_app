@@ -32,8 +32,7 @@ public class AtlasTeleop extends OpMode
     @Override
     public void loop() {
         //Drive
-        chassis.Drive(gamepad1.left_stick_x, gamepad1.left_stick_y);
-        motorLinearSlideLift.setPower(gamepad1.right_stick_y);
+        chassis.Drive(gamepad1.left_stick_x, gamepad1.left_stick_y * -1); //Y is inverted here b/c the joystick gives up as a negative, but the Drive method wants up as a positive
 
         motorLinearSlideLift.setPower(gamepad1.right_stick_y);
 
