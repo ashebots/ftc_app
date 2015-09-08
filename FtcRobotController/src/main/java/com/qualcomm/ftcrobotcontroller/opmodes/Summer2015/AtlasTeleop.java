@@ -43,11 +43,7 @@ public class AtlasTeleop extends OpMode
 
         motorLinearSlideLift.setPower(gamepad1.right_stick_y);
 
-
-        telemetry.addData("touchRingFrontPressed", "Front");
-
-        telemetry.addData("motorDriveLeftEncoder", "Left Drive Encoder: " + motorDriveLeft.getCurrentPosition());
-        telemetry.addData("motorDriveRightEncoder", "Right Drive Encoder: " + motorDriveRight.getCurrentPosition());
+        telemetryUpdate();
     }
 
     private void telemetryUpdate()
