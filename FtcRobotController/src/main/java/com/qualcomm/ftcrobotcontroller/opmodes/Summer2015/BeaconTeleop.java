@@ -26,11 +26,11 @@ public class BeaconTeleop extends OpMode
     public void init()
     {
         motorDriveLeft = hardwareMap.dcMotor.get("motorDriveLeft");
-        motorDriveLeft.setDirection(DcMotor.Direction.REVERSE);
         motorDriveRight = hardwareMap.dcMotor.get("motorDriveRight");
+        motorDriveRight.setDirection(DcMotor.Direction.REVERSE);
         motorDriveFront = hardwareMap.dcMotor.get("motorDriveFront");
-        motorDriveFront.setDirection(DcMotor.Direction.REVERSE);
         motorDriveBack = hardwareMap.dcMotor.get("motorDriveBack");
+        motorDriveBack.setDirection(DcMotor.Direction.REVERSE);
 
         forceRing = hardwareMap.lightSensor.get("forceRing");
 
@@ -40,11 +40,21 @@ public class BeaconTeleop extends OpMode
     @Override
     public void loop()
     {
-        chassis.Drive(gamepad1.left_stick_x, gamepad1.left_stick_y * -1, gamepad1.right_stick_x);
+        try
+        {
+            double leftDrivePower = chassis.Drive(gamepad1.left_stick_x, gamepad1.left_stick_y * -1.0f, gamepad1.right_stick_x);
+            telemetry.addData("4", "leftDrivePower: " + leftDrivePower);
+            telemetryUpdate();
+        }
+        catch (Exception exception)
+        {
+            telemetry.addData("3", "Error: " + exception.getMessage());
+        }
     }
 
     private void telemetryUpdate()
     {
-        telemetry.addData("forceRingWeight", "Ring weight raw value: " + forceRing.getLightDetectedRaw());
+        telemetry.addData("1", "Ring weight raw value: " + forceRing.getLightDetectedRaw());
+        telemetry.addData("2", "Ring weight processed value: " + forceRing.getLightDetected());
     }
 }

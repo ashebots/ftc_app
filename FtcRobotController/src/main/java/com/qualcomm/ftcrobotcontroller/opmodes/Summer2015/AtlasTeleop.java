@@ -25,8 +25,8 @@ public class AtlasTeleop extends OpMode
     @Override
     public void init() {
         motorDriveLeft = hardwareMap.dcMotor.get("motorDriveLeft");
-        motorDriveLeft.setDirection(DcMotor.Direction.REVERSE);
         motorDriveRight = hardwareMap.dcMotor.get("motorDriveRight");
+        motorDriveRight.setDirection(DcMotor.Direction.REVERSE);
 
         motorLinearSlideLift = hardwareMap.dcMotor.get("motorLinearSlideLift");
 
@@ -49,13 +49,12 @@ public class AtlasTeleop extends OpMode
     private void telemetryUpdate()
     {
         String touchRingFrontString = (touchRingFront.isPressed()) ? "Front Ring: HEAVY" : "Front Ring: LIGHT";
-        telemetry.addData("touchRingFrontPressed", touchRingFrontString);
+        telemetry.addData("1", touchRingFrontString);
 
         String touchRingBackString = (touchRingBack.isPressed()) ? "Back Ring: HEAVY" : "Back Ring: LIGHT";
-        telemetry.addData("touchRingBackPressed", touchRingBackString);
+        telemetry.addData("2", touchRingBackString);
 
-
-        telemetry.addData("motorDriveLeftEncoder", "Left Drive Encoder: " + motorDriveLeft.getCurrentPosition());
-        telemetry.addData("motorDriveRightEncoder", "Right Drive Encoder: " + motorDriveRight.getCurrentPosition());
+        //telemetry.addData("motorDriveLeftEncoder", "Left Drive Encoder: " + motorDriveLeft.getCurrentPosition());
+        //telemetry.addData("motorDriveRightEncoder", "Right Drive Encoder: " + motorDriveRight.getCurrentPosition());
     }
 }
