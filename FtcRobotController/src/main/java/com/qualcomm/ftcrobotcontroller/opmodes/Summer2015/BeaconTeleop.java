@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 import org.ashebots.ftcandroidlib.drive.ChassisOmni;
 
@@ -31,10 +32,8 @@ public class BeaconTeleop extends OpMode
     {
         motorDriveLeft = hardwareMap.dcMotor.get("motorDriveLeft");
         motorDriveRight = hardwareMap.dcMotor.get("motorDriveRight");
-        motorDriveRight.setDirection(DcMotor.Direction.REVERSE);
         motorDriveFront = hardwareMap.dcMotor.get("motorDriveFront");
         motorDriveBack = hardwareMap.dcMotor.get("motorDriveBack");
-        motorDriveBack.setDirection(DcMotor.Direction.REVERSE);
 
         chassis = new ChassisOmni(motorDriveLeft, motorDriveRight, motorDriveFront, motorDriveBack);
 
@@ -52,7 +51,7 @@ public class BeaconTeleop extends OpMode
             double leftDrivePower = chassis.Drive(gamepad1.left_stick_x, gamepad1.left_stick_y * -1.0f, gamepad1.right_stick_x);
 
             //ARM
-            float armPower = gamepad1.left_trigger;
+            float armPower = gamepad1.left_trigger / 10;
             if (gamepad1.left_bumper == true) //The bumper inverts the direction of the trigger
             {
                 armPower *= -1;
@@ -60,9 +59,18 @@ public class BeaconTeleop extends OpMode
             motorArm.setPower(armPower);
 
             //WRIST
+            float wristChange = gamepad1.right_trigger * 0.01f; //Made up :)
+            if (gamepad1.right_bumper == false)
+            {
+                wristChange *= -1;
+            }
+            float wristPosNew = (float) Range.clip(servoWrist.getPosition() + wristChange, 0.0f, 1.0f);
+            servoWrist.setPosition(wristPosNew);
 
             //TELEMETRY
-            telemetry.addData("4", "leftDrivePower: " + leftDrivePower);
+            telemetry.addData("4", "wristChange: " + wristChange);
+            telemetry.addData("5", "motorArmEncoder: " + motorArm.getCurrentPosition());
+            //telemetry.addData("4", "leftDrivePower: " + leftDrivePower);
             telemetryUpdate();
         }
         catch (Exception exception)
