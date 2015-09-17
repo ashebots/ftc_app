@@ -31,7 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import com.qualcomm.ftcrobotcontroller.opmodes.Summer2015.AtlasTeleop;
+import com.qualcomm.ftcrobotcontroller.opmodes.Summer2015.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
@@ -57,6 +57,7 @@ public class FtcOpModeRegister implements OpModeRegister {
      */
 
     manager.register("Atlas: TeleOp", AtlasTeleop.class);
+    manager.register("Beacon: TeleOp", BeaconTeleop.class);
 
     manager.register("Cascade Effect TeleOp", CascadeEffectTeleop.class);
     manager.register("Telemetry Test", TelemetryTest.class);
