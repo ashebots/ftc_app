@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.ftcrobotcontroller.opmodes.Summer2015.*;
+import com.qualcomm.ftcrobotcontroller.opmodes.res_q.test.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
@@ -61,6 +62,8 @@ public class FtcOpModeRegister implements OpModeRegister {
 
     manager.register("Cascade Effect TeleOp", CascadeEffectTeleop.class);
     manager.register("Telemetry Test", TelemetryTest.class);
+
+    manager.register("Test Drive", TestDrive.class);
 
     /*
      * The following op modes are example op modes provided by QualComm.
