@@ -10,9 +10,30 @@ android {
     }
 }
 
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.2.3'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
 repositories {
     flatDir {
         dirs 'libs'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        flatDir {
+            dirs 'out'
+        }
     }
 }
 
@@ -20,12 +41,15 @@ dependencies {
     compile files('libs/android-support-v4.jar')
 
     //FTC core
-    compile (name:'d2xx', ext:'jar')
+    //compile (name:'d2xx', ext:'jar')
+
     compile (name:'RobotCore-release', ext:'aar')
-    compile (name:'ModernRobotics-release', ext:'aar')
+    compile (name:'Hardware-release', ext:'aar')
     compile (name:'FtcCommon-release', ext:'aar')
-    compile (name:'WirelessP2p-release', ext:'aar')
+    compile (name:'ModernRobotics-release', ext:'aar')
     compile (name:'Analytics-release', ext:'aar')
+
+    compile (name:'WirelessP2p-release', ext:'aar')
 
     //Ashebots helper library
     compile project (':AB_FtcAndroidLib')
