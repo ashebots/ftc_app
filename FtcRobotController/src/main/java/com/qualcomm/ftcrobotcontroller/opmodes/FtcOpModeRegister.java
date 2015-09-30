@@ -64,6 +64,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("Telemetry Test", TelemetryTest.class);
 
     manager.register("Test Drive", TestDrive.class);
+    manager.register("Test Drive X 4", TestDrive4.class);
 
     /*
      * The following op modes are example op modes provided by QualComm.
