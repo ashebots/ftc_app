@@ -57,14 +57,15 @@ public class FtcOpModeRegister implements OpModeRegister {
      * If two or more op modes are registered with the same name, the app will display an error.
      */
 
-    manager.register("Atlas: TeleOp", AtlasTeleop.class);
-    manager.register("Beacon: TeleOp", BeaconTeleop.class);
+    //manager.register("Atlas: TeleOp", AtlasTeleop.class);
+    //manager.register("Beacon: TeleOp", BeaconTeleop.class);
 
-    manager.register("Cascade Effect TeleOp", CascadeEffectTeleop.class);
-    manager.register("Telemetry Test", TelemetryTest.class);
+    //manager.register("Cascade Effect TeleOp", CascadeEffectTeleop.class);
+    //manager.register("Telemetry Test", TelemetryTest.class);
 
     manager.register("Test Drive", TestDrive.class);
     manager.register("Test Drive X 4", TestDrive4.class);
+    manager.register("Test RPM", TestRPM.class);
 
     /*
      * The following op modes are example op modes provided by QualComm.
