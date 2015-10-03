@@ -30,7 +30,8 @@ public class TestRPM extends OpMode
 
         //double motorRevolutions = encoderChange / ticksPerRevolution;
         //double motorRPM = (1 / timeChange) * motorRevolutions * 60;
-        double motorRPM = (((1 / timeChange) * encoderChange) / ticksPerRevolution) * 60;
+        //double motorRPM = (((1 / timeChange) * encoderChange) / ticksPerRevolution) * 60;
+        double motorRPM = (encoderChange / timeChange) * (1 / ticksPerRevolution);
 
         telemetry.addData("1: Joystick", gamepad1.left_stick_y);
         telemetry.addData("2: Motor RPM", motorRPM);
