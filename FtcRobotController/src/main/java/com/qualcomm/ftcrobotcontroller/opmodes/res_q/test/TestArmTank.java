@@ -5,6 +5,7 @@ import android.text.method.Touch;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.util.Range;
 
 import org.ashebots.ftcandroidlib.drive.ChassisArcade;
 
@@ -26,6 +27,8 @@ public class TestArmTank extends OpMode
     ArmJoint armJoint1;
     ArmJoint armJoint2;
 
+    ArmSwivel armSwivel;
+
     public void init()
     {
         motorDriveLeft = hardwareMap.dcMotor.get("motorDriveLeft");
@@ -44,20 +47,81 @@ public class TestArmTank extends OpMode
 
         armJoint1 = new ArmJoint(motorArmJoint1, sensorTouchArmJoint1, 1000, 0.5);
         armJoint2 = new ArmJoint(motorArmJoint2, sensorTouchArmJoint2, 1000, 0.5);
+
+        armSwivel = new ArmSwivel(motorArmSwivel, -500, 500);
     }
 
     public void loop()
     {
+        //Driving
         chassis.Drive(gamepad1.left_stick_x, gamepad1.left_stick_y * -1);
 
+        //Both arm joints opening and closing
         armJoint1.Articulate(gamepad2.left_stick_y * -1);
         armJoint2.Articulate(gamepad2.right_stick_y * -1);
 
-        //Gross arm swiveling. THERE IS NO LIMIT YET
-        double armSwivelPower = (gamepad2.left_trigger * -1) + gamepad2.right_trigger;
-        motorArmSwivel.setPower(armSwivelPower);
+        armSwivel.LimitedSwivel((gamepad2.left_trigger * -1) + gamepad2.right_trigger);
     }
 
+
+    //Used to represent swivelling base of arm. Note that there should only be one of these.
+    class  ArmSwivel
+    {
+        DcMotor motor;
+        int encoderLimitLeft;
+        int encoderLimitRight;
+
+        public ArmSwivel(DcMotor motor,int encoderLimitLeft, int encoderLimitRight)
+         {
+             this.motor = motor;
+             this.encoderLimitLeft = encoderLimitLeft;
+             this.encoderLimitRight = encoderLimitRight;
+         }
+
+        /* MUST BE CALLED EVERY LOOP
+        power = -1 to 1
+        Negative value means arm swivel turns left/counter-clockwise, and is limited by this.encoderLimitLeft
+        Positive value means arm swivel turns right/clockwise, and is limited by this.encoderLimitRight
+        Motor encoder's 0 position is assumed to mean that the arm is pointing straight ahead, this means
+        that the arm should be pointed straight ahead when the robot starts.
+        */
+        public void LimitedSwivel(double power)
+        {
+            power = Range.clip(power,-1, 1);
+
+            //We are going left
+            if (power < 0)
+            {
+                //We have not reached the limit
+                if (this.motor.getCurrentPosition() > this.encoderLimitLeft)
+                {
+                    this.motor.setPower(power);
+                }
+                else
+                {
+                    this.motor.setPower(0);
+                }
+            }
+            //We are going right
+            else if (power > 0)
+            {
+                //not reached limit
+                if (this.motor.getCurrentPosition() < this.encoderLimitRight)
+                {
+                   this.motor.setPower(power);
+                }
+                else
+                {
+                    this.motor.setPower(0);
+                }
+
+            }
+            else
+            {
+                this.motor.setPower(0);
+            }
+        }
+    }
 
 
     //Used to represent each joint in the arm. There are two joints, so two of these objects. Different from swivel!
@@ -81,12 +145,39 @@ public class TestArmTank extends OpMode
         /* MUST BE CALLED EVERY LOOP
         power = -1 to 1
         Positive value means arm joint extends, and is limited by encoderLimit
-        Negative value means arm join contracts, and is limited by sensorTouchClosed
+        Negative value means arm joint contracts, and is limited by sensorTouchClosed
         Motor's encoder is reset when sensorTouchClosed is touched
         */
         public void Articulate(double power)
         {
+            power = Range.clip(power, -1.0, 1.0);
 
+            if (power > 0)
+            {
+                if (this.motor.getCurrentPosition() < this.encoderLimit)
+                {
+                    this.motor.setPower(power);
+                }
+                else
+                {
+                    this.motor.setPower(0);
+                }
+            }
+            else if (power < 0)
+            {
+                if (this.sensorTouchClosed.isPressed() == false)
+                {
+                    this.motor.setPower(power);
+                }
+                else
+                {
+                    this.motor.setPower(0);
+                }
+            }
+            else
+            {
+                this.motor.setPower(0);
+            }
         }
     }
 }
