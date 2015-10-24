@@ -14,47 +14,143 @@ public class TestButton extends LinearOpMode
     DcMotor right;
     DcMotor left;
     Servo push;
-    int rrotation = 0;
-    int lrotation = 0;
-    double leftpwr = 0.5;
-    double rightpwr = 0.5;
-    int firstdistance = 1000;
+    double firstpower = 0.5;
+    double secondpower = 0.5;
+    double thirdpower = 0.5;
+    double fourthpower = 0.5;
+
+    int firstdistance = 3000;
+    int seconddistanceleft = 2000;
+    int seconddistanceright = 1000;
+    int thirddistance = 500;
+    int fourthdistance = 500;
+
+    double ttpower = secondpower * seconddistanceleft / seconddistanceright;
 
     @Override
     public void runOpMode() throws InterruptedException
     {
         //set up hardware
         left = hardwareMap.dcMotor.get("left");
-        left.setDirection(DcMotor.Direction.REVERSE);
         left.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         right = hardwareMap.dcMotor.get("right");
         right.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         push = hardwareMap.servo.get("push");
 
+        left.setDirection(DcMotor.Direction.REVERSE);
+
         waitForStart();
 
         //run program
-        while (rightpwr > 0 || leftpwr > 0)
-        {
-            left.setPower(leftpwr);
-            right.setPower(rightpwr);
-            lrotation = left.getCurrentPosition();
-            if (lrotation > firstdistance)
-            {
+
+        double leftpwr = firstpower;
+        double rightpwr = firstpower;
+        int rrotation = 0;
+        int lrotation = 0;
+        int truer = 0;
+        int truel = 0;
+
+        while (rightpwr > 0 || leftpwr > 0) {
+            if (lrotation > firstdistance) {
                 leftpwr = 0;
             }
-            rrotation = right.getCurrentPosition();
-            if (rrotation > firstdistance)
-            {
+            if (rrotation > firstdistance) {
                 rightpwr = 0;
             }
+            left.setPower(leftpwr);
+            right.setPower(rightpwr);
+
+            rrotation += (right.getCurrentPosition() - truer);
+            lrotation += (left.getCurrentPosition() - truel);
+            truel = left.getCurrentPosition();
+            truer = right.getCurrentPosition();
+
+            telemetry.addData("1: Time Elapsed", getRuntime());
+            telemetry.addData("2: Left Motor", lrotation);
+            telemetry.addData("3: Right Motor", rrotation);
+
+            waitOneFullHardwareCycle();
         }
-        left.setPower(0.5);
-        right.setPower(0.5);
-        lrotation = left.getCurrentPosition();
-        rrotation = right.getCurrentPosition();
-        telemetry.addData("1: Time Elapsed", getRuntime());
-        telemetry.addData("2: Left Motor", lrotation);
-        telemetry.addData("3: Right Motor", rrotation);
+
+        leftpwr = secondpower;
+        rightpwr = ttpower;
+        rrotation = 0;
+        lrotation = 0;
+
+        while (rightpwr > 0 || leftpwr > 0) {
+            if (lrotation > seconddistanceleft) {
+                leftpwr = 0;
+            }
+            if (rrotation > seconddistanceright) {
+                rightpwr = 0;
+            }
+            left.setPower(leftpwr);
+            right.setPower(rightpwr);
+
+            rrotation += (right.getCurrentPosition() - truer);
+            lrotation += (left.getCurrentPosition() - truel);
+            truel = left.getCurrentPosition();
+            truer = right.getCurrentPosition();
+
+            telemetry.addData("1: Time Elapsed", getRuntime());
+            telemetry.addData("2: Left Motor", lrotation);
+            telemetry.addData("3: Right Motor", rrotation);
+
+            waitOneFullHardwareCycle();
+        }
+
+        leftpwr = thirdpower;
+        rightpwr = - thirdpower;
+        rrotation = 0;
+        lrotation = 0;
+
+        while (rightpwr > 0 || leftpwr > 0) {
+            if (lrotation > thirddistance) {
+                leftpwr = 0;
+            }
+            if (rrotation > - thirddistance) {
+                rightpwr = 0;
+            }
+            left.setPower(leftpwr);
+            right.setPower(rightpwr);
+
+            rrotation += (right.getCurrentPosition() - truer);
+            lrotation += (left.getCurrentPosition() - truel);
+            truel = left.getCurrentPosition();
+            truer = right.getCurrentPosition();
+
+            telemetry.addData("1: Time Elapsed", getRuntime());
+            telemetry.addData("2: Left Motor", lrotation);
+            telemetry.addData("3: Right Motor", rrotation);
+
+            waitOneFullHardwareCycle();
+        }
+
+        leftpwr = fourthpower;
+        rightpwr = fourthpower;
+        rrotation = 0;
+        lrotation = 0;
+
+        while (rightpwr > 0 || leftpwr > 0) {
+            if (lrotation > fourthdistance) {
+                leftpwr = 0;
+            }
+            if (rrotation > - fourthdistance) {
+                rightpwr = 0;
+            }
+            left.setPower(leftpwr);
+            right.setPower(rightpwr);
+
+            rrotation += (right.getCurrentPosition() - truer);
+            lrotation += (left.getCurrentPosition() - truel);
+            truel = left.getCurrentPosition();
+            truer = right.getCurrentPosition();
+
+            telemetry.addData("1: Time Elapsed", getRuntime());
+            telemetry.addData("2: Left Motor", lrotation);
+            telemetry.addData("3: Right Motor", rrotation);
+
+            waitOneFullHardwareCycle();
+        }
     }
 }
