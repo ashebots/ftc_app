@@ -99,5 +99,6 @@
     <orderEntry type="library" exported="" name="WirelessP2p-release-" level="project" />
     <orderEntry type="library" exported="" name="Hardware-release-" level="project" />
     <orderEntry type="library" exported="" name="RobotCore-release-" level="project" />
+    <orderEntry type="module" module-name="AB_FtcAndroidLib" exported="" />
   </component>
 </module>
