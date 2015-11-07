@@ -1,4 +1,4 @@
-package com.qualcomm.ftcrobotcontroller.opmodes.ftc_examples;
+package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.ftccommon.DbgLog;
 import com.qualcomm.robotcore.hardware.IrSeekerSensor;
