@@ -14,18 +14,6 @@ public class TestButton extends LinearOpMode
     DcMotor right;
     DcMotor left;
     Servo push;
-    double firstpower = 0.5;
-    double secondpower = 0.5;
-    double thirdpower = 0.5;
-    double fourthpower = 0.5;
-
-    int firstdistance = 3000;
-    int seconddistanceleft = 2000;
-    int seconddistanceright = 1000;
-    int thirddistance = 500;
-    int fourthdistance = 500;
-
-    double ttpower = secondpower * seconddistanceleft / seconddistanceright;
 
     @Override
     public void runOpMode() throws InterruptedException
@@ -42,13 +30,27 @@ public class TestButton extends LinearOpMode
         waitForStart();
 
         //run program
+        double firstpower = 0.5;
+        double secondpower = 0.5;
+        double thirdpower = 0.5;
+        double fourthpower = 0.5;
+        double fifthpower = 0.5;
+
+        int firstdistance = 5500;
+        int seconddistanceleft = 9000;
+        int seconddistanceright = 4500;
+        int thirddistance = 770;
+        int fourthdistance = 800;
+        double fifthdistance = (((18 * Math.sqrt(2)) - 18) / 2) * 1000;
+
+        double ttpower = secondpower * seconddistanceright / seconddistanceleft;
 
         double leftpwr = firstpower;
         double rightpwr = firstpower;
         int rrotation = 0;
         int lrotation = 0;
-        int truer = 0;
-        int truel = 0;
+        int truel = left.getCurrentPosition();
+        int truer = right.getCurrentPosition();
 
         while (rightpwr > 0 || leftpwr > 0) {
             if (lrotation > firstdistance) {
@@ -60,14 +62,15 @@ public class TestButton extends LinearOpMode
             left.setPower(leftpwr);
             right.setPower(rightpwr);
 
-            rrotation += (right.getCurrentPosition() - truer);
-            lrotation += (left.getCurrentPosition() - truel);
-            truel = left.getCurrentPosition();
-            truer = right.getCurrentPosition();
+            rrotation = (right.getCurrentPosition() - truer);
+            lrotation = (left.getCurrentPosition() - truel);
 
+            telemetry.addData("STEP", 1);
             telemetry.addData("1: Time Elapsed", getRuntime());
             telemetry.addData("2: Left Motor", lrotation);
             telemetry.addData("3: Right Motor", rrotation);
+            telemetry.addData("4: Start L", truel);
+            telemetry.addData("5: Start R", truer);
 
             waitOneFullHardwareCycle();
         }
@@ -76,6 +79,8 @@ public class TestButton extends LinearOpMode
         rightpwr = ttpower;
         rrotation = 0;
         lrotation = 0;
+        truel = left.getCurrentPosition();
+        truer = right.getCurrentPosition();
 
         while (rightpwr > 0 || leftpwr > 0) {
             if (lrotation > seconddistanceleft) {
@@ -87,14 +92,15 @@ public class TestButton extends LinearOpMode
             left.setPower(leftpwr);
             right.setPower(rightpwr);
 
-            rrotation += (right.getCurrentPosition() - truer);
-            lrotation += (left.getCurrentPosition() - truel);
-            truel = left.getCurrentPosition();
-            truer = right.getCurrentPosition();
+            rrotation = (right.getCurrentPosition() - truer);
+            lrotation = (left.getCurrentPosition() - truel);
 
+            telemetry.addData("STEP", 2);
             telemetry.addData("1: Time Elapsed", getRuntime());
             telemetry.addData("2: Left Motor", lrotation);
             telemetry.addData("3: Right Motor", rrotation);
+            telemetry.addData("4: Start L", truel);
+            telemetry.addData("5: Start R", truer);
 
             waitOneFullHardwareCycle();
         }
@@ -103,25 +109,28 @@ public class TestButton extends LinearOpMode
         rightpwr = - thirdpower;
         rrotation = 0;
         lrotation = 0;
+        truel = left.getCurrentPosition();
+        truer = right.getCurrentPosition();
 
         while (rightpwr > 0 || leftpwr > 0) {
             if (lrotation > thirddistance) {
                 leftpwr = 0;
             }
-            if (rrotation > - thirddistance) {
+            if (rrotation < - thirddistance) {
                 rightpwr = 0;
             }
             left.setPower(leftpwr);
             right.setPower(rightpwr);
 
-            rrotation += (right.getCurrentPosition() - truer);
-            lrotation += (left.getCurrentPosition() - truel);
-            truel = left.getCurrentPosition();
-            truer = right.getCurrentPosition();
+            rrotation = (right.getCurrentPosition() - truer);
+            lrotation = (left.getCurrentPosition() - truel);
 
+            telemetry.addData("STEP", 3);
             telemetry.addData("1: Time Elapsed", getRuntime());
             telemetry.addData("2: Left Motor", lrotation);
             telemetry.addData("3: Right Motor", rrotation);
+            telemetry.addData("4: Start L", truel);
+            telemetry.addData("5: Start R", truer);
 
             waitOneFullHardwareCycle();
         }
@@ -130,6 +139,8 @@ public class TestButton extends LinearOpMode
         rightpwr = fourthpower;
         rrotation = 0;
         lrotation = 0;
+        truel = left.getCurrentPosition();
+        truer = right.getCurrentPosition();
 
         while (rightpwr > 0 || leftpwr > 0) {
             if (lrotation > fourthdistance) {
@@ -141,14 +152,72 @@ public class TestButton extends LinearOpMode
             left.setPower(leftpwr);
             right.setPower(rightpwr);
 
-            rrotation += (right.getCurrentPosition() - truer);
-            lrotation += (left.getCurrentPosition() - truel);
-            truel = left.getCurrentPosition();
-            truer = right.getCurrentPosition();
+            rrotation = (right.getCurrentPosition() - truer);
+            lrotation = (left.getCurrentPosition() - truel);
 
+            telemetry.addData("STEP", 4);
             telemetry.addData("1: Time Elapsed", getRuntime());
             telemetry.addData("2: Left Motor", lrotation);
             telemetry.addData("3: Right Motor", rrotation);
+            telemetry.addData("4: Start L", truel);
+            telemetry.addData("5: Start R", truer);
+
+            waitOneFullHardwareCycle();
+        }
+
+        leftpwr = - fifthpower;
+        rightpwr = - fifthpower;
+        rrotation = 0;
+        lrotation = 0;
+        truel = left.getCurrentPosition();
+        truer = right.getCurrentPosition();
+
+        while (rightpwr > 0 || leftpwr > 0) {
+            if (lrotation < - fifthdistance) {
+                leftpwr = 0;
+            }
+            if (rrotation < - fifthdistance) {
+                rightpwr = 0;
+            }
+            left.setPower(leftpwr);
+            right.setPower(rightpwr);
+
+            rrotation = (right.getCurrentPosition() - truer);
+            lrotation = (left.getCurrentPosition() - truel);
+
+            telemetry.addData("STEP", 3);
+            telemetry.addData("1: Time Elapsed", getRuntime());
+            telemetry.addData("2: Left Motor", lrotation);
+            telemetry.addData("3: Right Motor", rrotation);
+            telemetry.addData("4: Start L", truel);
+            telemetry.addData("5: Start R", truer);
+
+            waitOneFullHardwareCycle();
+        }
+        leftpwr = sixthpower;
+        rightpwr = - sixthpower;
+        rrotation = 0;
+        lrotation = 0;
+        truel = left.getCurrentPosition();
+        truer = right.getCurrentPosition();
+
+        while (rightpwr > 0 || leftpwr > 0) {
+            if () {
+                leftpwr = 0;
+                rightpwr = 0;
+            }
+            left.setPower(leftpwr);
+            right.setPower(rightpwr);
+
+            rrotation = (right.getCurrentPosition() - truer);
+            lrotation = (left.getCurrentPosition() - truel);
+
+            telemetry.addData("STEP", 3);
+            telemetry.addData("1: Time Elapsed", getRuntime());
+            telemetry.addData("2: Left Motor", lrotation);
+            telemetry.addData("3: Right Motor", rrotation);
+            telemetry.addData("4: Start L", truel);
+            telemetry.addData("5: Start R", truer);
 
             waitOneFullHardwareCycle();
         }
