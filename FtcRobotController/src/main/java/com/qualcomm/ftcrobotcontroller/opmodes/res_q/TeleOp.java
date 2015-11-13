@@ -1,4 +1,4 @@
-package com.qualcomm.ftcrobotcontroller.opmodes.res_q.test;
+package com.qualcomm.ftcrobotcontroller.opmodes.res_q;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.ashebots.ftcandroidlib.drive.ChassisArcade;
 
-public class TestArmTank extends OpMode
+public class TeleOp extends OpMode
 {
     DcMotor motorDriveLeft;
     DcMotor motorDriveRight;
@@ -39,6 +39,7 @@ public class TestArmTank extends OpMode
         motorArmJoint1 = hardwareMap.dcMotor.get("motorArmJoint1");
         motorArmJoint2 = hardwareMap.dcMotor.get("motorArmJoint2");
         motorArmSwivel = hardwareMap.dcMotor.get("motorArmSwivel");
+
 
         sensorTouchArmJoint1 = hardwareMap.touchSensor.get("sensorTouchArmJoint1");
         sensorTouchArmJoint2 = hardwareMap.touchSensor.get("sensorTouchArmJoint2");
@@ -77,7 +78,7 @@ public class TestArmTank extends OpMode
          }
 
         /* MUST BE CALLED EVERY LOOP
-        power = -1 to 1
+        power = -1.0 to 1.0
         Negative value means arm swivel turns left/counter-clockwise, and is limited by this.encoderLimitLeft
         Positive value means arm swivel turns right/clockwise, and is limited by this.encoderLimitRight
         Motor encoder's 0 position is assumed to mean that the arm is pointing straight ahead, this means
@@ -141,7 +142,7 @@ public class TestArmTank extends OpMode
 
 
         /* MUST BE CALLED EVERY LOOP
-        power = -1 to 1
+        power = -1.0 to 1.0
         Positive value means arm joint extends, and is limited by encoderLimit
         Negative value means arm joint contracts, and is limited by sensorTouchClosed
         Motor's encoder is reset when sensorTouchClosed is touched

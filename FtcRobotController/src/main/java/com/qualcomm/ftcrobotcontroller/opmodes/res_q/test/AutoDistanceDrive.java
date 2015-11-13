@@ -3,6 +3,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes.res_q.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 
 import org.ashebots.ftcandroidlib.motor.MotorWheel;
 
@@ -23,11 +24,12 @@ public class AutoDistanceDrive extends LinearOpMode
         motorDriveLeft.setEncoderTicksPerRevolution(1440);
         motorDriveRight.setEncoderTicksPerRevolution(1440);
 
-        motorDriveLeft.setDistancePerRevolution(4.0f);
-        motorDriveRight.setDistancePerRevolution(4.0f);
+        motorDriveLeft.setDistancePerRevolution(12.56f);
+        motorDriveRight.setDistancePerRevolution(12.56f);
 
-        motorDriveLeft.runForDistance(12.0f, 0.25f);
-        motorDriveRight.runForDistance(12.0f, 0.25f);
+        //motorDriveLeft.runForDistance(12.0f, 0.25f);
+        //motorDriveRight.runForDistance(12.0f, 0.25f);
+        driveForDistance(24f, 0.25f);
 
 
         for (int i = 0; i < 10; i++) {
@@ -39,4 +41,17 @@ public class AutoDistanceDrive extends LinearOpMode
         }
     }
 
+
+    void driveForDistance(float distance, float power) throws InterruptedException
+    {
+        motorDriveLeft.runForDistance(distance, power);
+        motorDriveRight.runForDistance(distance, power);
+        while (motorDriveLeft.isBusy() || motorDriveRight.isBusy())
+        {
+            sleep(10);
+        }
+        motorDriveLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        motorDriveRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+
+    }
 }

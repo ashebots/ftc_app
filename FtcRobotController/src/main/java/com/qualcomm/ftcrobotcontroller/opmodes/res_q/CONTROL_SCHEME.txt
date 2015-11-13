@@ -1,0 +1,10 @@
+left joystick = drive
+right joystick = sweeper
+
+d-pad left and right = arm swivel
+right bumper and trigger = arm joint 1
+left bumper and trigger = arm joint 2
+
+
+
+("x = nitro")
