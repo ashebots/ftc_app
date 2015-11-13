@@ -2,6 +2,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes.res_q;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
@@ -19,6 +20,8 @@ public class TeleOp extends OpMode
     DcMotor motorArmJoint2; //Second arm join, one farthest from robot
     DcMotor motorArmSwivel; //Motor that turns the arm's lazy-susan base
 
+    DcMotor motorBoxSweeper;
+
     TouchSensor sensorTouchArmJoint1; //Sensor to detect when the first arm join is fully closed
     TouchSensor sensorTouchArmJoint2; //Sensor to detect when the second arm join is fully closed
 
@@ -30,36 +33,107 @@ public class TeleOp extends OpMode
     public void init()
     {
         motorDriveLeft = hardwareMap.dcMotor.get("motorDriveLeft");
-        motorDriveLeft.setDirection(DcMotor.Direction.REVERSE);
         motorDriveRight = hardwareMap.dcMotor.get("motorDriveRight");
+        motorDriveRight.setDirection(DcMotor.Direction.REVERSE);
 
         chassis = new ChassisArcade(motorDriveLeft, motorDriveRight);
 
 
         motorArmJoint1 = hardwareMap.dcMotor.get("motorArmJoint1");
+        motorArmJoint1.setDirection(DcMotor.Direction.REVERSE);
         motorArmJoint2 = hardwareMap.dcMotor.get("motorArmJoint2");
+        motorArmJoint2.setDirection(DcMotor.Direction.REVERSE);
         motorArmSwivel = hardwareMap.dcMotor.get("motorArmSwivel");
+
+
+        motorBoxSweeper = hardwareMap.dcMotor.get("motorBoxSweeper");
 
 
         sensorTouchArmJoint1 = hardwareMap.touchSensor.get("sensorTouchArmJoint1");
         sensorTouchArmJoint2 = hardwareMap.touchSensor.get("sensorTouchArmJoint2");
 
-        armJoint1 = new ArmJoint(motorArmJoint1, sensorTouchArmJoint1, 1000, 0.5);
-        armJoint2 = new ArmJoint(motorArmJoint2, sensorTouchArmJoint2, 1000, 0.5);
+        armJoint1 = new ArmJoint(motorArmJoint1, sensorTouchArmJoint1, 200000, 0.5);
+        armJoint2 = new ArmJoint(motorArmJoint2, sensorTouchArmJoint2, 200000, 0.5);
 
         armSwivel = new ArmSwivel(motorArmSwivel, -500, 500);
+
+        motorArmJoint1.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorArmJoint2.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorArmSwivel.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+    }
+
+    public void start()
+    {
+        motorArmJoint1.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        motorArmJoint2.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        motorArmSwivel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
     }
 
     public void loop()
     {
         //Driving
-        chassis.Drive(gamepad1.left_stick_x, gamepad1.left_stick_y * -1);
+        float driveX = gamepad1.left_stick_x;
+        float driveY = gamepad1.left_stick_y * -1;
+        if (gamepad1.x == false)
+        {
+            driveX *= .6f;
+            driveY *= .6f;
+        }
+        chassis.Drive(driveX, driveY);
+        //brayden did this ^
 
-        //Both arm joints opening and closing
-        armJoint1.Articulate(gamepad2.left_stick_y * -1);
-        armJoint2.Articulate(gamepad2.right_stick_y * -1);
+        //Sweeper
+        motorBoxSweeper.setPower(gamepad1.right_stick_y);
 
-        armSwivel.LimitedSwivel((gamepad2.left_trigger * -1) + gamepad2.right_trigger);
+        //Arm swivel
+        float swivelInput;
+        if (gamepad1.dpad_left)
+        {
+            swivelInput = -1.0f;
+        }
+        else if (gamepad1.dpad_right)
+        {
+            swivelInput = 1.0f;
+        }
+        else
+        {
+            swivelInput = 0.0f;
+        }
+        armSwivel.LimitedSwivel(swivelInput);
+
+        //Joint 1
+        float jointInput1;
+        if(gamepad1.right_bumper)
+        {
+            jointInput1 = 1.0f;
+        }
+        else if (gamepad1.right_trigger > 0.3f)
+        {
+            jointInput1 = -1.0f;
+        }
+        else
+        {
+            jointInput1 = 0f;
+        }
+        armJoint1.Articulate(jointInput1);
+
+
+        //Joint 2
+        //brayden did this
+        float jointInput2;
+        if(gamepad1.left_bumper)
+        {
+            jointInput2 = 1.0f;
+        }
+        else if (gamepad1.left_trigger > 0.3f)
+        {
+            jointInput2 = -1.0f;
+        }
+        else
+        {
+            jointInput2 = 0f;
+        }
+        armJoint2.Articulate(jointInput2);
     }
 
 
@@ -151,6 +225,8 @@ public class TeleOp extends OpMode
         {
             power = Range.clip(power, -1.0, 1.0);
 
+            this.motor.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+
             if (power > 0)
             {
                 if (this.motor.getCurrentPosition() < this.encoderLimit)
@@ -171,6 +247,7 @@ public class TeleOp extends OpMode
                 else
                 {
                     this.motor.setPower(0);
+                    this.motor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
                 }
             }
             else
