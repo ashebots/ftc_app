@@ -8,22 +8,9 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.ashebots.ftcandroidlib.drive.ChassisArcade;
 
-public class TeleOp extends OpMode
+public class TeleOp extends ResQRobot
 {
-    DcMotor motorDriveLeft;
-    DcMotor motorDriveRight;
-
     ChassisArcade chassis;
-
-
-    DcMotor motorArmJoint1; //First arm joint, one closest to robot
-    DcMotor motorArmJoint2; //Second arm join, one farthest from robot
-    DcMotor motorArmSwivel; //Motor that turns the arm's lazy-susan base
-
-    DcMotor motorBoxSweeper;
-
-    TouchSensor sensorTouchArmJoint1; //Sensor to detect when the first arm join is fully closed
-    TouchSensor sensorTouchArmJoint2; //Sensor to detect when the second arm join is fully closed
 
     ArmJoint armJoint1;
     ArmJoint armJoint2;
@@ -32,25 +19,12 @@ public class TeleOp extends OpMode
 
     public void init()
     {
-        motorDriveLeft = hardwareMap.dcMotor.get("motorDriveLeft");
-        motorDriveRight = hardwareMap.dcMotor.get("motorDriveRight");
-        motorDriveRight.setDirection(DcMotor.Direction.REVERSE);
+        //This will call the init() method in the parent "ResQRobot" class. That is the class
+        //where we store and setup all our HARDWARE variables.
+        super.init();
+
 
         chassis = new ChassisArcade(motorDriveLeft, motorDriveRight);
-
-
-        motorArmJoint1 = hardwareMap.dcMotor.get("motorArmJoint1");
-        motorArmJoint1.setDirection(DcMotor.Direction.REVERSE);
-        motorArmJoint2 = hardwareMap.dcMotor.get("motorArmJoint2");
-        motorArmJoint2.setDirection(DcMotor.Direction.REVERSE);
-        motorArmSwivel = hardwareMap.dcMotor.get("motorArmSwivel");
-
-
-        motorBoxSweeper = hardwareMap.dcMotor.get("motorBoxSweeper");
-
-
-        sensorTouchArmJoint1 = hardwareMap.touchSensor.get("sensorTouchArmJoint1");
-        sensorTouchArmJoint2 = hardwareMap.touchSensor.get("sensorTouchArmJoint2");
 
         armJoint1 = new ArmJoint(motorArmJoint1, sensorTouchArmJoint1, 200000, 0.5);
         armJoint2 = new ArmJoint(motorArmJoint2, sensorTouchArmJoint2, 200000, 0.5);
