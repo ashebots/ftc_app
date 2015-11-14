@@ -25,7 +25,7 @@ public class TestAutoMountainBF extends LinearOpMode
     {
         motorLeft = hardwareMap.dcMotor.get("motorDriveLeft");
         motorRight = hardwareMap.dcMotor.get("motorDriveRight");
-        motorLeft.setDirection(DcMotor.Direction.REVERSE);
+        motorRight.setDirection(DcMotor.Direction.REVERSE);
 
         motorLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         motorRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
