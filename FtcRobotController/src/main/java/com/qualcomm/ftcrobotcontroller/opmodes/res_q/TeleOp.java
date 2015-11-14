@@ -108,6 +108,11 @@ public class TeleOp extends ResQRobot
             jointInput2 = 0f;
         }
         armJoint2.Articulate(jointInput2);
+
+
+        //Telemetry
+        telemetry.addData("1: Left drive encoder = ", motorDriveLeft.getCurrentPosition());
+        telemetry.addData("2: Right drive encoder = ", motorDriveRight.getCurrentPosition());
     }
 
 

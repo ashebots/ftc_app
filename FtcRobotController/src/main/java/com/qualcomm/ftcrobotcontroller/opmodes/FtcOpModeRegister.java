@@ -64,11 +64,11 @@ public class FtcOpModeRegister implements OpModeRegister {
     //manager.register("Cascade Effect TeleOp", CascadeEffectTeleop.class);
     //manager.register("Telemetry Test", TelemetryTest.class);
     manager.register("TeleOp", TeleOp.class);
-    manager.register("Test Drive", TestDrive.class);
-    manager.register("Test Drive X 4", TestDrive4.class);
-    manager.register("Test RPM", TestRPM.class);
-    manager.register("Orientation Test", AndroidOrientationTest.class);
-    manager.register("Auto Dist Test", AutoDistanceDrive.class);
+    //manager.register("Test Drive", TestDrive.class);
+    //manager.register("Test Drive X 4", TestDrive4.class);
+    //manager.register("Test RPM", TestRPM.class);
+    //manager.register("Orientation Test", AndroidOrientationTest.class);
+    //manager.register("Auto Dist Test", AutoDistanceDrive.class);
 
     /*
      * The following op modes are example op modes provided by QualComm.
