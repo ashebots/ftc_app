@@ -16,8 +16,8 @@ public class TestAutoMountain extends LinearOpMode
 {
     DcMotor motorRight;
     DcMotor motorLeft;
-    double num1 = 1000;
-    double num2 = 500;
+    double num1;
+    double num2;
     @Override
     public void runOpMode() throws InterruptedException
     {
