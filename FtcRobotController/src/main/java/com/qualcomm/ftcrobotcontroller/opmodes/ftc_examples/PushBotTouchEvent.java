@@ -1,5 +1,4 @@
-package com.qualcomm.ftcrobotcontroller.opmodes;
-
+package com.qualcomm.ftcrobotcontroller.opmodes.ftc_examples;
 //------------------------------------------------------------------------------
 //
 // PushBotTouchEvent
