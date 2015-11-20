@@ -69,6 +69,8 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("Red Autonomous SS", TestAutoMountainRC.class);
     manager.register("Red Autonomous OS", TestAutoMountainRF.class);
 
+    manager.register("Encoder Test", FancyEncoderTest.class);
+
     /*
      * The following op modes are example op modes provided by QualComm.
      * Uncomment the lines to make the op modes available to the driver station.

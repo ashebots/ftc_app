@@ -1,12 +1,10 @@
 package com.qualcomm.ftcrobotcontroller.opmodes.res_q;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.ashebots.ftcandroidlib.drive.ChassisArcade;
+import org.ashebots.ftcandroidlib.motor.Motor;
 
 public class TeleOp extends ResQRobot
 {
@@ -17,6 +15,7 @@ public class TeleOp extends ResQRobot
 
     ArmSwivel armSwivel;
 
+    @Override
     public void init()
     {
         //This will call the init() method in the parent "ResQRobot" class. That is the class
@@ -30,19 +29,9 @@ public class TeleOp extends ResQRobot
         armJoint2 = new ArmJoint(motorArmJoint2, sensorTouchArmJoint2, 200000, 0.5);
 
         armSwivel = new ArmSwivel(motorArmSwivel, -500, 500);
-
-        motorArmJoint1.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        motorArmJoint2.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        motorArmSwivel.setMode(DcMotorController.RunMode.RESET_ENCODERS);
     }
 
-    public void start()
-    {
-        motorArmJoint1.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        motorArmJoint2.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        motorArmSwivel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-    }
-
+    @Override
     public void loop()
     {
         //Driving
@@ -113,21 +102,26 @@ public class TeleOp extends ResQRobot
         //Telemetry
         telemetry.addData("1: Left drive encoder = ", motorDriveLeft.getCurrentPosition());
         telemetry.addData("2: Right drive encoder = ", motorDriveRight.getCurrentPosition());
+        telemetry.addData("3: Arm swivel encoder = ", motorArmSwivel.getCurrentPosition());
+        telemetry.addData("4: Arm joint 1 encoder = ", motorArmJoint1.getCurrentPosition());
+        telemetry.addData("5: Arm joint 2 encoder = ", motorArmJoint2.getCurrentPosition());
     }
 
 
     //Used to represent swivelling base of arm. Note that there should only be one of these.
     class  ArmSwivel
     {
-        DcMotor motor;
+        Motor motor;
         int encoderLimitLeft;
         int encoderLimitRight;
 
-        public ArmSwivel(DcMotor motor,int encoderLimitLeft, int encoderLimitRight)
+        public ArmSwivel(Motor motor, int encoderLimitLeft, int encoderLimitRight)
          {
              this.motor = motor;
              this.encoderLimitLeft = encoderLimitLeft;
              this.encoderLimitRight = encoderLimitRight;
+
+             this.motor.setCurrentPosition(0);
          }
 
         /* MUST BE CALLED EVERY LOOP
@@ -179,13 +173,13 @@ public class TeleOp extends ResQRobot
     //Used to represent each joint in the arm. There are two joints, so two of these objects. Different from swivel!
     class ArmJoint
     {
-        DcMotor motor;
+        Motor motor;
         TouchSensor sensorTouchClosed; //Triggered when the arm is fully closed
 
         int encoderLimit; //How far the motor can extend the arm in encoder ticks
         double powerModifier; //Power input is multiplied by this
 
-        public ArmJoint(DcMotor motor, TouchSensor sensorTouchClosed, int encoderLimit, double powerModifier)
+        public ArmJoint(Motor motor, TouchSensor sensorTouchClosed, int encoderLimit, double powerModifier)
         {
             this.motor = motor;
             this.sensorTouchClosed = sensorTouchClosed;
@@ -203,8 +197,6 @@ public class TeleOp extends ResQRobot
         public void Articulate(double power)
         {
             power = Range.clip(power, -1.0, 1.0);
-
-            this.motor.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 
             if (power > 0)
             {
@@ -226,7 +218,7 @@ public class TeleOp extends ResQRobot
                 else
                 {
                     this.motor.setPower(0);
-                    this.motor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+                    this.motor.setCurrentPosition(0);
                 }
             }
             else
