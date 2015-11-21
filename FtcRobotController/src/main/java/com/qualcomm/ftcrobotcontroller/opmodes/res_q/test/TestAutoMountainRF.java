@@ -17,7 +17,7 @@ public class TestAutoMountainRF extends LinearOpMode
     DcMotor motorRight;
     DcMotor motorLeft;
     double num1 = 6519;
-    double num2 = 6400/9;
+    double num2 = 44800/9;
     double roffset;
     double loffset;
     @Override
