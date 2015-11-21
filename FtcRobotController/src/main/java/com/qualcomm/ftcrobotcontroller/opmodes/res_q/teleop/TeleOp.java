@@ -67,11 +67,11 @@ public class TeleOp extends ResQRobotBase
 
         //Joint 1
         float jointInput1;
-        if(gamepad1.right_bumper)
+        if(gamepad1.left_bumper)
         {
             jointInput1 = 1.0f;
         }
-        else if (gamepad1.right_trigger > 0.3f)
+        else if (gamepad1.left_trigger > 0.3f)
         {
             jointInput1 = -1.0f;
         }
@@ -85,11 +85,11 @@ public class TeleOp extends ResQRobotBase
         //Joint 2
         //brayden did this
         float jointInput2;
-        if(gamepad1.left_bumper)
+        if(gamepad1.right_bumper)
         {
             jointInput2 = 1.0f;
         }
-        else if (gamepad1.left_trigger > 0.3f)
+        else if (gamepad1.right_trigger > 0.3f)
         {
             jointInput2 = -1.0f;
         }
