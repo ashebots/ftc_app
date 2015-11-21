@@ -1,12 +1,13 @@
-package com.qualcomm.ftcrobotcontroller.opmodes.res_q;
+package com.qualcomm.ftcrobotcontroller.opmodes.res_q.teleop;
 
+import com.qualcomm.ftcrobotcontroller.opmodes.res_q.shared.ResQRobotBase;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.ashebots.ftcandroidlib.drive.ChassisArcade;
 import org.ashebots.ftcandroidlib.motor.Motor;
 
-public class TeleOp extends ResQRobot
+public class TeleOp extends ResQRobotBase
 {
     ChassisArcade chassis;
 
@@ -97,6 +98,13 @@ public class TeleOp extends ResQRobot
             jointInput2 = 0f;
         }
         armJoint2.Articulate(jointInput2);
+
+
+        //Test, might not work...
+        if (sensorAccelerometer.isTipping())
+        {
+            beep();
+        }
 
 
         //Telemetry
