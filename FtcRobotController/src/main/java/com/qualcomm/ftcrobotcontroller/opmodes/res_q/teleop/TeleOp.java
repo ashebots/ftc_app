@@ -99,13 +99,13 @@ public class TeleOp extends ResQRobotBase
         }
         armJoint2.Articulate(jointInput2);
 
-
+        /*
         //Test, might not work...
         if (sensorAccelerometer.isTipping())
         {
             beep();
         }
-
+        */
 
         //Telemetry
         telemetry.addData("1: Left drive encoder = ", motorDriveLeft.getCurrentPosition());
