@@ -33,6 +33,15 @@ public class TeleOp extends ResQRobotBase
     }
 
     @Override
+    public void start()
+    {
+        //Initialize encoders
+        motorArmSwivel.setCurrentPosition(0);
+        motorArmJoint1.setCurrentPosition(0);
+        motorArmJoint2.setCurrentPosition(0);
+    }
+
+    @Override
     public void loop()
     {
         //Driving
@@ -108,8 +117,8 @@ public class TeleOp extends ResQRobotBase
         */
 
         //Telemetry
-        telemetry.addData("1: Left drive encoder = ", motorDriveLeft.getCurrentPosition());
-        telemetry.addData("2: Right drive encoder = ", motorDriveRight.getCurrentPosition());
+        //telemetry.addData("1: Left drive encoder = ", motorDriveLeft.getCurrentPosition());
+        //telemetry.addData("2: Right drive encoder = ", motorDriveRight.getCurrentPosition());
         telemetry.addData("3: Arm swivel encoder = ", motorArmSwivel.getCurrentPosition());
         telemetry.addData("4: Arm joint 1 encoder = ", motorArmJoint1.getCurrentPosition());
         telemetry.addData("5: Arm joint 2 encoder = ", motorArmJoint2.getCurrentPosition());
@@ -128,8 +137,6 @@ public class TeleOp extends ResQRobotBase
              this.motor = motor;
              this.encoderLimitLeft = encoderLimitLeft;
              this.encoderLimitRight = encoderLimitRight;
-
-             this.motor.setCurrentPosition(0);
          }
 
         /* MUST BE CALLED EVERY LOOP
