@@ -35,7 +35,7 @@ public class AndroidAccelerometerTest extends OpMode
     {
         if (sensorAccelerometer.isTipping())
         {
-            ResQRobotBase.staticBeep(appContext);
+            //ResQRobotBase.staticBeep(appContext); //method buggy so removed
         }
     }
 

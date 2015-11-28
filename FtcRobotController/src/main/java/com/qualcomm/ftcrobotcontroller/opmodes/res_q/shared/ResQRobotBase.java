@@ -77,32 +77,4 @@ public abstract class ResQRobotBase extends OpMode
         }
     }
 
-
-
-    public void beep()
-    {
-        if (appContext == null)
-        {
-            this.appContext = getContext();
-        }
-
-        try {
-            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            Ringtone r = RingtoneManager.getRingtone(this.appContext, notification);
-            r.play();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void staticBeep(Context appContext)
-    {
-        try {
-            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            Ringtone r = RingtoneManager.getRingtone(appContext, notification);
-            r.play();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }
