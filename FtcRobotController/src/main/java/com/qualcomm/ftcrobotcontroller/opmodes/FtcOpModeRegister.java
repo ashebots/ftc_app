@@ -68,7 +68,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("Red Autonomous to Red", TestAutoMountainRC.class);
     manager.register("Red Autonomous to Blue", TestAutoMountainRF.class);
 
-    manager.register("Accelerometer Test", AndroidAccelerometerTest.class);
+    manager.register("Accelerometer Test", IMUtest.class);
 
     /*
      * The following op modes are example op modes provided by QualComm.
