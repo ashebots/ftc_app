@@ -21,7 +21,6 @@ public abstract class TestAutoMountain extends LinearOpMode
     DcMotor motorLeft;
     BNO055LIB boschBNO055;
     double distance;
-    double goalAngle = -135;
     boolean leftMotorNeg;
     double roffset;
     double loffset;
@@ -73,8 +72,8 @@ public abstract class TestAutoMountain extends LinearOpMode
 
         Thread.sleep(10000);
 
-        motorLeft.setPower(.1);
-        motorRight.setPower(.1);
+        motorLeft.setPower(.5);
+        motorRight.setPower(.5);
         roffset = motorRight.getCurrentPosition();
         loffset = motorLeft.getCurrentPosition();
         while(motorLeft.getCurrentPosition()-loffset < distance) {
@@ -94,21 +93,16 @@ public abstract class TestAutoMountain extends LinearOpMode
         }
 
         boschBNO055.getIMUGyroAngles(rollAngle, pitchAngle, yawAngle);
-        double goalYaw = yawAngle[0] + goalAngle;
-
-        if(goalYaw < -180)
-        {
-            goalYaw = 360 + goalYaw;
-        }
+        double goalYaw=  -135;
 
         if (leftMotorNeg) {
-            motorRight.setPower(.1);
-            motorLeft.setPower(-.1);
+            motorRight.setPower(.25);
+            motorLeft.setPower(-.25);
         } else {
-            motorRight.setPower(-.1);
-            motorLeft.setPower(.1);
+            motorRight.setPower(-.25);
+            motorLeft.setPower(.25);
         }
-        while(yawAngle[0] > goalYaw - 10 || goalYaw + 10 < yawAngle[0]) {
+        while(yawAngle[0] > goalYaw + 10 || goalYaw - 10 > yawAngle[0]) {
             telemetry.addData("Left Motor", motorLeft.getCurrentPosition()-loffset);
             telemetry.addData("Right Motor", motorRight.getCurrentPosition()-roffset);
 
@@ -130,7 +124,7 @@ public abstract class TestAutoMountain extends LinearOpMode
             motorRight.setPower(-0.01);
             motorLeft.setPower(0.01);
         }
-        while(yawAngle[0] > goalYaw - 2.5 || goalYaw + 2.5 < yawAngle[0]) {
+        while(yawAngle[0] > goalYaw + 2 || goalYaw - 2 > yawAngle[0]) {
             telemetry.addData("Left Motor", motorLeft.getCurrentPosition()-loffset);
             telemetry.addData("Right Motor", motorRight.getCurrentPosition()-roffset);
 
