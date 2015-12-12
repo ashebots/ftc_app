@@ -53,6 +53,7 @@ public class TeleOp extends ResQRobotBase
             driveY *= .6f;
         }
         chassis.Drive(driveX, driveY);
+        // Is it possible to make a telemetry power readout for the Left and Right Motor when doing this command?
         //brayden did this ^
 
         //Sweeper
