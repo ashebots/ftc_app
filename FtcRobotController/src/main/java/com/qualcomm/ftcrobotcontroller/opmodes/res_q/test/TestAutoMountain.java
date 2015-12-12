@@ -6,141 +6,38 @@ AUTHOR = Art (2015-11-10)
 
 package com.qualcomm.ftcrobotcontroller.opmodes.res_q.test;
 
+import com.qualcomm.ftcrobotcontroller.opmodes.Driving;
 
-import android.util.Log;
-
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.exception.RobotCoreException;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.ftcrobotcontroller.opmodes.BNO055LIB;
-
-public abstract class TestAutoMountain extends LinearOpMode
+public abstract class TestAutoMountain extends Driving
 {
-    DcMotor motorRight;
-    DcMotor motorLeft;
-    BNO055LIB boschBNO055;
-    double distance;
+    double floorDistance;
+    double mountAngle;
     boolean leftMotorNeg;
-    double roffset;
-    double loffset;
-
-    volatile double[] rollAngle = new double[2], pitchAngle = new double[2], yawAngle = new double[2];
-    long systemTime;
+    double mountDistance = 100000;
 
     @Override
     public void runOpMode() throws InterruptedException
     {
-        motorLeft = hardwareMap.dcMotor.get("motorDriveLeft");
-        motorRight = hardwareMap.dcMotor.get("motorDriveRight");
-        motorRight.setDirection(DcMotor.Direction.REVERSE);
-
-        motorLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        motorRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-
-        systemTime = System.nanoTime();
-        try {
-            boschBNO055 = new BNO055LIB(hardwareMap, "bno055"
-
-                    //The following was required when the definition of the "I2cDevice" class was incomplete.
-                    //, "cdim", 5
-
-                    , (byte)(BNO055LIB.BNO055_ADDRESS_A * 2)//By convention the FTC SDK always does 8-bit I2C bus
-                    //addressing
-                    , (byte)BNO055LIB.OPERATION_MODE_IMU);
-        } catch (RobotCoreException e){
-            Log.i("FtcRobotController", "Exception: " + e.getMessage());
-        }
-        Log.i("FtcRobotController", "IMU Init method finished in: "
-                + (-(systemTime - (systemTime = System.nanoTime()))) + " ns.");
+        initMotors();
+        initBNO055();
+        systemTimeSetup();
 
         waitForStart();
 
-        systemTime = System.nanoTime();
-        boschBNO055.startIMU();//Set up the IMU as needed for a continual stream of I2C reads.
-        Log.i("FtcRobotController", "IMU Start method finished in: "
-                + (-(systemTime - (systemTime = System.nanoTime()))) + " ns.");
+        readBNO();
 
-        boschBNO055.getIMUGyroAngles(rollAngle, pitchAngle, yawAngle);
-        telemetry.addData("Headings(yaw): ",
-                String.format("Euler= %4.5f, Quaternion calculated= %4.5f", yawAngle[0], yawAngle[1]));
-        telemetry.addData("Pitches: ",
-                String.format("Euler= %4.5f, Quaternion calculated= %4.5f", pitchAngle[0], pitchAngle[1]));
-        telemetry.addData("Max I2C read interval: ",
-                String.format("%4.4f ms. Average interval: %4.4f ms.", boschBNO055.maxReadInterval
-                        , boschBNO055.avgReadInterval));
+        Thread.sleep(0);
 
-        Thread.sleep(10000);
+        //move forward in front of mountain
+        moveForwardCorrection(floorDistance, 1, 0.5, 0.01, 5, 2.5);
 
-        motorLeft.setPower(.5);
-        motorRight.setPower(.5);
-        roffset = motorRight.getCurrentPosition();
-        loffset = motorLeft.getCurrentPosition();
-        while(motorLeft.getCurrentPosition()-loffset < distance) {
-            telemetry.addData("Left Motor", motorLeft.getCurrentPosition()-loffset);
-            telemetry.addData("Right Motor", motorRight.getCurrentPosition()-roffset);
+        readBNO();
 
-            boschBNO055.getIMUGyroAngles(rollAngle, pitchAngle, yawAngle);
-            telemetry.addData("Headings(yaw): ",
-                    String.format("Euler= %4.5f, Quaternion calculated= %4.5f", yawAngle[0], yawAngle[1]));
-            telemetry.addData("Pitches: ",
-                    String.format("Euler= %4.5f, Quaternion calculated= %4.5f", pitchAngle[0], pitchAngle[1]));
-            telemetry.addData("Max I2C read interval: ",
-                    String.format("%4.4f ms. Average interval: %4.4f ms.", boschBNO055.maxReadInterval
-                            , boschBNO055.avgReadInterval));
+        //turn towards mountain
+        turnOnSpotPID(mountAngle, 5, 2.5, 0.5, 0.025, leftMotorNeg);
 
-            waitOneFullHardwareCycle();
-        }
-
-        boschBNO055.getIMUGyroAngles(rollAngle, pitchAngle, yawAngle);
-        double goalYaw=  -135;
-
-        if (leftMotorNeg) {
-            motorRight.setPower(.25);
-            motorLeft.setPower(-.25);
-        } else {
-            motorRight.setPower(-.25);
-            motorLeft.setPower(.25);
-        }
-        while(yawAngle[0] > goalYaw + 10 || goalYaw - 10 > yawAngle[0]) {
-            telemetry.addData("Left Motor", motorLeft.getCurrentPosition()-loffset);
-            telemetry.addData("Right Motor", motorRight.getCurrentPosition()-roffset);
-
-            boschBNO055.getIMUGyroAngles(rollAngle, pitchAngle, yawAngle);
-            telemetry.addData("Headings(yaw): ",
-                    String.format("Euler= %4.5f, Quaternion calculated= %4.5f", yawAngle[0], yawAngle[1]));
-            telemetry.addData("Pitches: ",
-                    String.format("Euler= %4.5f, Quaternion calculated= %4.5f", pitchAngle[0], pitchAngle[1]));
-            telemetry.addData("Max I2C read interval: ",
-                    String.format("%4.4f ms. Average interval: %4.4f ms.", boschBNO055.maxReadInterval
-                            , boschBNO055.avgReadInterval));
-
-            waitOneFullHardwareCycle();
-        }
-        if (leftMotorNeg) {
-            motorRight.setPower(0.01);
-            motorLeft.setPower(-0.01);
-        } else {
-            motorRight.setPower(-0.01);
-            motorLeft.setPower(0.01);
-        }
-        while(yawAngle[0] > goalYaw + 2 || goalYaw - 2 > yawAngle[0]) {
-            telemetry.addData("Left Motor", motorLeft.getCurrentPosition()-loffset);
-            telemetry.addData("Right Motor", motorRight.getCurrentPosition()-roffset);
-
-            boschBNO055.getIMUGyroAngles(rollAngle, pitchAngle, yawAngle);
-            telemetry.addData("Headings(yaw): ",
-                    String.format("Euler= %4.5f, Quaternion calculated= %4.5f", yawAngle[0], yawAngle[1]));
-            telemetry.addData("Pitches: ",
-                    String.format("Euler= %4.5f, Quaternion calculated= %4.5f", pitchAngle[0], pitchAngle[1]));
-            telemetry.addData("Max I2C read interval: ",
-                    String.format("%4.4f ms. Average interval: %4.4f ms.", boschBNO055.maxReadInterval
-                            , boschBNO055.avgReadInterval));
-
-            waitOneFullHardwareCycle();
-        }
-        motorRight.setPower(.1);
-        motorLeft.setPower(.1);
+        // charge up mountain
+        moveForwardCorrection(mountDistance, 1, 0.5, 0.025, 5, 2.5);
     }
 }
 
