@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.ashebots.ftcandroidlib.control.PIDController;
+import org.ashebots.ftcandroidlib.control.PIDSettings;
 import org.ashebots.ftcandroidlib.motor.Motor;
 
 
@@ -19,7 +20,9 @@ public class GyroPIDTest extends OpMode {
 
     Motor motorDriveLeft;
     Motor motorDriveRight;
-    PIDController headingPID;
+
+    PIDSettings headingPIDSettings;
+    PIDController headingPIDController;
 
     AdafruitIMU boschBNO055;
 
@@ -74,22 +77,48 @@ public class GyroPIDTest extends OpMode {
         motorDriveLeft.setDirection(DcMotor.Direction.REVERSE);
         motorDriveRight = new Motor(hardwareMap.dcMotor.get("right"));
 
-        headingPID = new PIDController(0.02, 0, 0);
+        headingPIDSettings = new PIDSettings(0.02, 0, 0);
+        headingPIDController = new PIDController(headingPIDSettings);
     }
 
+    //Yeah this is gross, whatcha gon' do about it? Prototyping, ya'll...
     @Override
     public void loop() {
+        //Configure P
+        if (gamepad1.dpad_up)
+            headingPIDSettings.setProportionalTerm(headingPIDSettings.getProportionalTerm() + 0.00001);
+        if (gamepad1.dpad_up)
+            headingPIDSettings.setProportionalTerm(headingPIDSettings.getProportionalTerm() - 0.00001);
+
+        //Configure I
+        if (gamepad1.left_bumper)
+            headingPIDSettings.setIntegralTerm(headingPIDSettings.getIntegralTerm() + 0.00001);
+        if (gamepad1.left_trigger > .2)
+            headingPIDSettings.setIntegralTerm(headingPIDSettings.getIntegralTerm() - 0.00001);
+
+        //Configure D
+        if (gamepad1.right_bumper)
+            headingPIDSettings.setDerivativeTerm(headingPIDSettings.getDerivativeTerm() + 0.00001);
+        if (gamepad1.right_trigger > .2)
+            headingPIDSettings.setDerivativeTerm(headingPIDSettings.getDerivativeTerm() - 0.00001);
+
+
         boschBNO055.getIMUGyroAngles(rollAngle, pitchAngle, yawAngle);
 
         telemetry.addData("Headings(yaw): ",
                 String.format("Euler= %4.5f", yawAngle[0]));
 
 
-        double pidValue = headingPID.calculate(yawAngle[0], targetHeading);
+        double pidValue = headingPIDController.calculate(yawAngle[0], targetHeading);
         double turnPower = Range.clip(pidValue, -1.0, 1.0);
 
         telemetry.addData("PID value = ", pidValue);
         telemetry.addData("Turn power = ", turnPower);
+
+        telemetry.addData("Z: PID settings = {",
+                        headingPIDSettings.getProportionalTerm() + ", "
+                        + headingPIDSettings.getIntegralTerm() + ", "
+                        + headingPIDSettings.getProportionalTerm() + "}");
 
         motorDriveLeft.setPower(-turnPower);
         motorDriveRight.setPower(turnPower);

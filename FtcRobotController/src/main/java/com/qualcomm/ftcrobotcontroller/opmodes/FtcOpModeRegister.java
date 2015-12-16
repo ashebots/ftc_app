@@ -69,6 +69,10 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("Red Autonomous to Blue", TestAutoMountainRF.class);
     manager.register("Accelerometer Test", IMUtest.class);
 
+    manager.register("IMU PID Heading Test", GyroPIDTest.class);
+
+    manager.register("Test Drive", TestDrive.class);
+
     /*
      * The following op modes are example op modes provided by QualComm.
      * Uncomment the lines to make the op modes available to the driver station.

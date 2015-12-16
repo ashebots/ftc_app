@@ -23,7 +23,6 @@ public class TeleOp extends ResQRobotBase
         //where we store and setup all our HARDWARE variables.
         super.init();
 
-
         chassis = new ChassisArcade(motorDriveLeft, motorDriveRight);
 
         armJoint1 = new ArmJoint(motorArmJoint1, sensorTouchArmJoint1, 200000, 0.5);
@@ -31,6 +30,7 @@ public class TeleOp extends ResQRobotBase
 
         armSwivel = new ArmSwivel(motorArmSwivel, -500, 500);
     }
+
 
     @Override
     public void start()
@@ -40,6 +40,7 @@ public class TeleOp extends ResQRobotBase
         motorArmJoint1.setCurrentPosition(0);
         motorArmJoint2.setCurrentPosition(0);
     }
+
 
     @Override
     public void loop()
@@ -56,8 +57,18 @@ public class TeleOp extends ResQRobotBase
         // Is it possible to make a telemetry power readout for the Left and Right Motor when doing this command?
         //brayden did this ^
 
+
         //Sweeper
-        motorBoxSweeper.setPower(gamepad1.right_stick_y);
+        if (gamepad1.right_stick_y > 0)
+        {
+            boxSweeperPos += boxSweeperDelta;
+        }
+        if (gamepad1.right_stick_y < 0)
+        {
+            boxSweeperPos -= boxSweeperDelta;
+        }
+        boxSweeperPos = Range.clip(boxSweeperPos, boxSweeperMinRange, boxSweeperMaxRange);
+        servoBoxSweeper.setPosition(boxSweeperPos);
 
         //Arm swivel
         float swivelInput;
@@ -109,17 +120,12 @@ public class TeleOp extends ResQRobotBase
         }
         armJoint2.Articulate(jointInput2);
 
-        /*
-        //Test, might not work...
-        if (sensorAccelerometer.isTipping())
-        {
-            beep();
-        }
-        */
 
         //Telemetry
-        //telemetry.addData("1: Left drive encoder = ", motorDriveLeft.getCurrentPosition());
-        //telemetry.addData("2: Right drive encoder = ", motorDriveRight.getCurrentPosition());
+        /*
+        telemetry.addData("1: Left drive encoder = ", motorDriveLeft.getCurrentPosition());
+        telemetry.addData("2: Right drive encoder = ", motorDriveRight.getCurrentPosition());
+        */
         telemetry.addData("3: Arm swivel encoder = ", motorArmSwivel.getCurrentPosition());
         telemetry.addData("4: Arm joint 1 encoder = ", motorArmJoint1.getCurrentPosition());
         telemetry.addData("5: Arm joint 2 encoder = ", motorArmJoint2.getCurrentPosition());

@@ -10,6 +10,7 @@ import android.net.Uri;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.ashebots.ftcandroidlib.motor.Motor;
@@ -30,7 +31,12 @@ public abstract class ResQRobotBase extends OpMode
     public Motor motorArmJoint2; //Second arm join, one farthest from robot
     public Motor motorArmSwivel; //Motor that turns the arm's lazy-susan base
 
-    public Motor motorBoxSweeper;
+    //public Motor motorBoxSweeper;
+    public Servo servoBoxSweeper;
+    public float boxSweeperDelta = 0.01f;
+    public float boxSweeperPos = 0f;
+    public float boxSweeperMinRange = 0.0f;
+    public float boxSweeperMaxRange = 1.0f;
 
     public TouchSensor sensorTouchArmJoint1; //Sensor to detect when the first arm join is fully closed
     public TouchSensor sensorTouchArmJoint2; //Sensor to detect when the second arm join is fully closed
@@ -39,10 +45,11 @@ public abstract class ResQRobotBase extends OpMode
     @Override
     public void init()
     {
+        /*
         appContext = getContext();
         sensorManager = (SensorManager) appContext.getSystemService(Context.SENSOR_SERVICE);
         sensorAccelerometer = new AccelerometerSensor(appContext, sensorManager, SensorManager.SENSOR_DELAY_FASTEST, 7.0f);
-
+        */
 
         motorDriveLeft = new Motor(hardwareMap.dcMotor.get("motorDriveLeft"));
         motorDriveRight = new Motor(hardwareMap.dcMotor.get("motorDriveRight"));
@@ -54,7 +61,8 @@ public abstract class ResQRobotBase extends OpMode
         motorArmJoint2.setDirection(DcMotor.Direction.REVERSE);
         motorArmSwivel = new Motor(hardwareMap.dcMotor.get("motorArmSwivel"));
 
-        motorBoxSweeper = new Motor(hardwareMap.dcMotor.get("motorBoxSweeper"));
+        //motorBoxSweeper = new Motor(hardwareMap.dcMotor.get("motorBoxSweeper"));
+        servoBoxSweeper = hardwareMap.servo.get("servoBoxSweeper");
 
         sensorTouchArmJoint1 = hardwareMap.touchSensor.get("sensorTouchArmJoint1");
         sensorTouchArmJoint2 = hardwareMap.touchSensor.get("sensorTouchArmJoint2");

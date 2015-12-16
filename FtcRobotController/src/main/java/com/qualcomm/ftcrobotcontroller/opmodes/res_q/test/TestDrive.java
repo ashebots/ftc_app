@@ -15,9 +15,8 @@ public class TestDrive extends OpMode
     public void init()
     {
         motorDriveLeft = hardwareMap.dcMotor.get("motorDriveLeft");
-        motorDriveLeft.setDirection(DcMotor.Direction.REVERSE);
-
         motorDriveRight = hardwareMap.dcMotor.get("motorDriveRight");
+        motorDriveRight.setDirection(DcMotor.Direction.REVERSE);
     }
 
     public void loop()
@@ -34,5 +33,8 @@ public class TestDrive extends OpMode
 
         motorDriveLeft.setPower(drivePowerLeft);
         motorDriveRight.setPower(drivePowerRight);
+
+        telemetry.addData("1: left drive encoder = ", motorDriveLeft.getCurrentPosition());
+        telemetry.addData("2: right drive encoder = ", motorDriveRight.getCurrentPosition());
     }
 }
