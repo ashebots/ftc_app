@@ -12,13 +12,13 @@ public abstract class ClimbersToMountain extends Driving
 {
     boolean leftMotorNeg;
 
-    double clearDistance = 0;
+    double clearDistance = 5;
     double buttAngle;
-    double buttDistance = 0;
+    double buttDistance = 70;
     double reverseAngle;
-    double mountDistance = 0;
+    double mountDistance = 50;
     double mountAngle;
-    double chargeDistance = 0;
+    double chargeDistance = 1000;
 
     @Override
     public void runOpMode() throws InterruptedException {

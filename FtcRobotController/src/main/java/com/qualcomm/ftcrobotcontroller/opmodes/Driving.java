@@ -94,7 +94,7 @@ public abstract class Driving extends LinearOpMode {
         motorRight.setPower(power);
         double roffset = motorRight.getCurrentPosition();
         double loffset = motorLeft.getCurrentPosition();
-        while(motorLeft.getCurrentPosition()-loffset < distance) {
+        while(motorLeft.getCurrentPosition()-loffset < 211*distance) {
             telemetry.addData("Left Motor", motorLeft.getCurrentPosition()-loffset);
             telemetry.addData("Right Motor", motorRight.getCurrentPosition()-roffset);
 
@@ -113,7 +113,7 @@ public abstract class Driving extends LinearOpMode {
         double keepAtAngle = yawAngle[0];
         double roffset = motorRight.getCurrentPosition();
         double loffset = motorLeft.getCurrentPosition();
-        while(motorLeft.getCurrentPosition()-loffset < distance) {
+        while(motorLeft.getCurrentPosition()-loffset < 211*distance) {
             telemetry.addData("Left Motor", motorLeft.getCurrentPosition() - loffset);
             telemetry.addData("Right Motor", motorRight.getCurrentPosition() - roffset);
 
