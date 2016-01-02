@@ -4,15 +4,20 @@
         <TouchSensor name="sensorTouchArmJoint1" port="1" />
         <TouchSensor name="sensorTouchArmJoint2" port="2" />
     </LegacyModuleController>
-    <MotorController name="misc motors" serialNumber="AL00YD77">
-        <Motor name="motorArmSwivel" port="2" />
-    </MotorController>
+    <DeviceInterfaceModule name="Device Interface Module 1" serialNumber="AL00VDKD">
+    </DeviceInterfaceModule>
     <MotorController name="drive" serialNumber="AL00XUMH">
         <Motor name="motorDriveLeft" port="1" />
         <Motor name="motorDriveRight" port="2" />
     </MotorController>
-    <MotorController name="arm joint" serialNumber="AL00XTNK">
+    <ServoController name="Servo Controller 1" serialNumber="AI02RN3B">
+        <Servo name="servoBoxSweeper" port="6" />
+    </ServoController>
+    <MotorController name="arm joints" serialNumber="AL00XTNK">
         <Motor name="motorArmJoint2" port="1" />
         <Motor name="motorArmJoint1" port="2" />
+    </MotorController>
+    <MotorController name="misc motors" serialNumber="AL00YD77">
+        <Motor name="motorArmSwivel" port="1" />
     </MotorController>
 </Robot>

@@ -10,6 +10,7 @@ import android.net.Uri;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
@@ -32,11 +33,8 @@ public abstract class ResQRobotBase extends OpMode
     public Motor motorArmSwivel; //Motor that turns the arm's lazy-susan base
 
     //public Motor motorBoxSweeper;
-    public Servo servoBoxSweeper;
-    public float boxSweeperDelta = 0.01f;
-    public float boxSweeperPos = 0f;
-    public float boxSweeperMinRange = 0.0f;
-    public float boxSweeperMaxRange = 1.0f;
+    public Servo servoBoxSweeper; //This is a continuous servo, so I THINK 0.5 = stop (0.0 to 1.0)
+    public float boxSweeperPower = 0.5f; //Represents current power assigned to continuous servo (0 to 1, 0.5 is stopped)
 
     public TouchSensor sensorTouchArmJoint1; //Sensor to detect when the first arm join is fully closed
     public TouchSensor sensorTouchArmJoint2; //Sensor to detect when the second arm join is fully closed
@@ -59,7 +57,10 @@ public abstract class ResQRobotBase extends OpMode
         motorArmJoint1.setDirection(DcMotor.Direction.REVERSE);
         motorArmJoint2 = new Motor(hardwareMap.dcMotor.get("motorArmJoint2"));
         motorArmJoint2.setDirection(DcMotor.Direction.REVERSE);
+
         motorArmSwivel = new Motor(hardwareMap.dcMotor.get("motorArmSwivel"));
+        motorArmSwivel.setDirection(DcMotor.Direction.REVERSE);
+        motorArmSwivel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
         //motorBoxSweeper = new Motor(hardwareMap.dcMotor.get("motorBoxSweeper"));
         servoBoxSweeper = hardwareMap.servo.get("servoBoxSweeper");

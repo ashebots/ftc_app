@@ -58,27 +58,22 @@ public class TeleOp extends ResQRobotBase
         //brayden did this ^
 
 
-        //Sweeper
-        if (gamepad1.right_stick_y > 0)
-        {
-            boxSweeperPos += boxSweeperDelta;
-        }
-        if (gamepad1.right_stick_y < 0)
-        {
-            boxSweeperPos -= boxSweeperDelta;
-        }
-        boxSweeperPos = Range.clip(boxSweeperPos, boxSweeperMinRange, boxSweeperMaxRange);
-        servoBoxSweeper.setPosition(boxSweeperPos);
+        //Sweeper (continuous, 0.5 is stop)
+        boxSweeperPower = gamepad1.right_stick_y * -1;
+        boxSweeperPower = (boxSweeperPower + 1) / 2; //Scales number from (-1 to +1) to (0 to 1) with 0.5 being default
+        boxSweeperPower = Range.clip(boxSweeperPower, 0, 1);
+        servoBoxSweeper.setPosition(boxSweeperPower);
+
 
         //Arm swivel
         float swivelInput;
         if (gamepad1.dpad_left)
         {
-            swivelInput = -1.0f;
+            swivelInput = -0.1f;
         }
         else if (gamepad1.dpad_right)
         {
-            swivelInput = 1.0f;
+            swivelInput = 0.1f;
         }
         else
         {
