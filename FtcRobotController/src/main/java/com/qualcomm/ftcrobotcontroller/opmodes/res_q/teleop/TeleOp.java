@@ -4,6 +4,8 @@ import com.qualcomm.ftcrobotcontroller.opmodes.res_q.shared.ResQRobotBase;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
+import org.ashebots.ftcandroidlib.control.PIDController;
+import org.ashebots.ftcandroidlib.control.PIDSettings;
 import org.ashebots.ftcandroidlib.drive.ChassisArcade;
 import org.ashebots.ftcandroidlib.motor.Motor;
 
@@ -14,6 +16,7 @@ public class TeleOp extends ResQRobotBase
     ArmJoint armJoint1;
     ArmJoint armJoint2;
 
+    PIDSettings armSwivelHeadingSettings;
     ArmSwivel armSwivel;
 
     @Override
@@ -28,7 +31,8 @@ public class TeleOp extends ResQRobotBase
         armJoint1 = new ArmJoint(motorArmJoint1, sensorTouchArmJoint1, 200000, 0.5);
         armJoint2 = new ArmJoint(motorArmJoint2, sensorTouchArmJoint2, 200000, 0.5);
 
-        armSwivel = new ArmSwivel(motorArmSwivel, -500, 500);
+        armSwivelHeadingSettings = new PIDSettings(0, 0, 0);
+        armSwivel = new ArmSwivel(motorArmSwivel, armSwivelHeadingSettings, -500, 500);
     }
 
 
@@ -115,6 +119,8 @@ public class TeleOp extends ResQRobotBase
         }
         armJoint2.Articulate(jointInput2);
 
+        //Quick little hack to tune the PID controller for the arm swivel
+        tunePID(armSwivelHeadingSettings);
 
         //Telemetry
         /*
@@ -126,63 +132,105 @@ public class TeleOp extends ResQRobotBase
         telemetry.addData("5: Arm joint 2 encoder = ", motorArmJoint2.getCurrentPosition());
     }
 
+    void tunePID(PIDSettings pidSettings)
+    {
+        //pTerm
+        if (gamepad2.dpad_up)
+        {
+            pidSettings.setProportionalTerm(pidSettings.getProportionalTerm() + 0.001);
+        }
+        else if (gamepad2.dpad_down)
+        {
+            pidSettings.setProportionalTerm(pidSettings.getProportionalTerm() - 0.001);
+        }
+
+        //iTerm
+        if (gamepad2.left_stick_y < -0.1)
+        {
+            pidSettings.setIntegralTerm(pidSettings.getIntegralTerm() + 0.001);
+        }
+        else if (gamepad2.left_stick_y > 0.1)
+        {
+            pidSettings.setIntegralTerm(pidSettings.getIntegralTerm() - 0.001);
+        }
+
+        //iTerm
+        if (gamepad2.right_stick_y < -0.1)
+        {
+            pidSettings.setDerivativeTerm(pidSettings.getDerivativeTerm() + 0.001);
+        }
+        else if (gamepad2.right_stick_y > 0.1)
+        {
+            pidSettings.setDerivativeTerm(pidSettings.getDerivativeTerm() - 0.001);
+        }
+
+        telemetry.addData("1: pTerm=", pidSettings.getProportionalTerm());
+        telemetry.addData("2: iTerm=", pidSettings.getIntegralTerm());
+        telemetry.addData("3: dTerm=", pidSettings.getDerivativeTerm());
+    }
 
     //Used to represent swivelling base of arm. Note that there should only be one of these.
     class  ArmSwivel
     {
         Motor motor;
+        PIDSettings headingSettings;
+        PIDController headingController;
+
         int encoderLimitLeft;
         int encoderLimitRight;
 
-        public ArmSwivel(Motor motor, int encoderLimitLeft, int encoderLimitRight)
+        double currentEncoderTarget;
+
+        public ArmSwivel(Motor motor, PIDSettings headingSettings, int encoderLimitLeft, int encoderLimitRight)
          {
              this.motor = motor;
+
+             this.headingSettings = headingSettings;
+             this.headingController = new PIDController(headingSettings);
+
              this.encoderLimitLeft = encoderLimitLeft;
              this.encoderLimitRight = encoderLimitRight;
+
+             this.currentEncoderTarget = motor.getCurrentPosition();
          }
 
         /* MUST BE CALLED EVERY LOOP
         power = -1.0 to 1.0
         Negative value means arm swivel turns left/counter-clockwise, and is limited by this.encoderLimitLeft
-        Positive value means arm swivel turns right/clockwise, and is limited by this.encoderLimitRight
+        Positive value means arm sivel turns right/clockwise, and is limited by this.encoderLimitRight
         Motor encoder's 0 position is assumed to mean that the arm is pointing straight ahead, this means
         that the arm should be pointed straight ahead when the robot starts.
         */
-        public void LimitedSwivel(double power)
+        public void LimitedSwivel(double positionChangeInput)
         {
-            power = Range.clip(power,-1, 1);
+            positionChangeInput = Range.clip(positionChangeInput,-1, 1);
 
             //We are going left
-            if (power < 0)
+            if (positionChangeInput < 0)
             {
                 //We have not reached the limit
-                if (this.motor.getCurrentPosition() > this.encoderLimitLeft)
+                if (this.currentEncoderTarget > this.encoderLimitLeft)
                 {
-                    this.motor.setPower(power);
-                }
-                else
-                {
-                    this.motor.setPower(0);
+
+                    this.currentEncoderTarget -= positionChangeInput;
                 }
             }
             //We are going right
-            else if (power > 0)
+            else if (positionChangeInput > 0)
             {
                 //not reached limit
-                if (this.motor.getCurrentPosition() < this.encoderLimitRight)
+                if (this.currentEncoderTarget < this.encoderLimitRight)
                 {
-                   this.motor.setPower(power);
-                }
-                else
-                {
-                    this.motor.setPower(0);
+                   this.currentEncoderTarget += positionChangeInput;
                 }
 
             }
-            else
-            {
-                this.motor.setPower(0);
-            }
+
+            //Now we have determined our new target position, try to get there
+            double powerDelta = this.headingController.calculate(this.motor.getCurrentPosition(), this.currentEncoderTarget);
+            powerDelta = Range.clip(powerDelta, -1.0, 1.0);
+
+            this.motor.setPower(powerDelta);
         }
     }
 

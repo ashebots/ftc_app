@@ -14,6 +14,8 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
+import org.ashebots.ftcandroidlib.control.PIDController;
+import org.ashebots.ftcandroidlib.control.PIDSettings;
 import org.ashebots.ftcandroidlib.motor.Motor;
 
 import java.lang.reflect.Method;
@@ -38,6 +40,7 @@ public abstract class ResQRobotBase extends OpMode
 
     public TouchSensor sensorTouchArmJoint1; //Sensor to detect when the first arm join is fully closed
     public TouchSensor sensorTouchArmJoint2; //Sensor to detect when the second arm join is fully closed
+
 
 
     @Override
