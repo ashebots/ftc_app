@@ -1,6 +1,7 @@
 package com.qualcomm.ftcrobotcontroller.opmodes.res_q.teleop;
 
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.shared.ResQRobotBase;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
@@ -32,7 +33,7 @@ public class TeleOp extends ResQRobotBase
         armJoint2 = new ArmJoint(motorArmJoint2, sensorTouchArmJoint2, 200000, 0.5);
 
         armSwivelHeadingSettings = new PIDSettings(0, 0, 0);
-        armSwivel = new ArmSwivel(motorArmSwivel, armSwivelHeadingSettings, -500, 500);
+        armSwivel = new ArmSwivel(motorArmSwivel, 0.2, -500, 500);
     }
 
 
@@ -127,9 +128,9 @@ public class TeleOp extends ResQRobotBase
         telemetry.addData("1: Left drive encoder = ", motorDriveLeft.getCurrentPosition());
         telemetry.addData("2: Right drive encoder = ", motorDriveRight.getCurrentPosition());
         */
-        telemetry.addData("3: Arm swivel encoder = ", motorArmSwivel.getCurrentPosition());
-        telemetry.addData("4: Arm joint 1 encoder = ", motorArmJoint1.getCurrentPosition());
-        telemetry.addData("5: Arm joint 2 encoder = ", motorArmJoint2.getCurrentPosition());
+        telemetry.addData("4: Arm swivel encoder = ", motorArmSwivel.getCurrentPosition());
+        telemetry.addData("5: Arm joint 1 encoder = ", motorArmJoint1.getCurrentPosition());
+        telemetry.addData("6: Arm joint 2 encoder = ", motorArmJoint2.getCurrentPosition());
     }
 
     void tunePID(PIDSettings pidSettings)
@@ -137,31 +138,31 @@ public class TeleOp extends ResQRobotBase
         //pTerm
         if (gamepad2.dpad_up)
         {
-            pidSettings.setProportionalTerm(pidSettings.getProportionalTerm() + 0.001);
+            pidSettings.setProportionalTerm(pidSettings.getProportionalTerm() + 0.000001);
         }
         else if (gamepad2.dpad_down)
         {
-            pidSettings.setProportionalTerm(pidSettings.getProportionalTerm() - 0.001);
+            pidSettings.setProportionalTerm(pidSettings.getProportionalTerm() - 0.000001);
         }
 
         //iTerm
         if (gamepad2.left_stick_y < -0.1)
         {
-            pidSettings.setIntegralTerm(pidSettings.getIntegralTerm() + 0.001);
+            pidSettings.setIntegralTerm(pidSettings.getIntegralTerm() + 0.000001);
         }
         else if (gamepad2.left_stick_y > 0.1)
         {
-            pidSettings.setIntegralTerm(pidSettings.getIntegralTerm() - 0.001);
+            pidSettings.setIntegralTerm(pidSettings.getIntegralTerm() - 0.000001);
         }
 
         //iTerm
         if (gamepad2.right_stick_y < -0.1)
         {
-            pidSettings.setDerivativeTerm(pidSettings.getDerivativeTerm() + 0.001);
+            pidSettings.setDerivativeTerm(pidSettings.getDerivativeTerm() + 0.000001);
         }
         else if (gamepad2.right_stick_y > 0.1)
         {
-            pidSettings.setDerivativeTerm(pidSettings.getDerivativeTerm() - 0.001);
+            pidSettings.setDerivativeTerm(pidSettings.getDerivativeTerm() - 0.000001);
         }
 
         telemetry.addData("1: pTerm=", pidSettings.getProportionalTerm());
@@ -173,20 +174,18 @@ public class TeleOp extends ResQRobotBase
     class  ArmSwivel
     {
         Motor motor;
-        PIDSettings headingSettings;
-        PIDController headingController;
+        double motorPower;
 
         int encoderLimitLeft;
         int encoderLimitRight;
 
         double currentEncoderTarget;
 
-        public ArmSwivel(Motor motor, PIDSettings headingSettings, int encoderLimitLeft, int encoderLimitRight)
+        public ArmSwivel(Motor motor, double motorPower, int encoderLimitLeft, int encoderLimitRight)
          {
              this.motor = motor;
 
-             this.headingSettings = headingSettings;
-             this.headingController = new PIDController(headingSettings);
+             this.motorPower = Range.clip(motorPower, 0.0, 1.0);
 
              this.encoderLimitLeft = encoderLimitLeft;
              this.encoderLimitRight = encoderLimitRight;
@@ -227,10 +226,9 @@ public class TeleOp extends ResQRobotBase
             }
 
             //Now we have determined our new target position, try to get there
-            double powerDelta = this.headingController.calculate(this.motor.getCurrentPosition(), this.currentEncoderTarget);
-            powerDelta = Range.clip(powerDelta, -1.0, 1.0);
-
-            this.motor.setPower(powerDelta);
+            this.motor.setMode(DcMotorController.RunMode.RUN_TO_POSITION); //This is redundant, just want to make sure we're in the right mode
+            this.motor.setTargetPosition( (int) this.currentEncoderTarget);
+            this.motor.setPower(this.motorPower);
         }
     }
 
