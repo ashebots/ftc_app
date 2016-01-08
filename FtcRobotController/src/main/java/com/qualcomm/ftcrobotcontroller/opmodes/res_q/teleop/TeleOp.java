@@ -33,7 +33,7 @@ public class TeleOp extends ResQRobotBase
         armJoint2 = new ArmJoint(motorArmJoint2, sensorTouchArmJoint2, 200000, 0.5);
 
         armSwivelHeadingSettings = new PIDSettings(0, 0, 0);
-        armSwivel = new ArmSwivel(motorArmSwivel, 0.2, -500, 500);
+        armSwivel = new ArmSwivel(motorArmSwivel, 1.0, -500, 500);
     }
 
 
@@ -50,43 +50,51 @@ public class TeleOp extends ResQRobotBase
     @Override
     public void loop()
     {
-        //Driving
+        //region === DRIVING === (Collapse this w/ Android Studio)
         float driveX = gamepad1.left_stick_x;
         float driveY = gamepad1.left_stick_y * -1;
-        if (gamepad1.x == false)
+        if (gamepad1.x == false) //motors default at 0.6, X button is "nitro" to 1.0
         {
             driveX *= .6f;
             driveY *= .6f;
         }
+        if (gamepad1.a == true) //reverse driving orientation
+        {
+            driveY *= -1;
+        }
         chassis.Drive(driveX, driveY);
-        // Is it possible to make a telemetry power readout for the Left and Right Motor when doing this command?
-        //brayden did this ^
+        telemetry.addData("Left motor power = ", motorDriveLeft.getPower());
+        telemetry.addData("Right motor power = ", motorDriveRight.getPower());
+        //endregion
 
 
-        //Sweeper (continuous, 0.5 is stop)
+        //region === SWEEPER === (Collapse this w/ Android Studio)
+        //(continuous, 0.5 is stop)
         boxSweeperPower = gamepad1.right_stick_y * -1;
         boxSweeperPower = (boxSweeperPower + 1) / 2; //Scales number from (-1 to +1) to (0 to 1) with 0.5 being default
         boxSweeperPower = Range.clip(boxSweeperPower, 0, 1);
         servoBoxSweeper.setPosition(boxSweeperPower);
+        //endregion
 
 
-        //Arm swivel
+        //region === ARM SWIVEL === (Collapse this w/ Android Studio)
         float swivelInput;
         if (gamepad1.dpad_left)
         {
-            swivelInput = -0.1f;
+            swivelInput = -1.0f;
         }
         else if (gamepad1.dpad_right)
         {
-            swivelInput = 0.1f;
+            swivelInput = 1.0f;
         }
         else
         {
             swivelInput = 0.0f;
         }
         armSwivel.LimitedSwivel(swivelInput);
+        //endregion
 
-        //Joint 1
+        //region === JOINT 1 === (Collapse this w/ Android Studio)
         float jointInput1;
         if(gamepad1.left_bumper)
         {
@@ -101,10 +109,9 @@ public class TeleOp extends ResQRobotBase
             jointInput1 = 0f;
         }
         armJoint1.Articulate(jointInput1);
+        //endregion
 
-
-        //Joint 2
-        //brayden did this
+        //region === JOINT 2 === (Collapse this w/ Android Studio)
         float jointInput2;
         if(gamepad1.right_bumper)
         {
@@ -119,11 +126,12 @@ public class TeleOp extends ResQRobotBase
             jointInput2 = 0f;
         }
         armJoint2.Articulate(jointInput2);
+        //endregion
 
         //Quick little hack to tune the PID controller for the arm swivel
-        tunePID(armSwivelHeadingSettings);
+        //tunePID(armSwivelHeadingSettings);
 
-        //Telemetry
+        //region === TELEMETRY === (Collapse this w/ Android Studio)
         /*
         telemetry.addData("1: Left drive encoder = ", motorDriveLeft.getCurrentPosition());
         telemetry.addData("2: Right drive encoder = ", motorDriveRight.getCurrentPosition());
@@ -131,6 +139,7 @@ public class TeleOp extends ResQRobotBase
         telemetry.addData("4: Arm swivel encoder = ", motorArmSwivel.getCurrentPosition());
         telemetry.addData("5: Arm joint 1 encoder = ", motorArmJoint1.getCurrentPosition());
         telemetry.addData("6: Arm joint 2 encoder = ", motorArmJoint2.getCurrentPosition());
+        //endregion
     }
 
     void tunePID(PIDSettings pidSettings)
@@ -170,6 +179,7 @@ public class TeleOp extends ResQRobotBase
         telemetry.addData("3: dTerm=", pidSettings.getDerivativeTerm());
     }
 
+
     //Used to represent swivelling base of arm. Note that there should only be one of these.
     class  ArmSwivel
     {
@@ -191,6 +201,9 @@ public class TeleOp extends ResQRobotBase
              this.encoderLimitRight = encoderLimitRight;
 
              this.currentEncoderTarget = motor.getCurrentPosition();
+
+
+             this.motor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
          }
 
         /* MUST BE CALLED EVERY LOOP
@@ -202,7 +215,7 @@ public class TeleOp extends ResQRobotBase
         */
         public void LimitedSwivel(double positionChangeInput)
         {
-            positionChangeInput = Range.clip(positionChangeInput,-1, 1);
+            positionChangeInput = Range.clip(positionChangeInput, -1.0, 1.0);
 
             //We are going left
             if (positionChangeInput < 0)
@@ -211,7 +224,7 @@ public class TeleOp extends ResQRobotBase
                 if (this.currentEncoderTarget > this.encoderLimitLeft)
                 {
 
-                    this.currentEncoderTarget -= positionChangeInput;
+                    this.currentEncoderTarget += positionChangeInput;
                 }
             }
             //We are going right
@@ -224,6 +237,9 @@ public class TeleOp extends ResQRobotBase
                 }
 
             }
+
+            telemetry.addData("Swivel change input = ", positionChangeInput);
+            telemetry.addData("current swivel target = ", this.currentEncoderTarget);
 
             //Now we have determined our new target position, try to get there
             this.motor.setMode(DcMotorController.RunMode.RUN_TO_POSITION); //This is redundant, just want to make sure we're in the right mode
