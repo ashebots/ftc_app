@@ -12,17 +12,18 @@ public abstract class ClimbersToMountain extends Driving
 {
     boolean leftMotorNeg;
 
-    double clearDistance = 5;
+    double clearDistance = 12;
     double buttAngle;
-    double buttDistance = 70;
-    double reverseAngle;
-    double mountDistance = 50;
+    double buttDistance = 64;
+    double mountDistance = 21;
     double mountAngle;
-    double chargeDistance = 1000;
+    double chargeDistance = 1;
+    double neg;
 
     @Override
     public void runOpMode() throws InterruptedException {
         initMotors();
+        initArm();
         initBNO055();
         systemTimeSetup();
 
@@ -35,27 +36,30 @@ public abstract class ClimbersToMountain extends Driving
         readBNO();
 
         //move forward to clear mountain
-        moveForwardCorrection(clearDistance, 1, 0.5, 0.01, 5, 2.5);
+        moveForwardCorrection(clearDistance, 1, 0.25, 0.01, 5, 2.5);
 
         //turn towards button
-        turnOnSpotPID(buttAngle, 5, 2.5, 0.5, 0.025, leftMotorNeg);
+        turnOnSpotPID(buttAngle, 5, 2.5, 0.25, 0.025, leftMotorNeg);
 
         //move toward button
-        moveForwardCorrection(buttDistance, 1, 0.5, 0.025, 5, 2.5);
+        moveForwardCorrection(buttDistance, 1, 0.25, 0.025, 5, 2.5);
 
         //insert arm code here
-
-        //turn 180
-        turnOnSpotPID(reverseAngle, 5, 2.5, 0.5, 0.025, leftMotorNeg);
+        turnTable(600*neg,0.025*neg);
+        moveArmInit();
+        while(!armFinish) {
+            moveArm(7000 ,0.25);
+        }
+        stopArm();
 
         //move to mountain
-        moveForwardCorrection(mountDistance, 1, 0.5, 0.025, 5, 2.5);
+        moveForwardCorrection(-mountDistance, -1, 0.25, 0.025, 5, 2.5);
 
         //turn towards mountain
-        turnOnSpotPID(mountAngle, 5, 2.5, 0.5, 0.025, !(leftMotorNeg));
+        turnOnSpotPID(mountAngle, 5, 2.5, 0.25, 0.025, !(leftMotorNeg));
 
         //drive up mountain
-        moveForwardCorrection(chargeDistance, 1, 0.5, 0.025, 5, 2.5);
+        moveForwardCorrection(chargeDistance, -0.5, 0.25, 0.025, 5, 2.5);
     }
 }
 

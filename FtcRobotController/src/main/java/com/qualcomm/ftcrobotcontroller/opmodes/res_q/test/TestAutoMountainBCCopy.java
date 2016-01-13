@@ -6,12 +6,11 @@ AUTHOR = Art (2015-11-10)
 
 package com.qualcomm.ftcrobotcontroller.opmodes.res_q.test;
 
-public class ClimbersToMountainRed extends ClimbersToMountain
+public class TestAutoMountainBCCopy extends TestAutoMountainCopy
 {
-    public ClimbersToMountainRed() {
-        super.buttAngle = 45;
-        super.mountAngle = -45;
+    public TestAutoMountainBCCopy() {
+        super.floorDistance = 63;
         super.leftMotorNeg = false;
-        super.neg=-1;
+        super.mountAngle = -135;
     }
 }

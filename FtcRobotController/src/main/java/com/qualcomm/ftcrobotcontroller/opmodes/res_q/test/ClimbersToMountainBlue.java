@@ -10,8 +10,8 @@ public class ClimbersToMountainBlue extends ClimbersToMountain
 {
     public ClimbersToMountainBlue() {
         super.buttAngle = -45;
-        super.reverseAngle = 135;
-        super.mountAngle = -135;
-        super.leftMotorNeg = false;
+        super.mountAngle = 45;
+        super.leftMotorNeg = true;
+        super.neg=1;
     }
 }
