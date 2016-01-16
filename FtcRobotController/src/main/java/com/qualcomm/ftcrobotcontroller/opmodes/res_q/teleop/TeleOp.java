@@ -2,13 +2,14 @@ package com.qualcomm.ftcrobotcontroller.opmodes.res_q.teleop;
 
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.shared.ResQRobotBase;
 import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
-
-import org.ashebots.ftcandroidlib.control.PIDController;
-import org.ashebots.ftcandroidlib.control.PIDSettings;
 import org.ashebots.ftcandroidlib.drive.ChassisArcade;
+import org.ashebots.ftcandroidlib.misc.Toggle;
 import org.ashebots.ftcandroidlib.motor.Motor;
+
+import java.util.Timer;
 
 public class TeleOp extends ResQRobotBase
 {
@@ -17,8 +18,15 @@ public class TeleOp extends ResQRobotBase
     ArmJoint armJoint1;
     ArmJoint armJoint2;
 
-    PIDSettings armSwivelHeadingSettings;
     ArmSwivel armSwivel;
+
+    Toggle driveOrientationToggle;
+
+    AllianceColor ourAlliance = AllianceColor.UNKNOWN; //Enum can be BLUE or RED
+
+    Servo servoLeverHitter; //hits levers that release climbers on mountain. only initialized if alliance selected
+    Toggle leverHitterToggle; //will open when true
+    double tempLeverHitterPos = 0.0; //temoporary/testing
 
     @Override
     public void init()
@@ -32,8 +40,29 @@ public class TeleOp extends ResQRobotBase
         armJoint1 = new ArmJoint(motorArmJoint1, sensorTouchArmJoint1, 200000, 0.5);
         armJoint2 = new ArmJoint(motorArmJoint2, sensorTouchArmJoint2, 200000, 0.5);
 
-        armSwivelHeadingSettings = new PIDSettings(0, 0, 0);
-        armSwivel = new ArmSwivel(motorArmSwivel, 1.0, -500, 500);
+        armSwivel = new ArmSwivel(motorArmSwivel, 1.0, -800, 800);
+
+        driveOrientationToggle = new Toggle();
+
+        leverHitterToggle = new Toggle();
+    }
+
+
+    //Called continuously after "init" button but before "play" button pressed
+    @Override public void init_loop()
+    {
+        //Select alliance
+        if (gamepad1.x) //blue button
+        {
+            ourAlliance = AllianceColor.BLUE;
+        }
+
+        if (gamepad1.b) //red button
+        {
+            ourAlliance = AllianceColor.RED;
+        }
+
+        telemetry.addData("_Alliance = ", ourAlliance);
     }
 
 
@@ -44,6 +73,12 @@ public class TeleOp extends ResQRobotBase
         motorArmSwivel.setCurrentPosition(0);
         motorArmJoint1.setCurrentPosition(0);
         motorArmJoint2.setCurrentPosition(0);
+
+        //Get servo for hitting levers, if our alliance is selected
+        if (ourAlliance == AllianceColor.BLUE || ourAlliance == AllianceColor.RED)
+        {
+            servoLeverHitter = hardwareMap.servo.get("servoLeverHitter");
+        }
     }
 
 
@@ -58,7 +93,9 @@ public class TeleOp extends ResQRobotBase
             driveX *= .6f;
             driveY *= .6f;
         }
-        if (gamepad1.a == true) //reverse driving orientation
+        //Toggle driving orientation
+        driveOrientationToggle.toggleState(gamepad1.a);
+        if (driveOrientationToggle.getState()) //reverse driving orientation
         {
             driveY *= -1;
         }
@@ -77,15 +114,67 @@ public class TeleOp extends ResQRobotBase
         //endregion
 
 
+        //region === LEVER HITTER SERVO ===
+        /*
+        if (ourAlliance != AllianceColor.UNKNOWN)
+        {
+            //Decide values for position
+            double leverHitterOpenPos = 0;
+            double leverHitterClosePos = 0;
+            if (ourAlliance == AllianceColor.BLUE)
+            {
+                //made up values
+                leverHitterOpenPos = 0.4;
+                leverHitterClosePos = 0.6;
+            }
+            else if (ourAlliance == AllianceColor.RED)
+            {
+                //made up values
+                leverHitterOpenPos = 0.4;
+                leverHitterClosePos = 0.6;
+            }
+
+            //Decide to toggle
+            leverHitterToggle.toggleState(gamepad1.y);
+
+            //Decide position/set position
+            if (leverHitterToggle.getState() == true) //open
+            {
+                servoLeverHitter.setPosition(leverHitterOpenPos);
+            }
+            else if (leverHitterToggle.getState() == false) //close
+            {
+                servoLeverHitter.setPosition(leverHitterClosePos);
+            }
+        }
+        */
+
+        //testing
+        //if (ourAlliance == AllianceColor.UNKNOWN) {
+            if (gamepad2.dpad_up)
+                tempLeverHitterPos += 0.001;
+            if (gamepad2.dpad_down)
+                tempLeverHitterPos -= 0.001;
+
+            tempLeverHitterPos = Range.clip(tempLeverHitterPos, 0.0, 1.0);
+            servoLeverHitter.setPosition(tempLeverHitterPos);
+
+            telemetry.addData("lever hitter target pos", tempLeverHitterPos);
+            telemetry.addData("__lever hitter pos = ", servoLeverHitter.getPosition());
+        //}
+
+        //endregion
+
+
         //region === ARM SWIVEL === (Collapse this w/ Android Studio)
         float swivelInput;
         if (gamepad1.dpad_left)
         {
-            swivelInput = -1.0f;
+            swivelInput = -1.3f;
         }
         else if (gamepad1.dpad_right)
         {
-            swivelInput = 1.0f;
+            swivelInput = 1.3f;
         }
         else
         {
@@ -132,51 +221,14 @@ public class TeleOp extends ResQRobotBase
         //tunePID(armSwivelHeadingSettings);
 
         //region === TELEMETRY === (Collapse this w/ Android Studio)
-        /*
-        telemetry.addData("1: Left drive encoder = ", motorDriveLeft.getCurrentPosition());
-        telemetry.addData("2: Right drive encoder = ", motorDriveRight.getCurrentPosition());
-        */
+
+        telemetry.addData("_Alliance = ", ourAlliance);
+        //telemetry.addData("1: Left drive encoder = ", motorDriveLeft.getCurrentPosition());
+        //telemetry.addData("2: Right drive encoder = ", motorDriveRight.getCurrentPosition());
         telemetry.addData("4: Arm swivel encoder = ", motorArmSwivel.getCurrentPosition());
         telemetry.addData("5: Arm joint 1 encoder = ", motorArmJoint1.getCurrentPosition());
         telemetry.addData("6: Arm joint 2 encoder = ", motorArmJoint2.getCurrentPosition());
         //endregion
-    }
-
-    void tunePID(PIDSettings pidSettings)
-    {
-        //pTerm
-        if (gamepad2.dpad_up)
-        {
-            pidSettings.setProportionalTerm(pidSettings.getProportionalTerm() + 0.000001);
-        }
-        else if (gamepad2.dpad_down)
-        {
-            pidSettings.setProportionalTerm(pidSettings.getProportionalTerm() - 0.000001);
-        }
-
-        //iTerm
-        if (gamepad2.left_stick_y < -0.1)
-        {
-            pidSettings.setIntegralTerm(pidSettings.getIntegralTerm() + 0.000001);
-        }
-        else if (gamepad2.left_stick_y > 0.1)
-        {
-            pidSettings.setIntegralTerm(pidSettings.getIntegralTerm() - 0.000001);
-        }
-
-        //iTerm
-        if (gamepad2.right_stick_y < -0.1)
-        {
-            pidSettings.setDerivativeTerm(pidSettings.getDerivativeTerm() + 0.000001);
-        }
-        else if (gamepad2.right_stick_y > 0.1)
-        {
-            pidSettings.setDerivativeTerm(pidSettings.getDerivativeTerm() - 0.000001);
-        }
-
-        telemetry.addData("1: pTerm=", pidSettings.getProportionalTerm());
-        telemetry.addData("2: iTerm=", pidSettings.getIntegralTerm());
-        telemetry.addData("3: dTerm=", pidSettings.getDerivativeTerm());
     }
 
 
@@ -215,7 +267,7 @@ public class TeleOp extends ResQRobotBase
         */
         public void LimitedSwivel(double positionChangeInput)
         {
-            positionChangeInput = Range.clip(positionChangeInput, -1.0, 1.0);
+            positionChangeInput = Range.clip(positionChangeInput, -10.0, 10.0);
 
             //We are going left
             if (positionChangeInput < 0)

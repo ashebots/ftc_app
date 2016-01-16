@@ -43,6 +43,13 @@ public abstract class ResQRobotBase extends OpMode
 
 
 
+    public enum AllianceColor {
+        UNKNOWN,
+        BLUE,
+        RED
+    }
+
+
     @Override
     public void init()
     {
