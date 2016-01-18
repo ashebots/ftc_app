@@ -231,7 +231,7 @@ public abstract class Driving extends LinearOpMode {
 
         armMotor2.setPower(power);
 
-        if (armMotor2.getCurrentPosition()-armOff > distance) {
+        if (-distance > armMotor2.getCurrentPosition()-armOff || armMotor2.getCurrentPosition()-armOff > distance) {
             armFinish = true;
         }
     }

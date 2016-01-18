@@ -48,22 +48,6 @@ public class TeleOp extends ResQRobotBase
     }
 
 
-    //Called continuously after "init" button but before "play" button pressed
-    @Override public void init_loop()
-    {
-        //Select alliance
-        if (gamepad1.x) //blue button
-        {
-            ourAlliance = AllianceColor.BLUE;
-        }
-
-        if (gamepad1.b) //red button
-        {
-            ourAlliance = AllianceColor.RED;
-        }
-
-        telemetry.addData("_Alliance = ", ourAlliance);
-    }
 
 
     @Override
@@ -75,10 +59,7 @@ public class TeleOp extends ResQRobotBase
         motorArmJoint2.setCurrentPosition(0);
 
         //Get servo for hitting levers, if our alliance is selected
-        if (ourAlliance == AllianceColor.BLUE || ourAlliance == AllianceColor.RED)
-        {
-            servoLeverHitter = hardwareMap.servo.get("servoLeverHitter");
-        }
+        servoLeverHitter = hardwareMap.servo.get("servoLeverHitter");
     }
 
 
@@ -116,6 +97,22 @@ public class TeleOp extends ResQRobotBase
 
         //region === LEVER HITTER SERVO ===
         /*
+        //Select alliance
+        if (gamepad2.x) //blue button
+        {
+            ourAlliance = AllianceColor.BLUE;
+        }
+
+        if (gamepad2.b) //red button
+        {
+            ourAlliance = AllianceColor.RED;
+        }
+
+        telemetry.addData("_Alliance = ", ourAlliance);
+        */
+
+        //If alliance chosen, move servo to open or close pos, depending on state of toggle
+        /*
         if (ourAlliance != AllianceColor.UNKNOWN)
         {
             //Decide values for position
@@ -150,18 +147,13 @@ public class TeleOp extends ResQRobotBase
         */
 
         //testing
-        //if (ourAlliance == AllianceColor.UNKNOWN) {
-            if (gamepad2.dpad_up)
-                tempLeverHitterPos += 0.001;
-            if (gamepad2.dpad_down)
-                tempLeverHitterPos -= 0.001;
+        tempLeverHitterPos += 0.005 * gamepad2.left_stick_y;
 
-            tempLeverHitterPos = Range.clip(tempLeverHitterPos, 0.0, 1.0);
-            servoLeverHitter.setPosition(tempLeverHitterPos);
+        tempLeverHitterPos = Range.clip(tempLeverHitterPos, 0.0, 1.0);
+        servoLeverHitter.setPosition(tempLeverHitterPos);
 
-            telemetry.addData("lever hitter target pos", tempLeverHitterPos);
-            telemetry.addData("__lever hitter pos = ", servoLeverHitter.getPosition());
-        //}
+        telemetry.addData("lever hitter target pos", tempLeverHitterPos);
+        telemetry.addData("__lever hitter pos = ", servoLeverHitter.getPosition());
 
         //endregion
 

@@ -6,6 +6,7 @@
     <LegacyModuleController name="Legacy Module 1" serialNumber="AL00XQF6">
         <TouchSensor name="sensorTouchArmJoint1" port="1" />
         <TouchSensor name="sensorTouchArmJoint2" port="2" />
+        <UltrasonicSensor name="sensorUltrasonicFront" port="5" />
     </LegacyModuleController>
     <MotorController name="arm joints" serialNumber="AL00XTNK">
         <Motor name="motorArmJoint2" port="1" />

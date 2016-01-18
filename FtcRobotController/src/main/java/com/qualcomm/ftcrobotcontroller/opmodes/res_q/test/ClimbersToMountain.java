@@ -12,12 +12,12 @@ public abstract class ClimbersToMountain extends Driving
 {
     boolean leftMotorNeg;
 
-    double clearDistance = 12;
+    double clearDistance = 13.5;
     double buttAngle;
-    double buttDistance = 64;
-    double mountDistance = 21;
+    double buttDistance = 65.5;
+    double mountDistance = 18;
     double mountAngle;
-    double chargeDistance = 1;
+    double chargeDistance = 50;
     double neg;
 
     @Override
@@ -48,18 +48,16 @@ public abstract class ClimbersToMountain extends Driving
         turnTable(600*neg,0.025*neg);
         moveArmInit();
         while(!armFinish) {
-            moveArm(7000 ,0.25);
+            moveArm(8500 ,0.25);
+        }
+        Thread.sleep(2000);
+        stopArm();
+        turnTable(-600*neg,-0.025*neg);
+        moveArmInit();
+        while(!armFinish) {
+            moveArm(8500, -0.25);
         }
         stopArm();
-
-        //move to mountain
-        moveForwardCorrection(-mountDistance, -1, 0.25, 0.025, 5, 2.5);
-
-        //turn towards mountain
-        turnOnSpotPID(mountAngle, 5, 2.5, 0.25, 0.025, !(leftMotorNeg));
-
-        //drive up mountain
-        moveForwardCorrection(chargeDistance, -0.5, 0.25, 0.025, 5, 2.5);
     }
 }
 
