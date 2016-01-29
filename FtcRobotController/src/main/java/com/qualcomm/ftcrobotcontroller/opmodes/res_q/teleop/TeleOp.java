@@ -72,7 +72,7 @@ public class TeleOp extends ResQRobotBase
         //endregion
 
         //region === PLOW ===
-
+        /*
         //Toggle target state for plow
         if (gamepad1.right_trigger > 0.3)
         {
@@ -92,6 +92,7 @@ public class TeleOp extends ResQRobotBase
         {
 
         }
+        */
 
 
         //endregion
@@ -100,6 +101,7 @@ public class TeleOp extends ResQRobotBase
 
         //region === LEVER HITTER SERVOS ===
 
+        /*
         //LEFT
         leverHitterPosL += 0.005 * gamepad2.left_stick_y;
 
@@ -130,5 +132,6 @@ public class TeleOp extends ResQRobotBase
         //telemetry.addData("1: Left drive encoder = ", motorDriveLeft.getCurrentPosition());
         //telemetry.addData("2: Right drive encoder = ", motorDriveRight.getCurrentPosition());
         //endregion
+        */
     }
 }

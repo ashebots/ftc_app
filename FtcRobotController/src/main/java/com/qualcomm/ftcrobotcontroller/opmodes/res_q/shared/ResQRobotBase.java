@@ -6,6 +6,7 @@ import android.content.Context;
 import android.hardware.SensorManager;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.ashebots.ftcandroidlib.motor.Motor;
@@ -47,17 +48,19 @@ public abstract class ResQRobotBase extends OpMode
         sensorAccelerometer = new AccelerometerSensor(appContext, sensorManager, SensorManager.SENSOR_DELAY_FASTEST, 7.0f);
         */
         motorDriveLeft = new Motor(hardwareMap.dcMotor.get("motorDriveLeft"));
+        motorDriveLeft.setDirection(DcMotor.Direction.REVERSE);
         motorDriveRight = new Motor(hardwareMap.dcMotor.get("motorDriveRight"));
 
 
         motorArm = new Motor(hardwareMap.dcMotor.get("armMotor"));
 
-
+        /*
         servoLeverHitterLeft = hardwareMap.servo.get("leverHitterL");
         servoLeverHitterRight = hardwareMap.servo.get("leverHitterR");
 
         servoPlowLeft = hardwareMap.servo.get("plowL");
         servoPlowRight = hardwareMap.servo.get("plowR");
+        */
     }
 
 
