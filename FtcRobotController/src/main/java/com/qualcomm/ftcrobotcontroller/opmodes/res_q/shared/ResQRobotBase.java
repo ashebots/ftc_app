@@ -4,18 +4,10 @@ package com.qualcomm.ftcrobotcontroller.opmodes.res_q.shared;
 import android.app.Application;
 import android.content.Context;
 import android.hardware.SensorManager;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 
-import org.ashebots.ftcandroidlib.control.PIDController;
-import org.ashebots.ftcandroidlib.control.PIDSettings;
 import org.ashebots.ftcandroidlib.motor.Motor;
 
 import java.lang.reflect.Method;
@@ -25,21 +17,17 @@ public abstract class ResQRobotBase extends OpMode
     public Context appContext; //Android "Context" of RC app
     public SensorManager sensorManager; //Used for Android sensors
 
-    public AccelerometerSensor sensorAccelerometer;
-
     public Motor motorDriveLeft;
     public Motor motorDriveRight;
 
-    public Motor motorArmJoint1; //First arm joint, one closest to robot
-    public Motor motorArmJoint2; //Second arm join, one farthest from robot
-    public Motor motorArmSwivel; //Motor that turns the arm's lazy-susan base
+    public Motor motorArm; //Single motor to control to arm thingy
 
-    //public Motor motorBoxSweeper;
-    public Servo servoBoxSweeper; //This is a continuous servo, so I THINK 0.5 = stop (0.0 to 1.0)
-    public float boxSweeperPower = 0.5f; //Represents current power assigned to continuous servo (0 to 1, 0.5 is stopped)
+    public Servo servoLeverHitterLeft; //Refers to left "drive side"
+    public Servo servoLeverHitterRight; //Refers to right "drive side"
 
-    public TouchSensor sensorTouchArmJoint1; //Sensor to detect when the first arm join is fully closed
-    public TouchSensor sensorTouchArmJoint2; //Sensor to detect when the second arm join is fully closed
+    public Servo servoPlowLeft; //Refers to left "drive side"
+    public Servo servoPlowRight; //Refers to right "drive side"
+
 
 
 
@@ -58,25 +46,18 @@ public abstract class ResQRobotBase extends OpMode
         sensorManager = (SensorManager) appContext.getSystemService(Context.SENSOR_SERVICE);
         sensorAccelerometer = new AccelerometerSensor(appContext, sensorManager, SensorManager.SENSOR_DELAY_FASTEST, 7.0f);
         */
-
         motorDriveLeft = new Motor(hardwareMap.dcMotor.get("motorDriveLeft"));
         motorDriveRight = new Motor(hardwareMap.dcMotor.get("motorDriveRight"));
-        motorDriveRight.setDirection(DcMotor.Direction.REVERSE);
 
-        motorArmJoint1 = new Motor(hardwareMap.dcMotor.get("motorArmJoint1"));
-        motorArmJoint1.setDirection(DcMotor.Direction.REVERSE);
-        motorArmJoint2 = new Motor(hardwareMap.dcMotor.get("motorArmJoint2"));
-        motorArmJoint2.setDirection(DcMotor.Direction.REVERSE);
 
-        motorArmSwivel = new Motor(hardwareMap.dcMotor.get("motorArmSwivel"));
-        motorArmSwivel.setDirection(DcMotor.Direction.REVERSE);
-        motorArmSwivel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        motorArm = new Motor(hardwareMap.dcMotor.get("armMotor"));
 
-        //motorBoxSweeper = new Motor(hardwareMap.dcMotor.get("motorBoxSweeper"));
-        servoBoxSweeper = hardwareMap.servo.get("servoBoxSweeper");
 
-        sensorTouchArmJoint1 = hardwareMap.touchSensor.get("sensorTouchArmJoint1");
-        sensorTouchArmJoint2 = hardwareMap.touchSensor.get("sensorTouchArmJoint2");
+        servoLeverHitterLeft = hardwareMap.servo.get("leverHitterL");
+        servoLeverHitterRight = hardwareMap.servo.get("leverHitterR");
+
+        servoPlowLeft = hardwareMap.servo.get("plowL");
+        servoPlowRight = hardwareMap.servo.get("plowR");
     }
 
 
