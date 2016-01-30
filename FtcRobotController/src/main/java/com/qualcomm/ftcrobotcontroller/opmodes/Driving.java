@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.ftcrobotcontroller.opmodes.BNO055LIB;
+import com.qualcomm.robotcore.hardware.Servo;
 
 
 public abstract class Driving extends LinearOpMode {
@@ -17,9 +18,7 @@ public abstract class Driving extends LinearOpMode {
 
     DcMotor motorRight;
     DcMotor motorLeft;
-    DcMotor armMotor1;
-    DcMotor armMotor2;
-    DcMotor TurnTable;
+    //public Servo armServo;
     BNO055LIB boschBNO055;
 
     volatile double[] rollAngle = new double[2], pitchAngle = new double[2], yawAngle = new double[2];
@@ -36,16 +35,7 @@ public abstract class Driving extends LinearOpMode {
     }
 
     public void initArm() {
-        armMotor1 = hardwareMap.dcMotor.get("motorArmJoint1");
-        armMotor2 = hardwareMap.dcMotor.get("motorArmJoint2");
-        TurnTable = hardwareMap.dcMotor.get("motorArmSwivel");
-
-        armMotor1.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        armMotor2.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        TurnTable.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-
-        armMotor1.setDirection(DcMotor.Direction.REVERSE);
-        armMotor2.setDirection(DcMotor.Direction.REVERSE);
+        //armServo = hardwareMap.servo.get("armServo");
     }
 
     public void initBNO055() {
@@ -125,15 +115,6 @@ public abstract class Driving extends LinearOpMode {
         }
     }
 
-    public void turnTable(double distance, double power) throws InterruptedException {
-        TurnTable.setPower(power);
-        double offset = TurnTable.getCurrentPosition();
-        while((distance > 0 && TurnTable.getCurrentPosition()-offset < distance) || (TurnTable.getCurrentPosition()-offset > distance && distance < 0)) {
-            waitOneFullHardwareCycle();
-        }
-        TurnTable.setPower(0);
-    }
-
     public void moveForward(double distance, double power) throws InterruptedException {
         motorLeft.setPower(power);
         motorRight.setPower(power);
@@ -198,15 +179,18 @@ public abstract class Driving extends LinearOpMode {
 
         readBNO();
 
-        if (yawAngle[0] > keepAngle + correctTrigger || keepAngle - correctTrigger > yawAngle[0]) {
+        if (!turnTriggered && (yawAngle[0] > keepAngle + correctTrigger || keepAngle - correctTrigger > yawAngle[0])) {
             turnTriggered = true;
             turnBackgroundInit();
         }
         if (turnTriggered) {
-            turnBackground(keepAngle, correctRange, restorePower, (keepAngle - yawAngle[0] > 0));
+            turnBackground(keepAngle, correctRange, restorePower, (keepAngle - yawAngle[0] < 0));
         } else {
             motorLeft.setPower(power);
             motorRight.setPower(power);
+        }
+        if (turnFinish) {
+            turnTriggered = false;
         }
 
         waitOneFullHardwareCycle();
@@ -218,25 +202,4 @@ public abstract class Driving extends LinearOpMode {
 
     double armOff;
     protected boolean armFinish = true;
-
-    public void moveArmInit() {
-        armOff = armMotor2.getCurrentPosition();
-        armFinish = false;
-    }
-
-    public void moveArm(double distance, double power) throws InterruptedException {
-        telemetry.addData("Arm", armMotor2.getCurrentPosition()-armOff);
-
-        waitOneFullHardwareCycle();
-
-        armMotor2.setPower(power);
-
-        if (-distance > armMotor2.getCurrentPosition()-armOff || armMotor2.getCurrentPosition()-armOff > distance) {
-            armFinish = true;
-        }
-    }
-
-    public void stopArm() {
-        armMotor2.setPower(0);
-    }
 }
