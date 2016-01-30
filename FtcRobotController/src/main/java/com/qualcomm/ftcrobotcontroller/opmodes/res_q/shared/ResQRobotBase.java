@@ -40,8 +40,8 @@ public abstract class ResQRobotBase extends OpMode
         sensorAccelerometer = new AccelerometerSensor(appContext, sensorManager, SensorManager.SENSOR_DELAY_FASTEST, 7.0f);
         */
         motorDriveLeft = new Motor(hardwareMap.dcMotor.get("motorDriveLeft"));
-        motorDriveLeft.setDirection(DcMotor.Direction.REVERSE);
         motorDriveRight = new Motor(hardwareMap.dcMotor.get("motorDriveRight"));
+        motorDriveRight.setDirection(DcMotor.Direction.REVERSE);
 
 
         //motorArm = new Motor(hardwareMap.dcMotor.get("armMotor")); //DISABLED DUE TO HARDWARE
@@ -52,8 +52,8 @@ public abstract class ResQRobotBase extends OpMode
         servoLeverHitterRight = hardwareMap.servo.get("leverHitterR");
 
         servoPlowLeft = hardwareMap.servo.get("plowL");
-        servoPlowLeft.setDirection(Servo.Direction.REVERSE); //Should be that 0 is down //Unsure which should be reversed
         servoPlowRight = hardwareMap.servo.get("plowR");
+        servoPlowRight.setDirection(Servo.Direction.REVERSE); //Should be that 0 is down //Unsure which should be reversed
 
     }
 

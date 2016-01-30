@@ -126,8 +126,8 @@ public class TeleOp extends ResQRobotBase
 //NOTE: one should already be reversed
 class LeverHitter
 {
-    static double MAX_POS = 0.9;
-    static double MIN_POS = 0.01;
+    static double MAX_POS = 1.0;
+    static double MIN_POS = 0.0;
     static double START_POS = 0.8;
 
     double currentPos; //will be initialized
