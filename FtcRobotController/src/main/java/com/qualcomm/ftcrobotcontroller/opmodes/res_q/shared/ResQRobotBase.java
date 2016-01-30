@@ -31,14 +31,6 @@ public abstract class ResQRobotBase extends OpMode
 
 
 
-
-    public enum AllianceColor {
-        UNKNOWN,
-        BLUE,
-        RED
-    }
-
-
     @Override
     public void init()
     {
@@ -52,15 +44,17 @@ public abstract class ResQRobotBase extends OpMode
         motorDriveRight = new Motor(hardwareMap.dcMotor.get("motorDriveRight"));
 
 
-        motorArm = new Motor(hardwareMap.dcMotor.get("armMotor"));
+        //motorArm = new Motor(hardwareMap.dcMotor.get("armMotor")); //DISABLED DUE TO HARDWARE
 
-        /*
+
         servoLeverHitterLeft = hardwareMap.servo.get("leverHitterL");
+        servoLeverHitterLeft.setDirection(Servo.Direction.REVERSE); //Should be that 0 is down //Unsure which should be reversed
         servoLeverHitterRight = hardwareMap.servo.get("leverHitterR");
 
         servoPlowLeft = hardwareMap.servo.get("plowL");
+        servoPlowLeft.setDirection(Servo.Direction.REVERSE); //Should be that 0 is down //Unsure which should be reversed
         servoPlowRight = hardwareMap.servo.get("plowR");
-        */
+
     }
 
 

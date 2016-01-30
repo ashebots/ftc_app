@@ -3,13 +3,11 @@ package com.qualcomm.ftcrobotcontroller.opmodes.res_q.teleop;
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.shared.ResQRobotBase;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 import org.ashebots.ftcandroidlib.drive.ChassisArcade;
 import org.ashebots.ftcandroidlib.misc.Toggle;
 import org.ashebots.ftcandroidlib.motor.Motor;
 
-import java.util.Timer;
 
 public class TeleOp extends ResQRobotBase
 {
@@ -17,14 +15,21 @@ public class TeleOp extends ResQRobotBase
 
     Toggle driveOrientationToggle;
 
-    AllianceColor ourAlliance = AllianceColor.UNKNOWN; //Enum can be BLUE or RED
+    //Both servos share position, 'cause one is software reversed
+    //TODO: add actual positons
+    /* USED FOR NON-CONTINUOUS SERVOS, SO NOT RIGHT NOW
+    static double plowPosMax = 0.9; //upper position bound
+    static double plowPosMin = 0.1; //lower position bound
+
+    static double plowPosUp = 0.6;  //automatic go-to-pos up position
+    static double plowPosDown = 0.4;//automatic go-to-pos down position
+
+    double plowPosCurrent = plowPosUp; //initial position
+    */
 
 
-    boolean plowIsDown = false; //true is down ready to push, false is up and out of way
-
-    //TODO: add actual defaults
-    double leverHitterPosL = 0.0;
-    double leverHitterPosR = 0.0;
+    LeverHitter leverHitterLeft;
+    LeverHitter leverHitterRight;
 
     @Override
     public void init()
@@ -36,6 +41,9 @@ public class TeleOp extends ResQRobotBase
         chassis = new ChassisArcade(motorDriveLeft, motorDriveRight);
 
         driveOrientationToggle = new Toggle();
+
+        leverHitterLeft = new LeverHitter("Left", servoLeverHitterLeft);
+        leverHitterRight = new LeverHitter("Right", servoLeverHitterRight);
     }
 
 
@@ -67,33 +75,27 @@ public class TeleOp extends ResQRobotBase
         //region === ARM === (Collapse this w/ Android Studio)
 
         //TODO: ADD LIMITS
-        motorArm.setPower(gamepad1.right_stick_y * -1);
+        //motorArm.setPower(gamepad1.right_stick_y * -1); //CURRENTLY DISABLED BECAUSE MECHANICAL
 
         //endregion
 
+
         //region === PLOW ===
-        /*
-        //Toggle target state for plow
-        if (gamepad1.right_trigger > 0.3)
+
+        //Driver ONE uses RIGHT bumper/trigger to move plow to default up/down positions
+        double plowPower = 0.5;
+        if (gamepad1.right_bumper) //Going up overrides going down
         {
-            plowIsDown = true;
+            plowPower = 0.7;
         }
-        else if (gamepad1.right_bumper)
+        else if (gamepad1.right_trigger > 0.3)
         {
-            plowIsDown = false;
+            plowPower = 0.3;
         }
 
-        //Make sure plow is in target pos, based on state
-        if (plowIsDown)
-        {
-
-        }
-        else //plow up (plowIsDown == false)
-        {
-
-        }
-        */
-
+        //Make sure target pos within range, then move
+        servoPlowLeft.setPosition(plowPower);
+        servoPlowRight.setPosition(plowPower);
 
         //endregion
 
@@ -101,37 +103,64 @@ public class TeleOp extends ResQRobotBase
 
         //region === LEVER HITTER SERVOS ===
 
-        /*
-        //LEFT
-        leverHitterPosL += 0.005 * gamepad2.left_stick_y;
-
-        leverHitterPosL = Range.clip(leverHitterPosL, 0.0, 1.0);
-        servoLeverHitterLeft.setPosition(leverHitterPosL);
-
-        telemetry.addData("left lever hitter target pos", leverHitterPosL);
-        telemetry.addData("left lever hitter pos = ", servoLeverHitterLeft.getPosition());
-
-        //RIGHT
-        leverHitterPosR += 0.005 * gamepad2.right_stick_y;
-
-        leverHitterPosR = Range.clip(leverHitterPosR, 0.0, 1.0);
-        servoLeverHitterRight.setPosition(leverHitterPosR);
-
-        telemetry.addData("right lever hitter target pos", leverHitterPosR);
-        telemetry.addData("right lever hitter pos = ", servoLeverHitterRight.getPosition());
+        leverHitterLeft.loop(gamepad2.left_stick_y * -1, gamepad2.left_bumper);
+        leverHitterRight.loop(gamepad2.right_stick_y * -1, gamepad2.right_bumper);
 
         //endregion
-
-
-        //Quick little hack to tune the PID controller for the arm swivel
-        //tunePID(armSwivelHeadingSettings);
 
         //region === TELEMETRY === (Collapse this w/ Android Studio)
 
-        telemetry.addData("_Alliance = ", ourAlliance);
-        //telemetry.addData("1: Left drive encoder = ", motorDriveLeft.getCurrentPosition());
-        //telemetry.addData("2: Right drive encoder = ", motorDriveRight.getCurrentPosition());
+        telemetry.addData("1: Left lever hitter pos = ", servoLeverHitterLeft.getPosition());
+        telemetry.addData("2: Right lever hitter pos = ", servoLeverHitterRight.getPosition());
+
+        telemetry.addData("3: Left plow pos = ", servoPlowLeft.getPosition());
+        telemetry.addData("4: Right plow pos = ", servoPlowRight.getPosition());
+
+        telemetry.addData("5: Left drive encoder = ", motorDriveLeft.getCurrentPosition());
+        telemetry.addData("6: Right drive encoder = ", motorDriveRight.getCurrentPosition());
         //endregion
-        */
+
+    }
+}
+
+//NOTE: one should already be reversed
+class LeverHitter
+{
+    static double MAX_POS = 0.9;
+    static double MIN_POS = 0.01;
+    static double START_POS = 0.8;
+
+    double currentPos; //will be initialized
+
+    String readableName = "";
+
+    //Refence should be passed already initialized and possibly reversed
+    Servo servo;
+
+    public LeverHitter(String readableName, Servo servo)
+    {
+        this.readableName = readableName;
+        this.servo = servo;
+
+        this.currentPos = this.START_POS;
+    }
+
+    //variableInput: positive is up, negative is down
+    public void loop(double variableInput, boolean upOverride)
+    {
+        if (upOverride)
+        {
+            this.currentPos = this.START_POS;
+        }
+
+        this.currentPos += 0.005 * variableInput;
+        this.currentPos = Range.clip(this.currentPos, this.MIN_POS, this.MAX_POS);
+
+        this.servo.setPosition(currentPos);
+    }
+
+    public double getCurrentPos()
+    {
+        return this.currentPos;
     }
 }
