@@ -82,6 +82,8 @@ public class FtcOpModeRegister implements OpModeRegister {
 
     manager.register("Strategy Test", StrategyTest.class);
 
+    manager.register("Sonic", SonicRobotEyes.class);
+
     /*
      * The following op modes are example op modes provided by QualComm.
      * Uncomment the lines to make the op modes available to the driver station.
