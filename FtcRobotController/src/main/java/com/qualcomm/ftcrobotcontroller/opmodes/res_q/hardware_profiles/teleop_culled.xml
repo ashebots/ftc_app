@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<Robot>
+    <MotorController name="arm" serialNumber="AL00XUMH">
+        <Motor name="armMotor" port="1" />
+    </MotorController>
+    <MotorController name="drive" serialNumber="AL00YD77">
+        <Motor name="motorDriveLeft" port="1" />
+        <Motor name="motorDriveRight" port="2" />
+    </MotorController>
+</Robot>
