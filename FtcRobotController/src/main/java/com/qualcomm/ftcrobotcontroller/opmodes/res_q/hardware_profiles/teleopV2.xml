@@ -14,6 +14,7 @@
     <ServoController name="Servo Controller 4" serialNumber="AL00VEMH">
         <Servo name="leverHitterR" port="1" />
         <Servo name="plowL" port="3" />
+        <Servo name="servoArm" port="4" />
         <Servo name="plowR" port="5" />
         <Servo name="leverHitterL" port="6" />
     </ServoController>

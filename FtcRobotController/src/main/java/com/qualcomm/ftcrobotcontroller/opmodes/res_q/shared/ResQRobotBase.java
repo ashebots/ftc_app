@@ -22,6 +22,7 @@ public abstract class ResQRobotBase extends OpMode
     public Motor motorDriveRight;
 
     public Motor motorArm; //Single motor to control to arm thingy
+    public Servo servoArm; //Temporary servo arm to dump climbers. CONTINUOUS
 
     public Servo servoLeverHitterLeft; //Refers to left "drive side"
     public Servo servoLeverHitterRight; //Refers to right "drive side"
@@ -45,6 +46,8 @@ public abstract class ResQRobotBase extends OpMode
 
 
         //motorArm = new Motor(hardwareMap.dcMotor.get("armMotor")); //DISABLED DUE TO HARDWARE
+        servoArm = hardwareMap.servo.get("servoArm");
+        servoArm.setDirection(Servo.Direction.REVERSE);
 
 
         servoLeverHitterLeft = hardwareMap.servo.get("leverHitterL");

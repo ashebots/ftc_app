@@ -74,6 +74,9 @@ public class TeleOp extends ResQRobotBase
 
         //region === ARM === (Collapse this w/ Android Studio)
 
+        //TEMPORARY SERVO ARM
+        servoArm.setPosition(0.5 + (gamepad1.right_stick_y / 6) * -1); //temporary servo
+
         //TODO: ADD LIMITS
         //motorArm.setPower(gamepad1.right_stick_y * -1); //CURRENTLY DISABLED BECAUSE MECHANICAL
 
