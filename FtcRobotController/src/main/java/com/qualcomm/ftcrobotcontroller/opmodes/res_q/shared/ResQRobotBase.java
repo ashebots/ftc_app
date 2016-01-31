@@ -52,8 +52,8 @@ public abstract class ResQRobotBase extends OpMode
         servoLeverHitterRight = hardwareMap.servo.get("leverHitterR");
 
         servoPlowLeft = hardwareMap.servo.get("plowL");
+        servoPlowLeft.setDirection(Servo.Direction.REVERSE); //Should be that 0 is down //Unsure which should be reversed
         servoPlowRight = hardwareMap.servo.get("plowR");
-        servoPlowRight.setDirection(Servo.Direction.REVERSE); //Should be that 0 is down //Unsure which should be reversed
 
     }
 

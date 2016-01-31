@@ -128,7 +128,7 @@ class LeverHitter
 {
     static double MAX_POS = 1.0;
     static double MIN_POS = 0.0;
-    static double START_POS = 0.8;
+    static double START_POS = 0.9;
 
     double currentPos; //will be initialized
 
@@ -142,7 +142,7 @@ class LeverHitter
         this.readableName = readableName;
         this.servo = servo;
 
-        this.currentPos = this.START_POS;
+        this.currentPos = LeverHitter.START_POS;
     }
 
     //variableInput: positive is up, negative is down
@@ -150,11 +150,11 @@ class LeverHitter
     {
         if (upOverride)
         {
-            this.currentPos = this.START_POS;
+            this.currentPos = LeverHitter.START_POS;
         }
 
         this.currentPos += 0.005 * variableInput;
-        this.currentPos = Range.clip(this.currentPos, this.MIN_POS, this.MAX_POS);
+        this.currentPos = Range.clip(this.currentPos, LeverHitter.MIN_POS, LeverHitter.MAX_POS);
 
         this.servo.setPosition(currentPos);
     }
