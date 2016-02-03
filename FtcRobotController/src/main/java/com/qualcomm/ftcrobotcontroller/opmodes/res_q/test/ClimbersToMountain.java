@@ -21,9 +21,9 @@ public abstract class ClimbersToMountain extends Driving
     int ultrasonicPortL = 4;
     int ultrasonicPortR = 5;
 
-    double neg;
+    Servo LeverHitterL;
 
-    double servoPosition = 0;
+    double neg;
 
     double start2Turn = 12;
     double turn2Push = -45;
@@ -31,8 +31,6 @@ public abstract class ClimbersToMountain extends Driving
     double wall2Perp = 0;
     double perp2Basket = 6;
     double basket2Arm = 90;
-
-    double armDistance = 7000;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -49,17 +47,23 @@ public abstract class ClimbersToMountain extends Driving
         PlowL = hardwareMap.servo.get("plowL");
         PlowR = hardwareMap.servo.get("plowR");
 
+        LeverHitterL = hardwareMap.servo.get("leverHitterL");
+
         waitForStart();
 
+        LeverHitterL.setPosition(0.9);
+        armServo.setPosition(0.5);
+
         readBNO();
 
-        Thread.sleep(0);
-
-        readBNO();
-
-        PlowL.setPosition(servoPosition);
-        PlowR.setPosition(1-servoPosition);
-
+        PlowL.setPosition(0.1);
+        PlowR.setPosition(0.1);
+        Thread.sleep(250);
+        PlowL.setPosition(0.6);
+        PlowR.setPosition(0.6);
+        Thread.sleep(50);
+        PlowL.setPosition(0.5);
+        PlowR.setPosition(0.5);
 
         //move forward to clear mountain
         telemetry.addData("Clearing...",0);
@@ -86,8 +90,9 @@ public abstract class ClimbersToMountain extends Driving
         //insert arm code here
         telemetry.addData("Dumping...",0);
         turnOnSpot(basket2Arm * neg, 2.5, 0.5, true);
-        //armServo.setPosition(0.6);
-
+        armServo.setPosition(0.6);
+        Thread.sleep(1000);
+        armServo.setPosition(0.5);
     }
 }
 

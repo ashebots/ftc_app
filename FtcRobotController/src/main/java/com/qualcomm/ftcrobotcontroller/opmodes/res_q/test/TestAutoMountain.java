@@ -26,18 +26,7 @@ public abstract class TestAutoMountain extends Driving
 
         readBNO();
 
-        Thread.sleep(0);
-
-        //move forward in front of mountain
-        moveForwardCorrection(floorDistance, 1, 0.5, 0.01, 5, 2.5);
-
-        readBNO();
-
-        //turn towards mountain
-        turnOnSpotPID(mountAngle, 5, 2.5, 0.5, 0.025, leftMotorNeg);
-
-        // charge up mountain
-        moveForwardCorrection(mountDistance, 1, 0.5, 0.025, 5, 2.5);
+        Thread.sleep(2000);
     }
 }
 

@@ -63,8 +63,9 @@ public class FtcOpModeRegister implements OpModeRegister {
     //manager.register("Cascade Effect TeleOp", CascadeEffectTeleop.class);
     //manager.register("Telemetry Test", TelemetryTest.class);
     manager.register("TeleOp", TeleOp.class);
+
+    manager.register("Nothing Happens!!!", TestAutoMountainBC.class);
     /*
-    manager.register("Blue Autonomous to Blue", TestAutoMountainBC.class);
     manager.register("Blue Autonomous to Red", TestAutoMountainBF.class);
     manager.register("Red Autonomous to Red", TestAutoMountainRC.class);
     manager.register("Red Autonomous to Blue", TestAutoMountainRF.class);
@@ -86,7 +87,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("Strategy Test", StrategyTest.class);
     */
 
-    manager.register("Sonic", SonicRobotEyes.class);
+    //manager.register("Sonic", SonicRobotEyes.class);
 
     /*
      * The following op modes are example op modes provided by QualComm.
