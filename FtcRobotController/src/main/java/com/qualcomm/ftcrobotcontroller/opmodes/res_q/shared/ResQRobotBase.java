@@ -22,13 +22,11 @@ public abstract class ResQRobotBase extends OpMode
     public Motor motorDriveRight;
 
     public Motor motorArm; //Single motor to control to arm thingy
-    public Servo servoArm; //Temporary servo arm to dump climbers. CONTINUOUS
+
+    public Motor motorWheelieBar;
 
     public Servo servoLeverHitterLeft; //Refers to left "drive side"
     public Servo servoLeverHitterRight; //Refers to right "drive side"
-
-    public Servo servoPlowLeft; //Refers to left "drive side"
-    public Servo servoPlowRight; //Refers to right "drive side"
 
 
 
@@ -45,19 +43,17 @@ public abstract class ResQRobotBase extends OpMode
         motorDriveRight.setDirection(DcMotor.Direction.REVERSE);
 
 
-        //motorArm = new Motor(hardwareMap.dcMotor.get("armMotor")); //DISABLED DUE TO HARDWARE
-        servoArm = hardwareMap.servo.get("servoArm");
-        servoArm.setDirection(Servo.Direction.REVERSE);
+        motorArm = new Motor(hardwareMap.dcMotor.get("armMotor")); //DISABLED DUE TO HARDWARE
+        motorArm.setDirection(DcMotor.Direction.REVERSE);
+
+        //motorWheelieBar = new Motor(hardwareMap.dcMotor.get("wheelieMotor"));
+        //servoArm = hardwareMap.servo.get("servoArm");
+        //servoArm.setDirection(Servo.Direction.REVERSE);
 
 
         servoLeverHitterLeft = hardwareMap.servo.get("leverHitterL");
         servoLeverHitterLeft.setDirection(Servo.Direction.REVERSE); //Should be that 0 is down //Unsure which should be reversed
         servoLeverHitterRight = hardwareMap.servo.get("leverHitterR");
-
-        servoPlowLeft = hardwareMap.servo.get("plowL");
-        servoPlowLeft.setDirection(Servo.Direction.REVERSE); //Should be that 0 is down //Unsure which should be reversed
-        servoPlowRight = hardwareMap.servo.get("plowR");
-
     }
 
 

@@ -1,4 +1,4 @@
-package com.qualcomm.ftcrobotcontroller.opmodes.res_q.teleop;
+package com.qualcomm.ftcrobotcontroller.opmodes.res_q.teleop_wheelie;
 
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.shared.ResQRobotBase;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -6,9 +6,10 @@ import com.qualcomm.robotcore.util.Range;
 import org.ashebots.ftcandroidlib.drive.ChassisArcade;
 import org.ashebots.ftcandroidlib.easing.easetypes.CircEase;
 import org.ashebots.ftcandroidlib.misc.Toggle;
+import org.ashebots.ftcandroidlib.motor.Motor;
 
 
-public class TeleOp extends ResQRobotBase
+public class TeleOpWheelie extends ResQRobotBase
 {
     ChassisArcade chassis;
 
@@ -38,6 +39,8 @@ public class TeleOp extends ResQRobotBase
         //This will call the init() method in the parent "ResQRobot" class. That is the class
         //where we store and setup all our HARDWARE variables.
         super.init();
+
+        motorWheelieBar = new Motor(hardwareMap.dcMotor.get("wheelieMotor"));
 
         chassis = new ChassisArcade(motorDriveLeft, motorDriveRight);
 
@@ -79,22 +82,20 @@ public class TeleOp extends ResQRobotBase
         //servoArm.setPosition(0.5 + (gamepad1.right_stick_y / 6) * -1); //temporary servo
 
         //TODO: ADD LIMITS
-        /*
-        double armPower = armPowerEaser.easeIn(Math.abs(gamepad1.right_stick_y), 0.0, 1.0, 1.0);
+       /* double armPower = armPowerEaser.easeIn(Math.abs(gamepad1.right_stick_y), 0.0, 1.0, 1.0);
         if (gamepad1.right_stick_y * -1 < 0)
         {
             armPower *= -1;
         }
         motorArm.setPower(armPower); //CURRENTLY DISABLED BECAUSE MECHANICAL
-        */
-
+*/
         motorArm.setPower(gamepad1.right_stick_y * -1);
 
 
         //endregion
 
         //region === WHEELIE BAR
-        /*
+
         if (gamepad1.right_bumper)
         {
             motorWheelieBar.setPower(0.6);
@@ -107,7 +108,6 @@ public class TeleOp extends ResQRobotBase
         {
             motorWheelieBar.setPower(0);
         }
-        */
 
         //endregion
 
