@@ -61,7 +61,10 @@ public abstract class ResQRobotBase extends OpMode
         servoLeverHitterRight = hardwareMap.servo.get("leverHitterR");
     }
 
-
+    public double easeInCirc(double currentInput, double startOutput, double endOutput, double endInput) {
+        currentInput /= endInput;
+        return -endOutput * (Math.sqrt(1 - currentInput*currentInput) - 1) + startOutput;
+    }
 
     //Taken from LASA Robotics
     //Gets the Android "context" of the RC app
