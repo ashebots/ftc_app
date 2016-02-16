@@ -56,7 +56,13 @@ public class TeleOp extends ResQRobotBase
         //region === DRIVING === (Collapse this w/ Android Studio)
         float driveX = gamepad1.left_stick_x;
         float driveY = gamepad1.left_stick_y * -1;
-        if (gamepad1.x == false) //motors default at 0.6, X button is "nitro" to 1.0
+
+        if (gamepad2.left_trigger > 0.5 && gamepad2.right_trigger > 0.5)
+        {
+            driveX *= .4f;
+            driveY *= .4f;
+        }
+        else if (gamepad1.x == false) //motors default at 0.6, X button is "nitro" to 1.0
         {
             driveX *= .6f;
             driveY *= .6f;
@@ -75,42 +81,48 @@ public class TeleOp extends ResQRobotBase
 
         //region === ARM === (Collapse this w/ Android Studio)
 
-        //TEMPORARY SERVO ARM
-        //servoArm.setPosition(0.5 + (gamepad1.right_stick_y / 6) * -1); //temporary servo
-
-        //TODO: ADD LIMITS
-        /*
-        double armPower = armPowerEaser.easeIn(Math.abs(gamepad1.right_stick_y), 0.0, 1.0, 1.0);
-        if (gamepad1.right_stick_y * -1 < 0)
+        double armPower = gamepad1.right_stick_y * -1;
+        if (Math.abs(armPower) < 0.9)
         {
-            armPower *= -1;
+            armPower /= 3;
         }
-        motorArm.setPower(armPower); //CURRENTLY DISABLED BECAUSE MECHANICAL
-        */
-
-        motorArm.setPower(gamepad1.right_stick_y * -1);
-
+        motorArm.setPower(armPower);
 
         //endregion
 
-        //region === WHEELIE BAR
-        /*
+
+        //region === CLIMBER DUMPER
+
+        double climberDumperPower = 0.5;
         if (gamepad1.right_bumper)
         {
-            motorWheelieBar.setPower(0.6);
+            climberDumperPower += 0.1;
         }
-        else if (gamepad1.right_trigger > 0.5)
+        if (gamepad1.right_trigger > 0.5)
         {
-            motorWheelieBar.setPower(-0.6);
+            climberDumperPower -= 0.1;
+        }
+        servoClimberDumper.setPosition(climberDumperPower);
+
+        //endregion
+
+
+        //region === LOCKING BAR
+
+        if (gamepad2.dpad_up)
+        {
+            motorLockingBar.setPower(1);
+        }
+        else if (gamepad2.dpad_down)
+        {
+            motorLockingBar.setPower(-1);
         }
         else
         {
-            motorWheelieBar.setPower(0);
+            motorLockingBar.setPower(0);
         }
-        */
 
         //endregion
-
 
 
         //region === LEVER HITTER SERVOS ===
@@ -140,7 +152,7 @@ class LeverHitter
 {
     static double MAX_POS = 1.0;
     static double MIN_POS = 0.0;
-    static double START_POS = 0.9;
+    static double START_POS = 0.99;
 
     double currentPos; //will be initialized
 

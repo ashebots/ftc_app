@@ -7,6 +7,7 @@ import android.hardware.SensorManager;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.ashebots.ftcandroidlib.motor.Motor;
@@ -23,7 +24,9 @@ public abstract class ResQRobotBase extends OpMode
 
     public Motor motorArm; //Single motor to control to arm thingy
 
-    public Motor motorWheelieBar;
+    public Motor motorLockingBar;
+
+    public Servo servoClimberDumper;
 
     public Servo servoLeverHitterLeft; //Refers to left "drive side"
     public Servo servoLeverHitterRight; //Refers to right "drive side"
@@ -43,12 +46,14 @@ public abstract class ResQRobotBase extends OpMode
         motorDriveRight.setDirection(DcMotor.Direction.REVERSE);
 
 
-        motorArm = new Motor(hardwareMap.dcMotor.get("armMotor")); //DISABLED DUE TO HARDWARE
-        motorArm.setDirection(DcMotor.Direction.REVERSE);
+        motorArm = new Motor(hardwareMap.dcMotor.get("armMotor"));
+        motorArm.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
-        //motorWheelieBar = new Motor(hardwareMap.dcMotor.get("wheelieMotor"));
-        //servoArm = hardwareMap.servo.get("servoArm");
-        //servoArm.setDirection(Servo.Direction.REVERSE);
+
+        motorLockingBar = new Motor(hardwareMap.dcMotor.get("motorLockingBar"));
+
+
+        servoClimberDumper = hardwareMap.servo.get("climberDumper"); //continuous servo
 
 
         servoLeverHitterLeft = hardwareMap.servo.get("leverHitterL");
