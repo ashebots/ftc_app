@@ -93,7 +93,7 @@ public class TeleOp extends ResQRobotBase
         double armDelta = easeInCirc(Math.abs(armInput), 0, 1, 1); //Get an (absolute) "eased" value from 0 to 1. It rises slowly at first then rises steeply at the end
         armDelta *= Math.signum(armInput); //signum = 1 if input positive, -1 if negative, 0 if zero. This turns back to negative if input negative.
 
-        armController.loop(armDelta);
+        armController.loop(armDelta, gamepad1.left_bumper);
 
         //endregion
 
@@ -187,25 +187,37 @@ class ArmController
         and makes sure it's not too far from the current encoder position.
     -Adjusts motor power based on PID calculation of difference between current encoder value and target encoder value
      */
-    public void loop(double positionDelta)
+    public void loop(double positionDelta, boolean isServoMode)
     {
-        //Update our target position
-        currentEncoderTarget += positionDelta;
-        //Make sure our new target isn't too far away from our current position
-        double currentEncoderPosition = armMotor.getCurrentPosition();
-        currentEncoderTarget = Range.clip(currentEncoderTarget, currentEncoderPosition - encoderTargetRange, currentEncoderPosition + encoderTargetRange);
+        if (isServoMode) //Control arm like continuous servo
+        {
+            //Update our target position
+            currentEncoderTarget += positionDelta;
+            //Make sure our new target isn't too far away from our current position
+            double currentEncoderPosition = armMotor.getCurrentPosition();
+            currentEncoderTarget = Range.clip(currentEncoderTarget, currentEncoderPosition - encoderTargetRange, currentEncoderPosition + encoderTargetRange);
 
-        //Figure out motor power
-        double motorPower = pidController.calculate(currentEncoderPosition, currentEncoderTarget);
-        motorPower = Range.clip(motorPower, -1, 1); //Make sure within acceptable range
+            //Figure out motor power
+            double motorPower = pidController.calculate(currentEncoderPosition, currentEncoderTarget);
+            motorPower = Range.clip(motorPower, -1, 1); //Make sure within acceptable range
 
-        //DON'T DO THIS YET --> armMotor.setPower(motorPower);
+            //DON'T DO THIS YET --> armMotor.setPower(motorPower);
 
-        //Debug
-        telemetry.addData("ArmController/positionDelta = ", positionDelta);
-        telemetry.addData("ArmController/currentEncoderPositon = ", currentEncoderPosition);
-        telemetry.addData("ArmController/currentEncoderTarget = ", currentEncoderTarget);
-        telemetry.addData("ArmController/motorPower = ", motorPower);
+            //Debug
+            telemetry.addData("ArmController/positionDelta = ", positionDelta);
+            telemetry.addData("ArmController/currentEncoderPositon = ", currentEncoderPosition);
+            telemetry.addData("ArmController/currentEncoderTarget = ", currentEncoderTarget);
+            telemetry.addData("ArmController/motorPower = ", motorPower);
+        }
+        else //Just give power (input still "eased")
+        {
+            //Keep our two modes in sync
+            currentEncoderTarget = armMotor.getCurrentPosition();
+
+            //Update motor power
+            double motorPower = Range.clip(positionDelta, -1, 1);
+            armMotor.setPower(motorPower);
+        }
     }
 }
 
