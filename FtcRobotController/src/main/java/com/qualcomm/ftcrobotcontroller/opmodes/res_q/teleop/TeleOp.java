@@ -19,6 +19,7 @@ public class TeleOp extends ResQRobotBase
 
     Toggle driveOrientationToggle;
 
+    PIDSettings armPIDSettings;
     ArmController armController;
 
     //Both servos share position, 'cause one is software reversed
@@ -48,7 +49,8 @@ public class TeleOp extends ResQRobotBase
 
         driveOrientationToggle = new Toggle();
 
-        armController = new ArmController(motorArm, new PIDSettings(0, 0, 0), telemetry);
+        armPIDSettings = new PIDSettings(0.001, 0, 0);
+        armController = new ArmController(motorArm, armPIDSettings, telemetry);
 
         leverHitterLeft = new LeverHitter("Left", servoLeverHitterLeft);
         leverHitterRight = new LeverHitter("Right", servoLeverHitterRight);
@@ -60,8 +62,12 @@ public class TeleOp extends ResQRobotBase
     @Override
     public void loop()
     {
+        //TUNE ARM PID:
+        //tunePID(armPIDSettings);
+
 
         //region === DRIVING === (Collapse this w/ Android Studio)
+        
         float driveX = gamepad1.left_stick_x;
         float driveY = gamepad1.left_stick_y * -1;
 
@@ -84,6 +90,7 @@ public class TeleOp extends ResQRobotBase
         chassis.Drive(driveX, driveY);
         telemetry.addData("Left motor power = ", motorDriveLeft.getPower());
         telemetry.addData("Right motor power = ", motorDriveRight.getPower());
+
         //endregion
 
 
@@ -153,6 +160,45 @@ public class TeleOp extends ResQRobotBase
         //endregion
 
     }
+
+
+
+    void tunePID(PIDSettings pidSettings)
+    {
+        //pTerm
+        if (gamepad2.dpad_up)
+        {
+            pidSettings.setProportionalTerm(pidSettings.getProportionalTerm() + 0.00001);
+        }
+        else if (gamepad2.dpad_down)
+        {
+            pidSettings.setProportionalTerm(pidSettings.getProportionalTerm() - 0.00001);
+        }
+
+        //iTerm
+        if (gamepad2.left_stick_y < -0.3)
+        {
+            pidSettings.setIntegralTerm(pidSettings.getIntegralTerm() + 0.00001);
+        }
+        else if (gamepad2.left_stick_y > 0.3)
+        {
+            pidSettings.setIntegralTerm(pidSettings.getIntegralTerm() - 0.00001);
+        }
+
+        //iTerm
+        if (gamepad2.right_stick_y < -0.3)
+        {
+            pidSettings.setDerivativeTerm(pidSettings.getDerivativeTerm() + 0.00001);
+        }
+        else if (gamepad2.right_stick_y > 0.3)
+        {
+            pidSettings.setDerivativeTerm(pidSettings.getDerivativeTerm() - 0.00001);
+        }
+
+        telemetry.addData("1: pTerm=", pidSettings.getProportionalTerm());
+        telemetry.addData("2: iTerm=", pidSettings.getIntegralTerm());
+        telemetry.addData("3: dTerm=", pidSettings.getDerivativeTerm());
+    }
 }
 
 
@@ -183,10 +229,13 @@ class ArmController
 
 
     /*
-    -Updates target encoder position based on positionDelta,
-        and makes sure it's not too far from the current encoder position.
-    -Adjusts motor power based on PID calculation of difference between current encoder value and target encoder value
-     */
+    SERVO-LIKE MODE:
+        -Updates target encoder position based on positionDelta,
+            and makes sure it's not too far from the current encoder position.
+        -Adjusts motor power based on PID calculation of difference between current encoder value and target encoder value.
+    MOTOR-LIKE MODE:
+        -Set motor directly to positionDelta (which should already be "eased")
+    */
     public void loop(double positionDelta, boolean isServoMode)
     {
         if (isServoMode) //Control arm like continuous servo
@@ -201,7 +250,7 @@ class ArmController
             double motorPower = pidController.calculate(currentEncoderPosition, currentEncoderTarget);
             motorPower = Range.clip(motorPower, -1, 1); //Make sure within acceptable range
 
-            //DON'T DO THIS YET --> armMotor.setPower(motorPower);
+            armMotor.setPower(motorPower);
 
             //Debug
             telemetry.addData("ArmController/positionDelta = ", positionDelta);

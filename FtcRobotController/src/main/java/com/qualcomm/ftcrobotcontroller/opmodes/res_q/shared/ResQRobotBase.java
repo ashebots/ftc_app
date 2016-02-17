@@ -66,6 +66,8 @@ public abstract class ResQRobotBase extends OpMode
         return -endOutput * (Math.sqrt(1 - currentInput*currentInput) - 1) + startOutput;
     }
 
+
+
     //Taken from LASA Robotics
     //Gets the Android "context" of the RC app
     public static Context getContext() {
