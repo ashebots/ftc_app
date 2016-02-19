@@ -18,6 +18,10 @@ public abstract class Driving extends LinearOpMode {
 
     DcMotor motorRight;
     DcMotor motorLeft;
+<<<<<<< HEAD
+=======
+    public Servo armServo;
+>>>>>>> origin/master
     BNO055LIB boschBNO055;
 
     volatile double[] rollAngle = new double[2], pitchAngle = new double[2], yawAngle = new double[2];
@@ -33,6 +37,13 @@ public abstract class Driving extends LinearOpMode {
         motorLeft.setDirection(DcMotor.Direction.REVERSE);
     }
 
+<<<<<<< HEAD
+=======
+    public void initArm() {
+        armServo = hardwareMap.servo.get("servoArm");
+    }
+
+>>>>>>> origin/master
     public void initBNO055() {
         systemTime = System.nanoTime();
         try {

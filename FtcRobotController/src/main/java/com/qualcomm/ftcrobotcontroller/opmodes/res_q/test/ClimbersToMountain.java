@@ -25,17 +25,16 @@ public abstract class ClimbersToMountain extends Driving
     int ultrasonicPortL = 4;
     int ultrasonicPortR = 5;
 
-    double neg;
+    Servo LeverHitterL;
 
     boolean startOnOtherSquare;
-
     boolean Mountain;
+
+    int neg;
 
     double start2Turn = 24;
     double turn2Push = -45;
     double push2Wall = 20;
-    double wall2Perp = 0;
-    double perp2Basket = 6;
     double basket2Arm = -90;
 
     @Override
@@ -53,9 +52,9 @@ public abstract class ClimbersToMountain extends Driving
         sarm = hardwareMap.servo.get("climberDumper");
         arm.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
-        waitForStart();
+        LeverHitterL = hardwareMap.servo.get("leverHitterL");
 
-        readBNO();
+        waitForStart();
 
         if (startOnOtherSquare) {
             turnOnSpotPID(-90*neg,5,2.5,0.5,0.1,neg==1);
