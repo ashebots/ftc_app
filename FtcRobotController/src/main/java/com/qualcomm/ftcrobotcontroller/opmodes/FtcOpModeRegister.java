@@ -63,14 +63,16 @@ public class FtcOpModeRegister implements OpModeRegister {
     //manager.register("Cascade Effect TeleOp", CascadeEffectTeleop.class);
     //manager.register("Telemetry Test", TelemetryTest.class);
     manager.register("TeleOp", TeleOp.class);
-    /*
-    manager.register("Blue Autonomous to Blue", TestAutoMountainBC.class);
-    manager.register("Blue Autonomous to Red", TestAutoMountainBF.class);
-    manager.register("Red Autonomous to Red", TestAutoMountainRC.class);
-    manager.register("Red Autonomous to Blue", TestAutoMountainRF.class);
-    */
+
+    manager.register("Blue Autonomous Mountain", ClimbersToMountainBlueM.class);
+    manager.register("Red Autonomous Mountain", ClimbersToMountainRedM.class);
+    manager.register("Blue Autonomous Mountain 2ndPos", ClimbersToMountainBlueOffsetM.class);
+    manager.register("Red Autonomous Mountain 2ndPos", ClimbersToMountainRedOffsetM.class);
+
     manager.register("Blue Autonomous Climbers", ClimbersToMountainBlue.class);
     manager.register("Red Autonomous Climbers", ClimbersToMountainRed.class);
+    manager.register("Blue Autonomous Climbers 2ndPos", ClimbersToMountainBlueOffset.class);
+    manager.register("Red Autonomous Climbers 2ndPos", ClimbersToMountainRedOffset.class);
 
     /*
     manager.register("Background Test", StrategyBlocks.class);

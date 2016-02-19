@@ -10,5 +10,7 @@ public class ClimbersToMountainRed extends ClimbersToMountain
 {
     public ClimbersToMountainRed() {
         super.neg=-1;
+        super.startOnOtherSquare=false;
+        super.Mountain=false;
     }
 }

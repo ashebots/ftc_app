@@ -18,7 +18,6 @@ public abstract class Driving extends LinearOpMode {
 
     DcMotor motorRight;
     DcMotor motorLeft;
-    //public Servo armServo;
     BNO055LIB boschBNO055;
 
     volatile double[] rollAngle = new double[2], pitchAngle = new double[2], yawAngle = new double[2];
@@ -32,10 +31,6 @@ public abstract class Driving extends LinearOpMode {
         motorRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
         motorLeft.setDirection(DcMotor.Direction.REVERSE);
-    }
-
-    public void initArm() {
-        //armServo = hardwareMap.servo.get("armServo");
     }
 
     public void initBNO055() {
@@ -199,7 +194,4 @@ public abstract class Driving extends LinearOpMode {
             forwardFinish = true;
         }
     }
-
-    double armOff;
-    protected boolean armFinish = true;
 }

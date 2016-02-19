@@ -6,11 +6,11 @@ AUTHOR = Art (2015-11-10)
 
 package com.qualcomm.ftcrobotcontroller.opmodes.res_q.test;
 
-public class ClimbersToMountainBlue extends ClimbersToMountain
+public class ClimbersToMountainBlueOffset extends ClimbersToMountain
 {
-    public ClimbersToMountainBlue() {
+    public ClimbersToMountainBlueOffset() {
         super.neg=1;
-        super.startOnOtherSquare=false;
+        super.startOnOtherSquare=true;
         super.Mountain=false;
     }
 }
