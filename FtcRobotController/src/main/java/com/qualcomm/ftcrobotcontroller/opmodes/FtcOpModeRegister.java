@@ -70,6 +70,8 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("Blue Autonomous Mountain 2ndPos", ClimbersToMountainBlueOffsetM.class);
     manager.register("Red Autonomous Mountain 2ndPos", ClimbersToMountainRedOffsetM.class);
 
+    manager.register("Mountain Simple", MountainSimple.class);
+
     manager.register("Mountain MidZone", MountainCharge.class);
     //manager.register("Blue Autonomous Climbers", ClimbersToMountainBlue.class);
     //manager.register("Red Autonomous Climbers", ClimbersToMountainRed.class);
