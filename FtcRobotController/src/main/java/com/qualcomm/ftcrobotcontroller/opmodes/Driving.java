@@ -18,10 +18,6 @@ public abstract class Driving extends LinearOpMode {
 
     DcMotor motorRight;
     DcMotor motorLeft;
-<<<<<<< HEAD
-=======
-    public Servo armServo;
->>>>>>> origin/master
     BNO055LIB boschBNO055;
 
     volatile double[] rollAngle = new double[2], pitchAngle = new double[2], yawAngle = new double[2];
@@ -37,13 +33,6 @@ public abstract class Driving extends LinearOpMode {
         motorLeft.setDirection(DcMotor.Direction.REVERSE);
     }
 
-<<<<<<< HEAD
-=======
-    public void initArm() {
-        armServo = hardwareMap.servo.get("servoArm");
-    }
-
->>>>>>> origin/master
     public void initBNO055() {
         systemTime = System.nanoTime();
         try {
@@ -73,7 +62,7 @@ public abstract class Driving extends LinearOpMode {
         boschBNO055.getIMUGyroAngles(rollAngle, pitchAngle, yawAngle);
         telemetry.addData("Headings(yaw): ",
                 String.format("Euler= %4.5f, Quaternion calculated= %4.5f", yawAngle[0], yawAngle[1]));
-        telemetry.addData("Pitches: ",
+        telemetry.addData("Pitch: ",
                 String.format("Euler= %4.5f, Quaternion calculated= %4.5f", pitchAngle[0], pitchAngle[1]));
         telemetry.addData("Max I2C read interval: ",
                 String.format("%4.4f ms. Average interval: %4.4f ms.", boschBNO055.maxReadInterval
@@ -204,5 +193,21 @@ public abstract class Driving extends LinearOpMode {
         if (211*distance + 1 > motorLeft.getCurrentPosition()-loff && motorLeft.getCurrentPosition()-loff > 211*distance - 1) {
             forwardFinish = true;
         }
+    }
+    public double retrieveBNOData(char reading) {
+        double output = 0;
+        readBNO();
+        switch(reading) {
+            case 'y': output = yawAngle[0];
+                      break;
+            case 'r': output = rollAngle[0];
+                      break;
+            case 'p': output = pitchAngle[0];
+                      break;
+            default:  break;
+        }
+        telemetry.addData("Raw Output",output);
+        telemetry.addData("Char ID",reading);
+        return output;
     }
 }

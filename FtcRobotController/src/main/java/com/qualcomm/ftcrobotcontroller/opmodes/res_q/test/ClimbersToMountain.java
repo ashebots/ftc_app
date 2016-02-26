@@ -34,7 +34,7 @@ public abstract class ClimbersToMountain extends Driving
 
     double start2Turn = 24;
     double turn2Push = -45;
-    double push2Wall = 20;
+    double push2Wall = 50;
     double basket2Arm = -90;
 
     @Override
@@ -56,15 +56,11 @@ public abstract class ClimbersToMountain extends Driving
 
         waitForStart();
 
-        if (startOnOtherSquare) {
-            turnOnSpotPID(-90*neg,5,2.5,0.5,0.1,neg==1);
-            moveForwardCorrection(24,1,0.25,0.1,5,0.25);
-            turnOnSpotPID(0,5,2.5,0.5,0.1,neg==-1);
+        if (!startOnOtherSquare) {
+            //move forward to clear mountain
+            telemetry.addData("Clearing...", 0);
+            moveForwardCorrection(start2Turn, 1, 0.5, 0.1, 5, 2.5);
         }
-
-        //move forward to clear mountain
-        telemetry.addData("Clearing...", 0);
-        moveForwardCorrection(start2Turn, 1, 0.5, 0.1, 5, 2.5);
 
         //move toward button
         telemetry.addData("Plowing...",0);
@@ -74,19 +70,33 @@ public abstract class ClimbersToMountain extends Driving
             while(SonarSensorL.getUltrasonicLevel()>push2Wall || SonarSensorL.getUltrasonicLevel()==0) {
                 moveForwardCorrectionBackground(0,1,0.05,10,5);
                 telemetry.addData("Sonic",SonarSensorL.getUltrasonicLevel());
+                waitOneFullHardwareCycle();
             }
         } else {
             while(SonarSensorR.getUltrasonicLevel()>push2Wall || SonarSensorR.getUltrasonicLevel()==0) {
                 moveForwardCorrectionBackground(0,1,0.05,10,5);
                 telemetry.addData("Sonic",SonarSensorR.getUltrasonicLevel());
+                waitOneFullHardwareCycle();
             }
         }
 
         if (Mountain) {
-            moveForwardCorrection(-16,-1,0.25,0.1,5,2.5);
+            moveForwardCorrection(-12,-1,0.25,0.1,5,2.5);
             turnOnSpotPID(45*neg,5,2.5,.375,.125,neg==-1);
-            moveForwardCorrection(-50,-1,0.25,0.1,5,2.5);
-        } else {
+            //insert mount code here
+            moveForwardCorrectionBackInit(45*neg);
+            while(retrieveBNOData('p') < 25) {
+                moveForwardCorrectionBackground(1,0.5,0.1,5,10);
+            }
+            moveForwardCorrectionBackInit(45*neg);
+            while(retrieveBNOData('p') < 45) {
+                moveForwardCorrectionBackground(1,0.35,0.1,5,10);
+            }
+            moveForwardCorrectionBackInit(45*neg);
+            while(!forwardFinish) {
+                moveForwardCorrectionBackground(4,0.25,0.1,5,10);
+            }
+        } /*else {
             //insert arm code here
             telemetry.addData("Dumping...",0);
             turnOnSpot(basket2Arm * neg, 2.5, 0.5, true);
@@ -99,7 +109,6 @@ public abstract class ClimbersToMountain extends Driving
             Thread.sleep(100);
             arm.setPower(0);
             sarm.setPosition(0);
-        }
+        }*/
     }
 }
-

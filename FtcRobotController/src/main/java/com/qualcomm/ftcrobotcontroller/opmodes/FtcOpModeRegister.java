@@ -65,39 +65,28 @@ public class FtcOpModeRegister implements OpModeRegister {
     //manager.register("Telemetry Test", TelemetryTest.class);
     manager.register("TeleOp", TeleOp.class);
 
-<<<<<<< HEAD
     manager.register("Blue Autonomous Mountain", ClimbersToMountainBlueM.class);
     manager.register("Red Autonomous Mountain", ClimbersToMountainRedM.class);
     manager.register("Blue Autonomous Mountain 2ndPos", ClimbersToMountainBlueOffsetM.class);
     manager.register("Red Autonomous Mountain 2ndPos", ClimbersToMountainRedOffsetM.class);
 
-=======
-    manager.register("Nothing Happens!!!", TestAutoMountainBC.class);
-    manager.register("Battery Stress Tester", BatteryStressTest.class);
-    /*
-    manager.register("Blue Autonomous to Red", TestAutoMountainBF.class);
-    manager.register("Red Autonomous to Red", TestAutoMountainRC.class);
-    manager.register("Red Autonomous to Blue", TestAutoMountainRF.class);
-    */
->>>>>>> origin/master
-    manager.register("Blue Autonomous Climbers", ClimbersToMountainBlue.class);
-    manager.register("Red Autonomous Climbers", ClimbersToMountainRed.class);
-    manager.register("Blue Autonomous Climbers 2ndPos", ClimbersToMountainBlueOffset.class);
-    manager.register("Red Autonomous Climbers 2ndPos", ClimbersToMountainRedOffset.class);
+    manager.register("Mountain MidZone", MountainCharge.class);
+    //manager.register("Blue Autonomous Climbers", ClimbersToMountainBlue.class);
+    //manager.register("Red Autonomous Climbers", ClimbersToMountainRed.class);
+    //manager.register("Blue Autonomous Climbers 2ndPos", ClimbersToMountainBlueOffset.class);
+    //manager.register("Red Autonomous Climbers 2ndPos", ClimbersToMountainRedOffset.class);
 
-    /*
-    manager.register("Background Test", StrategyBlocks.class);
+    //manager.register("Background Test", StrategyBlocks.class);
 
-    manager.register("Accelerometer Test", IMUtest.class);
+    //manager.register("Accelerometer Test", IMUtest.class);
 
-    manager.register("IMU PID Heading Test", GyroPIDTest.class);
+    manager.register("IMU Heading Test", IMUtest.class);
 
-    manager.register("Test Drive", TestDrive.class);
+    //manager.register("Test Drive", TestDrive.class);
 
-    manager.register("Background Movement", TestAutoMountainBCCopy.class);
+    //manager.register("Background Movement", TestAutoMountainBCCopy.class);
 
-    manager.register("Strategy Test", StrategyTest.class);
-    */
+    //manager.register("Strategy Test", StrategyTest.class);
 
     //manager.register("Sonic", SonicRobotEyes.class);
 
