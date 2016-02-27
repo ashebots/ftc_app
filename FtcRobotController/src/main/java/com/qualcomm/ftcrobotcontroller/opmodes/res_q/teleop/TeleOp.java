@@ -34,6 +34,8 @@ public class TeleOp extends ResQRobotBase
     double plowPosCurrent = plowPosUp; //initial position
     */
 
+    AllClearGrabber leftAllClearGrabber;
+    AllClearGrabber rightAllClearGrabber;
 
     LeverHitter leverHitterLeft;
     LeverHitter leverHitterRight;
@@ -51,6 +53,9 @@ public class TeleOp extends ResQRobotBase
 
         armPIDSettings = new PIDSettings(0.001, 0, 0);
         armController = new ArmController(motorArm, armPIDSettings, telemetry);
+
+        leftAllClearGrabber = new AllClearGrabber(servoAllClearLeft);
+        rightAllClearGrabber = new AllClearGrabber(servoAllClearRight);
 
         leverHitterLeft = new LeverHitter("Left", servoLeverHitterLeft);
         leverHitterRight = new LeverHitter("Right", servoLeverHitterRight);
@@ -121,6 +126,16 @@ public class TeleOp extends ResQRobotBase
         //endregion
 
 
+        //region === ALL CLEAR GRABBERS
+
+        //LEFT all clear
+        leftAllClearGrabber.loop(gamepad2.left_bumper, gamepad2.left_trigger);
+        //RIGHT all clear
+        rightAllClearGrabber.loop(gamepad2.left_bumper, gamepad2.left_trigger);
+
+        //endregion
+
+
         //region === LOCKING BAR
 
         if (gamepad2.dpad_up)
@@ -141,8 +156,8 @@ public class TeleOp extends ResQRobotBase
 
         //region === LEVER HITTER SERVOS ===
 
-        leverHitterLeft.loop(gamepad2.left_stick_y * -1, gamepad2.left_bumper);
-        leverHitterRight.loop(gamepad2.right_stick_y * -1, gamepad2.right_bumper);
+        leverHitterLeft.loop(gamepad2.left_stick_y * -1, gamepad2.y);
+        leverHitterRight.loop(gamepad2.right_stick_y * -1, gamepad2.y);
 
         //endregion
 
@@ -160,7 +175,6 @@ public class TeleOp extends ResQRobotBase
         //endregion
 
     }
-
 
 
     void tunePID(PIDSettings pidSettings)
@@ -267,6 +281,34 @@ class ArmController
             double motorPower = Range.clip(positionDelta, -1, 1);
             armMotor.setPower(motorPower);
         }
+    }
+}
+
+
+class AllClearGrabber
+{
+    Servo servo; //continuous
+
+    public AllClearGrabber(Servo servo)
+    {
+        this.servo = servo;
+    }
+
+    public void loop(boolean isGoingUp, double goingDownFactor)
+    {
+        double servoPower = 0.5; //Base power to keep servo in place
+
+        if (goingDownFactor > 0.3) //Going back
+        {
+            servoPower -= goingDownFactor / 2; //Negative power for going back
+        }
+        if (isGoingUp) //Going forward
+        {
+            servoPower += 0.5;
+        }
+
+        servoPower = Range.clip(servoPower, -1.0, 1.0);
+        servo.setPosition(servoPower);
     }
 }
 
