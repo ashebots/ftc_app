@@ -131,7 +131,7 @@ public class TeleOp extends ResQRobotBase
         //LEFT all clear
         leftAllClearGrabber.loop(gamepad2.left_bumper, gamepad2.left_trigger);
         //RIGHT all clear
-        rightAllClearGrabber.loop(gamepad2.left_bumper, gamepad2.left_trigger);
+        rightAllClearGrabber.loop(gamepad2.right_bumper, gamepad2.right_trigger);
 
         //endregion
 

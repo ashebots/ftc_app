@@ -59,6 +59,7 @@ public abstract class ResQRobotBase extends OpMode
         servoClimberDumper = hardwareMap.servo.get("climberDumper"); //continuous servo
 
         servoAllClearLeft = hardwareMap.servo.get("allClearL");
+        servoAllClearLeft.setDirection(Servo.Direction.REVERSE);
         servoAllClearRight = hardwareMap.servo.get("allClearR");
 
 
