@@ -15,20 +15,19 @@ import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 import org.ashebots.ftcandroidlib.motor.Motor;
 
-public class MountainSimple extends Driving
+public abstract class MountainSimple extends Driving
 {
-    LegacyModule Legacy;
-    UltrasonicSensor SonarSensor;
-    DcMotor arm;
-    Servo sarm;
-    int ultrasonicPort = 4;
+    //LegacyModule Legacy;
+    //UltrasonicSensor SonarSensor;
+    //int ultrasonicPort = 4;
 
-    boolean Mountain;
+    public Servo servoClimberDumper;
+    public Servo servoLeverHitterLeft; //Refers to left "drive side"
+    public Servo servoLeverHitterRight; //Refers to right "drive side"
 
     int neg;
 
-    double start2Turn = 12;
-    double push2Wall = 200;
+    //double push2Wall = 200;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -36,40 +35,48 @@ public class MountainSimple extends Driving
         initBNO055();
         systemTimeSetup();
 
-        Legacy = hardwareMap.legacyModule.get("legacy");
-        Legacy.enable9v(ultrasonicPort, true);
-        SonarSensor = hardwareMap.ultrasonicSensor.get("sonic");
-        arm = hardwareMap.dcMotor.get("armMotor");
-        sarm = hardwareMap.servo.get("climberDumper");
-        arm.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        servoClimberDumper = hardwareMap.servo.get("climberDumper"); //continuous servo
+
+        servoLeverHitterLeft = hardwareMap.servo.get("leverHitterL");
+        servoLeverHitterLeft.setDirection(Servo.Direction.REVERSE); //Should be that 0 is down //Unsure which should be reversed
+        servoLeverHitterRight = hardwareMap.servo.get("leverHitterR");
+
+        //Legacy = hardwareMap.legacyModule.get("legacy");
+        //Legacy.enable9v(ultrasonicPort, true);
+        //SonarSensor = hardwareMap.ultrasonicSensor.get("sonic");
 
         waitForStart();
 
-        //move forward to clear mountain
-        telemetry.addData("Clearing...", 0);
-        moveForwardCorrection(start2Turn, 1, 0.5, 0.1, 5, 2.5);
+        servoLeverHitterLeft.setPosition(0.99);
+        servoLeverHitterRight.setPosition(0.99);
 
         //move toward button
         telemetry.addData("Plowing...", 0);
-        moveForwardCorrectionBackInit(0);
+        moveForwardCorrection(23,1,0.2,0.1,7.5,5);
+        /*moveForwardCorrectionBackInit(0);
         while(SonarSensor.getUltrasonicLevel()<push2Wall || SonarSensor.getUltrasonicLevel()==0 || SonarSensor.getUltrasonicLevel()==255) {
             moveForwardCorrectionBackground(0,1,0.05,10,5);
             telemetry.addData("Sonic",SonarSensor.getUltrasonicLevel());
             waitOneFullHardwareCycle();
-        }
-        turnOnSpotPID(45*neg,5,2.5,.375,.125,neg==-1);
+        }*/
+        turnOnSpotPID(45 * neg, 2.5, 1, .15, .05, neg == -1);
         //insert mount code here
         moveForwardCorrectionBackInit(45*neg);
-        while(retrieveBNOData('p') < 25) {
-            moveForwardCorrectionBackground(1,0.5,0.1,5,10);
+        telemetry.addData("On: STARTING     BNO", retrieveBNOData('p'));
+        while (Math.abs(retrieveBNOData('p')) < 25) {
+            moveForwardCorrectionBackground(1,-0.5,0.1,2.5,1);
+            telemetry.addData("On: Floor        BNO", retrieveBNOData('p'));
         }
-        moveForwardCorrectionBackInit(45*neg);
-        while(retrieveBNOData('p') < 45) {
-            moveForwardCorrectionBackground(1,0.35,0.1,5,10);
+        moveForwardCorrectionBackInit(45 * neg);
+        while(Math.abs(retrieveBNOData('p')) < 30) {
+            moveForwardCorrectionBackground(1,-0.35,0.1,2.5,1);
+            telemetry.addData("On: Low Zone     BNO", retrieveBNOData('p'));
         }
         moveForwardCorrectionBackInit(45*neg);
         while(!forwardFinish) {
-            moveForwardCorrectionBackground(4, 0.25, 0.1, 5, 10);
+            moveForwardCorrectionBackground(-24,-0.25, 0.1, 2.5, 1);
+            telemetry.addData("On: Mid Zone     BNO", retrieveBNOData('p'));
         }
+        changeMotorSpeed(0);
     }
 }

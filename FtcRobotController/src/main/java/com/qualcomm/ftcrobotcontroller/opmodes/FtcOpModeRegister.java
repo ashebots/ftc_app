@@ -65,14 +65,15 @@ public class FtcOpModeRegister implements OpModeRegister {
     //manager.register("Telemetry Test", TelemetryTest.class);
     manager.register("TeleOp", TeleOp.class);
 
-    manager.register("Blue Autonomous Mountain", ClimbersToMountainBlueM.class);
-    manager.register("Red Autonomous Mountain", ClimbersToMountainRedM.class);
-    manager.register("Blue Autonomous Mountain 2ndPos", ClimbersToMountainBlueOffsetM.class);
-    manager.register("Red Autonomous Mountain 2ndPos", ClimbersToMountainRedOffsetM.class);
+    //manager.register("Blue Autonomous Mountain", ClimbersToMountainBlueM.class);
+    //manager.register("Red Autonomous Mountain", ClimbersToMountainRedM.class);
+    //manager.register("Blue Autonomous Mountain 2ndPos", ClimbersToMountainBlueOffsetM.class);
+    //manager.register("Red Autonomous Mountain 2ndPos", ClimbersToMountainRedOffsetM.class);
 
-    manager.register("Mountain Simple", MountainSimple.class);
+    manager.register("Mountain Auto Blue",AutoBlue.class);
+    manager.register("Mountain Auto Red",AutoRed.class);
 
-    manager.register("Mountain MidZone", MountainCharge.class);
+    //manager.register("Mountain MidZone", MountainCharge.class);
     //manager.register("Blue Autonomous Climbers", ClimbersToMountainBlue.class);
     //manager.register("Red Autonomous Climbers", ClimbersToMountainRed.class);
     //manager.register("Blue Autonomous Climbers 2ndPos", ClimbersToMountainBlueOffset.class);
@@ -82,7 +83,7 @@ public class FtcOpModeRegister implements OpModeRegister {
 
     //manager.register("Accelerometer Test", IMUtest.class);
 
-    manager.register("IMU Heading Test", IMUtest.class);
+    //manager.register("IMU Heading Test", IMUtest.class);
 
     //manager.register("Test Drive", TestDrive.class);
 

@@ -190,7 +190,7 @@ public abstract class Driving extends LinearOpMode {
 
         waitOneFullHardwareCycle();
 
-        if (211*distance + 1 > motorLeft.getCurrentPosition()-loff && motorLeft.getCurrentPosition()-loff > 211*distance - 1) {
+        if (211*distance + 200 > motorLeft.getCurrentPosition()-loff && motorLeft.getCurrentPosition()-loff > 211*distance - 200) {
             forwardFinish = true;
         }
     }
@@ -206,8 +206,10 @@ public abstract class Driving extends LinearOpMode {
                       break;
             default:  break;
         }
-        telemetry.addData("Raw Output",output);
-        telemetry.addData("Char ID",reading);
         return output;
+    }
+    public void changeMotorSpeed(double speed) {
+        motorLeft.setPower(speed);
+        motorRight.setPower(speed);
     }
 }
