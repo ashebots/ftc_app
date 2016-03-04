@@ -28,6 +28,9 @@ public abstract class ResQRobotBase extends OpMode
 
     public Servo servoClimberDumper;
 
+    public Servo servoAllClearLeft;
+    public Servo servoAllClearRight;
+
     public Servo servoLeverHitterLeft; //Refers to left "drive side"
     public Servo servoLeverHitterRight; //Refers to right "drive side"
 
@@ -54,6 +57,10 @@ public abstract class ResQRobotBase extends OpMode
 
 
         servoClimberDumper = hardwareMap.servo.get("climberDumper"); //continuous servo
+
+        servoAllClearLeft = hardwareMap.servo.get("allClearL");
+        servoAllClearLeft.setDirection(Servo.Direction.REVERSE);
+        servoAllClearRight = hardwareMap.servo.get("allClearR");
 
 
         servoLeverHitterLeft = hardwareMap.servo.get("leverHitterL");
