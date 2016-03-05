@@ -146,7 +146,11 @@ public abstract class Driving extends LinearOpMode {
             motorRight.setPower(power);
 
             if (yawAngle[0] > keepAtAngle + correctTrigger || keepAtAngle - correctTrigger > yawAngle[0]) {
+                double ro = motorRight.getCurrentPosition();
+                double lo = motorLeft.getCurrentPosition();
                 turnOnSpotPID(keepAtAngle, correctTrigger, correctRange, restorePower, correctionPower, (keepAtAngle-yawAngle[0]<0));
+                roffset = roffset - ro + motorRight.getCurrentPosition();
+                loffset = loffset - ro + motorRight.getCurrentPosition();
             }
             waitOneFullHardwareCycle();
         }
@@ -168,6 +172,9 @@ public abstract class Driving extends LinearOpMode {
         forwardFinish = false;
     }
 
+    double ro = 0;
+    double lo = 0;
+
     public void moveForwardCorrectionBackground(double distance, double power, double restorePower, double correctTrigger, double correctRange) throws InterruptedException {
         telemetry.addData("Left Motor", motorLeft.getCurrentPosition() - loff);
         telemetry.addData("Right Motor", motorRight.getCurrentPosition() - roff);
@@ -175,6 +182,8 @@ public abstract class Driving extends LinearOpMode {
         readBNO();
 
         if (!turnTriggered && (yawAngle[0] > keepAngle + correctTrigger || keepAngle - correctTrigger > yawAngle[0])) {
+            ro = motorRight.getCurrentPosition();
+            lo = motorLeft.getCurrentPosition();
             turnTriggered = true;
             turnBackgroundInit();
         }
@@ -186,6 +195,8 @@ public abstract class Driving extends LinearOpMode {
         }
         if (turnFinish) {
             turnTriggered = false;
+            roff = roff - ro + motorRight.getCurrentPosition();
+            loff = loff - lo + motorRight.getCurrentPosition();
         }
 
         waitOneFullHardwareCycle();

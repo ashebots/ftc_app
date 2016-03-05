@@ -22,8 +22,12 @@ public abstract class MountainSimple extends Driving
     //int ultrasonicPort = 4;
 
     public Servo servoClimberDumper;
+
     public Servo servoLeverHitterLeft; //Refers to left "drive side"
     public Servo servoLeverHitterRight; //Refers to right "drive side"
+
+    public Servo servoAllClearLeft;
+    public Servo servoAllClearRight;
 
     int neg;
 
@@ -41,18 +45,27 @@ public abstract class MountainSimple extends Driving
         servoLeverHitterLeft.setDirection(Servo.Direction.REVERSE); //Should be that 0 is down //Unsure which should be reversed
         servoLeverHitterRight = hardwareMap.servo.get("leverHitterR");
 
+        servoAllClearLeft = hardwareMap.servo.get("allClearL");
+        servoAllClearLeft.setDirection(Servo.Direction.REVERSE);
+        servoAllClearRight = hardwareMap.servo.get("allClearR");
+
         //Legacy = hardwareMap.legacyModule.get("legacy");
         //Legacy.enable9v(ultrasonicPort, true);
         //SonarSensor = hardwareMap.ultrasonicSensor.get("sonic");
 
         waitForStart();
 
-        servoLeverHitterLeft.setPosition(0.99);
-        servoLeverHitterRight.setPosition(0.99);
+        servoLeverHitterLeft.setPosition(0.9);
+        servoLeverHitterRight.setPosition(0.9);
+
+        servoAllClearLeft.setPosition(0.5);
+        servoAllClearRight.setPosition(0.5);
+
+        servoClimberDumper.setPosition(0.5);
 
         //move toward button
         telemetry.addData("Plowing...", 0);
-        moveForwardCorrection(23,1,0.2,0.1,7.5,5);
+        moveForwardCorrection(22,1,0.2,0.1,7.5,5);
         /*moveForwardCorrectionBackInit(0);
         while(SonarSensor.getUltrasonicLevel()<push2Wall || SonarSensor.getUltrasonicLevel()==0 || SonarSensor.getUltrasonicLevel()==255) {
             moveForwardCorrectionBackground(0,1,0.05,10,5);
