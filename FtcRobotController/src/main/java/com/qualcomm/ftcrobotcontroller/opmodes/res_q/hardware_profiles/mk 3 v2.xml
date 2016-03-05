@@ -1,17 +1,19 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
 <Robot>
-    <LegacyModuleController name="legacy" serialNumber="AL00XQF6">
-        <UltrasonicSensor name="sonicL" port="4" />
-        <UltrasonicSensor name="sonicR" port="5" />
-    </LegacyModuleController>
-    <DeviceInterfaceModule name="Device Interface Module 1" serialNumber="AI02RLYJ">
-        <I2cDevice name="bno055" port="0" />
-    </DeviceInterfaceModule>
     <ServoController name="Servo Controller 1" serialNumber="AL00XLEU">
+        <Servo name="allClearR" port="1" />
+        <Servo name="allClearL" port="2" />
         <Servo name="climberDumper" port="4" />
         <Servo name="leverHitterR" port="5" />
         <Servo name="leverHitterL" port="6" />
     </ServoController>
+    <DeviceInterfaceModule name="Device Interface Module 1" serialNumber="AI02RLYJ">
+        <I2cDevice name="bno055" port="0" />
+    </DeviceInterfaceModule>
+    <LegacyModuleController name="legacy" serialNumber="AL00XQF6">
+        <UltrasonicSensor name="sonicL" port="4" />
+        <UltrasonicSensor name="sonicR" port="5" />
+    </LegacyModuleController>
     <MotorController name="misc motors" serialNumber="AL00XUMH">
         <Motor name="motorLockingBar" port="1" />
         <Motor name="armMotor" port="2" />
