@@ -65,20 +65,23 @@ public abstract class MountainSimple extends Driving
 
         //move toward button
         telemetry.addData("Plowing...", 0);
-        moveForwardCorrection(22,1,0.2,0.1,7.5,5);
+        moveForwardCorrection(26,1,0.2,0.1,7.5,5);
         /*moveForwardCorrectionBackInit(0);
         while(SonarSensor.getUltrasonicLevel()<push2Wall || SonarSensor.getUltrasonicLevel()==0 || SonarSensor.getUltrasonicLevel()==255) {
             moveForwardCorrectionBackground(0,1,0.05,10,5);
             telemetry.addData("Sonic",SonarSensor.getUltrasonicLevel());
             waitOneFullHardwareCycle();
         }*/
-        turnOnSpotPID(45 * neg, 2.5, 1, .15, .05, neg == -1);
         //insert mount code here
+        turnOnSpotPID(45 * neg, 10, 5, 0.5, 0.25, neg==-1);
         moveForwardCorrectionBackInit(45 * neg);
         telemetry.addData("On: STARTING     BNO", retrieveBNOData('p'));
         while (Math.abs(retrieveBNOData('p')) < 25) {
             moveForwardCorrectionBackground(1,-0.5,0.1,2.5,1);
             telemetry.addData("On: Floor        BNO", retrieveBNOData('p'));
+            if(motorPaused()) {
+                while (true) {changeMotorSpeed(0);}
+            }
         }
         moveForwardCorrectionBackInit(45 * neg);
         while(Math.abs(retrieveBNOData('p')) < 35) {

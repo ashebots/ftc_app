@@ -115,7 +115,7 @@ public abstract class Driving extends LinearOpMode {
         motorRight.setPower(power);
         double roffset = motorRight.getCurrentPosition();
         double loffset = motorLeft.getCurrentPosition();
-        while(motorLeft.getCurrentPosition()-loffset < 211*distance) {
+        while(motorLeft.getCurrentPosition()-loffset < 271*distance) {
             telemetry.addData("Left Motor", motorLeft.getCurrentPosition() - loffset);
             telemetry.addData("Right Motor", motorRight.getCurrentPosition() - roffset);
 
@@ -136,7 +136,7 @@ public abstract class Driving extends LinearOpMode {
         double keepAtAngle = yawAngle[0];
         double roffset = motorRight.getCurrentPosition();
         double loffset = motorLeft.getCurrentPosition();
-        while((distance > 0 && motorLeft.getCurrentPosition()-loffset < 211*distance) || (motorLeft.getCurrentPosition()-loffset > 211*distance && distance < 0)) {
+        while((distance > 0 && motorLeft.getCurrentPosition()-loffset < 271*distance) || (motorLeft.getCurrentPosition()-loffset > 271*distance && distance < 0)) {
             telemetry.addData("Left Motor", motorLeft.getCurrentPosition() - loffset);
             telemetry.addData("Right Motor", motorRight.getCurrentPosition() - roffset);
 
@@ -202,8 +202,8 @@ public abstract class Driving extends LinearOpMode {
         waitOneFullHardwareCycle();
 
         telemetry.addData("Current encoder with offset", motorLeft.getCurrentPosition() - loff);
-        telemetry.addData("Target distance value",distance*211);
-        if (!((distance > 0 && motorLeft.getCurrentPosition()-loff < 211*distance) || (motorLeft.getCurrentPosition()-loff > 211*distance && distance < 0))) {
+        telemetry.addData("Target distance value",distance*271);
+        if (!((distance > 0 && motorLeft.getCurrentPosition()-loff < 271*distance) || (motorLeft.getCurrentPosition()-loff > 271*distance && distance < 0))) {
             forwardFinish = true;
             telemetry.addData("Stopping robot",0);
         }
@@ -225,5 +225,9 @@ public abstract class Driving extends LinearOpMode {
     public void changeMotorSpeed(double speed) {
         motorLeft.setPower(speed);
         motorRight.setPower(speed);
+    }
+    public boolean motorPaused() {
+        boolean motorsPaused = motorLeft.getPower()==0.0 || motorRight.getPower()==0.0;
+        return motorsPaused;
     }
 }
