@@ -201,8 +201,11 @@ public abstract class Driving extends LinearOpMode {
 
         waitOneFullHardwareCycle();
 
-        if (211*distance + 200 > motorLeft.getCurrentPosition()-loff && motorLeft.getCurrentPosition()-loff > 211*distance - 200) {
+        telemetry.addData("Current encoder with offset", motorLeft.getCurrentPosition() - loff);
+        telemetry.addData("Target distance value",distance*211);
+        if (!((distance > 0 && motorLeft.getCurrentPosition()-loff < 211*distance) || (motorLeft.getCurrentPosition()-loff > 211*distance && distance < 0))) {
             forwardFinish = true;
+            telemetry.addData("Stopping robot",0);
         }
     }
     public double retrieveBNOData(char reading) {

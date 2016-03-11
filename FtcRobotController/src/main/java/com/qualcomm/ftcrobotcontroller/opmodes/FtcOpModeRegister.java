@@ -83,7 +83,7 @@ public class FtcOpModeRegister implements OpModeRegister {
 
     //manager.register("Accelerometer Test", IMUtest.class);
 
-    //manager.register("IMU Heading Test", IMUtest.class);
+    manager.register("IMU Heading Test", IMUtest.class);
 
     //manager.register("Test Drive", TestDrive.class);
 

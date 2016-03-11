@@ -74,22 +74,23 @@ public abstract class MountainSimple extends Driving
         }*/
         turnOnSpotPID(45 * neg, 2.5, 1, .15, .05, neg == -1);
         //insert mount code here
-        moveForwardCorrectionBackInit(45*neg);
+        moveForwardCorrectionBackInit(45 * neg);
         telemetry.addData("On: STARTING     BNO", retrieveBNOData('p'));
         while (Math.abs(retrieveBNOData('p')) < 25) {
             moveForwardCorrectionBackground(1,-0.5,0.1,2.5,1);
             telemetry.addData("On: Floor        BNO", retrieveBNOData('p'));
         }
         moveForwardCorrectionBackInit(45 * neg);
-        while(Math.abs(retrieveBNOData('p')) < 30) {
+        while(Math.abs(retrieveBNOData('p')) < 35) {
             moveForwardCorrectionBackground(1,-0.35,0.1,2.5,1);
             telemetry.addData("On: Low Zone     BNO", retrieveBNOData('p'));
         }
-        moveForwardCorrectionBackInit(45*neg);
-        while(!forwardFinish) {
-            moveForwardCorrectionBackground(-24,-0.25, 0.1, 2.5, 1);
-            telemetry.addData("On: Mid Zone     BNO", retrieveBNOData('p'));
+        moveForwardCorrectionBackInit(45 * neg);
+        while(Math.abs(retrieveBNOData('p')) > 33) {
+            moveForwardCorrectionBackground(1,-0.25,0.1,2.5,1);
+            telemetry.addData("On: Mid Zone BNO", retrieveBNOData('p'));
         }
+        telemetry.addData("On: STOPPED      BNO", retrieveBNOData('p'));
         changeMotorSpeed(0);
     }
 }

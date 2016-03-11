@@ -48,6 +48,15 @@ public abstract class ResQRobotBase extends OpMode
         motorDriveRight = new Motor(hardwareMap.dcMotor.get("motorDriveRight"));
         motorDriveRight.setDirection(DcMotor.Direction.REVERSE);
 
+        // SR COMPETITION TESTING
+        motorDriveLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        motorDriveRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+
+        motorDriveLeft.setPower(0);
+        motorDriveRight.setPower(0);
+
+        //END SR COMP
+
 
         motorArm = new Motor(hardwareMap.dcMotor.get("armMotor"));
         motorArm.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
