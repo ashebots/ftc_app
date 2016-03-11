@@ -55,8 +55,8 @@ public abstract class MountainSimple extends Driving
 
         waitForStart();
 
-        servoLeverHitterLeft.setPosition(0.9);
-        servoLeverHitterRight.setPosition(0.9);
+        servoLeverHitterLeft.setPosition(0.99);
+        servoLeverHitterRight.setPosition(0.99);
 
         servoAllClearLeft.setPosition(0.5);
         servoAllClearRight.setPosition(0.5);
