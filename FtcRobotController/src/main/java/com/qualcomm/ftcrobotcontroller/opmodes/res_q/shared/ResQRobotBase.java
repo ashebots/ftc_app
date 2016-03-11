@@ -49,9 +49,6 @@ public abstract class ResQRobotBase extends OpMode
         motorDriveRight.setDirection(DcMotor.Direction.REVERSE);
 
         // SR COMPETITION TESTING
-        motorDriveLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        motorDriveRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-
         motorDriveLeft.setPower(0);
         motorDriveRight.setPower(0);
 

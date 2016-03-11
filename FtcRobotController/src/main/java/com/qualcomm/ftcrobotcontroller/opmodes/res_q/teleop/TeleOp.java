@@ -22,18 +22,6 @@ public class TeleOp extends ResQRobotBase
     PIDSettings armPIDSettings;
     ArmController armController;
 
-    //Both servos share position, 'cause one is software reversed
-    //TODO: add actual positons
-    /* USED FOR NON-CONTINUOUS SERVOS, SO NOT RIGHT NOW
-    static double plowPosMax = 0.9; //upper position bound
-    static double plowPosMin = 0.1; //lower position bound
-
-    static double plowPosUp = 0.6;  //automatic go-to-pos up position
-    static double plowPosDown = 0.4;//automatic go-to-pos down position
-
-    double plowPosCurrent = plowPosUp; //initial position
-    */
-
     AllClearGrabber leftAllClearGrabber;
     AllClearGrabber rightAllClearGrabber;
 
@@ -252,7 +240,7 @@ class ArmController
     */
     public void loop(double positionDelta, boolean isServoMode)
     {
-        if (isServoMode) //Control arm like continuous servo
+        if (isServoMode && !Double.isNaN(armMotor.getCurrentPosition())) //Control arm like continuous servo
         {
             //Update our target position
             currentEncoderTarget += positionDelta;
@@ -262,15 +250,21 @@ class ArmController
 
             //Figure out motor power
             double motorPower = pidController.calculate(currentEncoderPosition, currentEncoderTarget);
+            if (Double.isNaN(motorPower)) //Hopefully fixes weird competition issue
+            {
+                motorPower = 0;
+            }
             motorPower = Range.clip(motorPower, -1, 1); //Make sure within acceptable range
 
             armMotor.setPower(motorPower);
 
             //Debug
+            /*
             telemetry.addData("ArmController/positionDelta = ", positionDelta);
             telemetry.addData("ArmController/currentEncoderPositon = ", currentEncoderPosition);
             telemetry.addData("ArmController/currentEncoderTarget = ", currentEncoderTarget);
             telemetry.addData("ArmController/motorPower = ", motorPower);
+            */
         }
         else //Just give power (input still "eased")
         {
