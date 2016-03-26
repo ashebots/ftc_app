@@ -28,6 +28,8 @@ public abstract class ResQRobotBase extends OpMode
 
     public Servo servoClimberDumper;
 
+    public Servo servoPlow;
+
     public Servo servoAllClearLeft;
     public Servo servoAllClearRight;
 
@@ -63,6 +65,8 @@ public abstract class ResQRobotBase extends OpMode
 
 
         servoClimberDumper = hardwareMap.servo.get("climberDumper"); //continuous servo
+
+        servoPlow = hardwareMap.servo.get("plow"); //continuous servo. < 0.5 is down, > 0.5 is up
 
         servoAllClearLeft = hardwareMap.servo.get("allClearL");
         servoAllClearLeft.setDirection(Servo.Direction.REVERSE);
