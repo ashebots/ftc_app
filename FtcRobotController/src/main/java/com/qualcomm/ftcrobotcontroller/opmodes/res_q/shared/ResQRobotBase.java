@@ -59,6 +59,7 @@ public abstract class ResQRobotBase extends OpMode
 
         motorArm = new Motor(hardwareMap.dcMotor.get("armMotor"));
         motorArm.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        motorArm.setEncoderTicksPerRevolution(1680); //NeveRest 60:1?
 
 
         motorLockingBar = new Motor(hardwareMap.dcMotor.get("motorLockingBar"));
