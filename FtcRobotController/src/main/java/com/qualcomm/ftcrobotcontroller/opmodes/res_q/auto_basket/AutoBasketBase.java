@@ -16,7 +16,7 @@ public abstract class AutoBasketBase extends ResQRobotBase
         DRIVE_AWAY_FROM_WALL, //Use encoders
         ROTATE_TOWARDS_BEACON, //Use gyro
         DRIVE_TO_COLORED_TAPE, //Use gyro/encoders to get to colored floor goal/repair zone tape
-        DRIVE_TO_WHITE_TAPE, //Follor the colored tape to get to the white tape that leads directly to the beacon
+        DRIVE_TO_WHITE_TAPE, //Follow the colored tape to get to the white tape that leads directly to the beacon
         DRIVE_TO_BEACON, //Follow the white tape to get to beacon, use gyro to stay straight. HOW DO WE DETERMINE DISTANCE?
     }
     ProgramState programState = ProgramState.INITIALIZE;
