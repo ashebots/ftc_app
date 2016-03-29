@@ -93,7 +93,7 @@ public class TeleOp extends ResQRobotBase
         double armDelta = easeInCirc(Math.abs(armInput), 0, 1, 1); //Get an (absolute) "eased" value from 0 to 1. It rises slowly at first then rises steeply at the end
         armDelta *= Math.signum(armInput); //signum = 1 if input positive, -1 if negative, 0 if zero. This turns back to negative if input negative.
 
-        armController.loop(armDelta, gamepad1.left_bumper);
+        armController.loop(armDelta, gamepad1.y);
 
         //endregion
 
@@ -110,6 +110,22 @@ public class TeleOp extends ResQRobotBase
             climberDumperPower -= 0.1;
         }
         servoClimberDumper.setPosition(climberDumperPower);
+
+        //endregion
+
+
+        //region === PLOW
+
+        double plowPower = 0.5;
+        if (gamepad1.left_bumper)
+        {
+            plowPower += 0.2;
+        }
+        if (gamepad1.left_trigger > 0.5)
+        {
+            plowPower -= 0.2;
+        }
+        servoPlow.setPosition(plowPower);
 
         //endregion
 
