@@ -323,7 +323,7 @@ class AllClearGrabber
 }
 
 
-//NOTE: one motor should already be reversed
+//NOTE: one servo should already be reversed
 class LeverHitter
 {
     static double MAX_POS = 1.0;

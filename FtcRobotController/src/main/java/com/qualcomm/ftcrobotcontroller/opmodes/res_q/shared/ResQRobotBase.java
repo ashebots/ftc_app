@@ -26,12 +26,12 @@ public abstract class ResQRobotBase extends OpMode
 
     public Motor motorLockingBar;
 
-    public Servo servoClimberDumper;
+    public Servo servoClimberDumper; //continuous
 
-    public Servo servoPlow;
+    public Servo servoPlow; //continuous
 
-    public Servo servoAllClearLeft;
-    public Servo servoAllClearRight;
+    public Servo servoAllClearLeft; //continuous
+    public Servo servoAllClearRight; //continuous
 
     public Servo servoLeverHitterLeft; //Refers to left "drive side"
     public Servo servoLeverHitterRight; //Refers to right "drive side"
@@ -77,6 +77,28 @@ public abstract class ResQRobotBase extends OpMode
         servoLeverHitterLeft.setDirection(Servo.Direction.REVERSE); //Should be that 0 is down //Unsure which should be reversed
         servoLeverHitterRight = hardwareMap.servo.get("leverHitterR");
     }
+
+
+    @Override
+    public void stop()
+    {
+        //Make sure all MOTORS are correctly stopped. This may not be necessary for motors, but best to be safe.
+        motorDriveLeft.setPower(0);
+        motorDriveRight.setPower(0);
+        motorArm.setPower(0);
+        motorLockingBar.setPower(0);
+
+        //Make sure all CONTINUOUS SERVOS are set to stop (0.5). We have had issues with continuous servos not stopping
+        servoAllClearLeft.setPosition(0.5);
+        servoAllClearRight.setPosition(0.5);
+        servoClimberDumper.setPosition(0.5);
+        servoPlow.setPosition(0.5);
+
+        //Make sure all REGULAR SERVOS are in a good ending position.
+        servoLeverHitterLeft.setPosition(0.99);
+        servoLeverHitterRight.setPosition(0.99);
+    }
+
 
     public double easeInCirc(double currentInput, double startOutput, double endOutput, double endInput) {
         currentInput /= endInput;
