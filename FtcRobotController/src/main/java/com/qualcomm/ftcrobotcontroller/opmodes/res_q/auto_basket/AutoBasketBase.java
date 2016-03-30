@@ -4,6 +4,8 @@ package com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket;
 import android.util.Log;
 
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.lib.AdafruitIMU;
+import com.qualcomm.ftcrobotcontroller.opmodes.res_q.lib.IMU;
+import com.qualcomm.ftcrobotcontroller.opmodes.res_q.lib.ImperialRoboticsBNO055;
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.shared.ResQRobotBase;
 import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.GyroSensor;
@@ -22,11 +24,7 @@ public abstract class AutoBasketBase extends ResQRobotBase
     ProgramState programState = ProgramState.INITIALIZE;
 
 
-    AdafruitIMU imu;
-    //The following arrays contain both the Euler angles reported by the IMU (indices = 0) AND the
-    // Tait-Bryan angles calculated from the 4 components of the quaternion vector (indices = 1)
-    volatile double[] rollAngle = new double[2], pitchAngle = new double[2], yawAngle = new double[2];
-    //(Explanation of "volatile" here: http://tutorials.jenkov.com/java-concurrency/volatile.html)
+    public IMU imu;
 
     @Override
     public void init()
@@ -38,16 +36,12 @@ public abstract class AutoBasketBase extends ResQRobotBase
 
         //IMU
         try {
-            imu = new AdafruitIMU(hardwareMap, "bno055"
-
-                    //The following was required when the definition of the "I2cDevice" class was incomplete.
-                    //, "cdim", 5
-
+            imu = new ImperialRoboticsBNO055(new AdafruitIMU(hardwareMap, "bno055"
                     , (byte)(AdafruitIMU.BNO055_ADDRESS_A * 2)//By convention the FTC SDK always does 8-bit I2C bus
                     //addressing
-                    , (byte)AdafruitIMU.OPERATION_MODE_IMU);
+                    , (byte)AdafruitIMU.OPERATION_MODE_IMU));
         } catch (RobotCoreException e){
-            Log.i("FtcRobotController", "Exception: " + e.getMessage());
+            Log.i("FtcRobotController", "Exception instantiating IMU: " + e.getMessage());
         }
 
 
@@ -57,7 +51,7 @@ public abstract class AutoBasketBase extends ResQRobotBase
     public void start()
     {
         //Set up IMU
-        imu.startIMU();
+        imu.start();
     }
 
     @Override
