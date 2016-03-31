@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.test.IMUDrivePID;
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.teleop.TeleOp;
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.test.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
@@ -63,35 +64,20 @@ public class FtcOpModeRegister implements OpModeRegister {
 
     //manager.register("Cascade Effect TeleOp", CascadeEffectTeleop.class);
     //manager.register("Telemetry Test", TelemetryTest.class);
+
     manager.register("TeleOp", TeleOp.class);
 
-    //manager.register("Blue Autonomous Mountain", ClimbersToMountainBlueM.class);
-    //manager.register("Red Autonomous Mountain", ClimbersToMountainRedM.class);
-    //manager.register("Blue Autonomous Mountain 2ndPos", ClimbersToMountainBlueOffsetM.class);
-    //manager.register("Red Autonomous Mountain 2ndPos", ClimbersToMountainRedOffsetM.class);
+
 
     manager.register("Mountain Auto Blue",AutoBlue.class);
     manager.register("Mountain Auto Red",AutoRed.class);
 
-    //manager.register("Mountain MidZone", MountainCharge.class);
-    //manager.register("Blue Autonomous Climbers", ClimbersToMountainBlue.class);
-    //manager.register("Red Autonomous Climbers", ClimbersToMountainRed.class);
-    //manager.register("Blue Autonomous Climbers 2ndPos", ClimbersToMountainBlueOffset.class);
-    //manager.register("Red Autonomous Climbers 2ndPos", ClimbersToMountainRedOffset.class);
+    manager.register("IMU PID Driving", IMUDrivePID.class);
 
-    //manager.register("Background Test", StrategyBlocks.class);
-
-    //manager.register("Accelerometer Test", IMUtest.class);
 
     manager.register("IMU Heading Test", IMUtest.class);
 
-    //manager.register("Test Drive", TestDrive.class);
 
-    //manager.register("Background Movement", TestAutoMountainBCCopy.class);
-
-    //manager.register("Strategy Test", StrategyTest.class);
-
-    //manager.register("Sonic", SonicRobotEyes.class);
 
     /*
      * The following op modes are example op modes provided by QualComm.

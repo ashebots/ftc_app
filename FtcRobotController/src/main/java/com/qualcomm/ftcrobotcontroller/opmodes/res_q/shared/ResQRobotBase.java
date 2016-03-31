@@ -81,7 +81,20 @@ public abstract class ResQRobotBase extends OpMode
 
 
     @Override
+    public void start()
+    {
+        stopMotorsAndServos();
+    }
+
+
+    @Override
     public void stop()
+    {
+        stopMotorsAndServos();
+    }
+
+
+    public void stopMotorsAndServos()
     {
         //Make sure all MOTORS are correctly stopped. This may not be necessary for motors, but best to be safe.
         motorDriveLeft.setPower(0);

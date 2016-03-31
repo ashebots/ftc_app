@@ -50,6 +50,8 @@ public abstract class AutoBasketBase extends ResQRobotBase
     @Override
     public void start()
     {
+        super.start();
+
         //Set up IMU
         imu.start();
     }
