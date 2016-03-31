@@ -54,6 +54,7 @@ public abstract class AutoBasketBase extends ResQRobotBase
 
         //Set up IMU
         imu.start();
+        imu.invertYaw(true);
     }
 
     @Override

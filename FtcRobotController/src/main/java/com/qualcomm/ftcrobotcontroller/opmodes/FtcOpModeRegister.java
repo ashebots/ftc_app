@@ -31,12 +31,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.test.IMUDrivePID;
+import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.test.IMUDriveRotatePID;
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.teleop.TeleOp;
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.test.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 /**
  * Register Op Modes
@@ -72,7 +71,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("Mountain Auto Blue",AutoBlue.class);
     manager.register("Mountain Auto Red",AutoRed.class);
 
-    manager.register("IMU PID Driving", IMUDrivePID.class);
+    manager.register("IMU PID Driving", IMUDriveRotatePID.class);
 
 
     manager.register("IMU Heading Test", IMUtest.class);

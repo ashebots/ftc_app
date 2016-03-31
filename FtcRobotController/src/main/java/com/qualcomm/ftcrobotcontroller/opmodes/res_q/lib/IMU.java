@@ -13,6 +13,8 @@ public abstract class IMU
     protected double continuousPitch = 0;
     protected double continuousYaw = 0;
 
+    protected double yawInversionFactor = 1; //1 or -1, whether or not yaw should be inverted
+
 
     //Any secondary initialization that doesn't fit in the constructor should go here.
     //This should be called during OpMode.start()
@@ -77,6 +79,10 @@ public abstract class IMU
     }
 
 
+    public void invertYaw(boolean shouldInvert)
+    {
+        yawInversionFactor = (shouldInvert == true) ? -1 : 1;
+    }
 
     public double getRoll()
     {
@@ -88,12 +94,12 @@ public abstract class IMU
     }
     public double getYaw()
     {
-        return yaw;
+        return yaw * yawInversionFactor;
     }
 
     public double getContinuousYaw()
     {
-        return continuousYaw;
+        return continuousYaw * yawInversionFactor;
     }
     /* NOT IMPLEMENTED :(
     public double getContinuousPitch()

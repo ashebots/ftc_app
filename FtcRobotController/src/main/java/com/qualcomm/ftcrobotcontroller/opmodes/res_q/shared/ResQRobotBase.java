@@ -47,7 +47,10 @@ public abstract class ResQRobotBase extends OpMode
         sensorAccelerometer = new AccelerometerSensor(appContext, sensorManager, SensorManager.SENSOR_DELAY_FASTEST, 7.0f);
         */
         motorDriveLeft = new Motor(hardwareMap.dcMotor.get("motorDriveLeft"));
+        motorDriveLeft.setEncoderTicksPerRevolution(1680); //NeveRest 60:1?
+
         motorDriveRight = new Motor(hardwareMap.dcMotor.get("motorDriveRight"));
+        motorDriveRight.setEncoderTicksPerRevolution(1680); //NeveRest 60:1?
         motorDriveRight.setDirection(DcMotor.Direction.REVERSE);
 
         // SR COMPETITION TESTING
@@ -58,7 +61,7 @@ public abstract class ResQRobotBase extends OpMode
 
 
         motorArm = new Motor(hardwareMap.dcMotor.get("armMotor"));
-        motorArm.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        //motorArm.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         motorArm.setEncoderTicksPerRevolution(1680); //NeveRest 60:1?
 
 

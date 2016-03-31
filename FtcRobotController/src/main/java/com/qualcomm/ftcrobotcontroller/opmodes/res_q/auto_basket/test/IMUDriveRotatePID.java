@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.ashebots.ftcandroidlib.control.PIDController;
 import org.ashebots.ftcandroidlib.control.PIDSettings;
 
-public class IMUDrivePID extends AutoBasketBase
+public class IMUDriveRotatePID extends AutoBasketBase
 {
     PIDController pidDriveController;
     PIDSettings pidDriveSettings;
@@ -81,8 +81,8 @@ public class IMUDrivePID extends AutoBasketBase
             else
             {
                 telemetry.addData("angleError = ", angleError);
-                leftDrivePower -= angleError;
-                rightDrivePower += angleError;
+                leftDrivePower += angleError;
+                rightDrivePower -= angleError;
             }
         }
 
