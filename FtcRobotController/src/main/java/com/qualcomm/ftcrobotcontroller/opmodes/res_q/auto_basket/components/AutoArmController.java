@@ -22,6 +22,7 @@ public class AutoArmController
     int encoderTicksPerArmRev; //How many encoder ticks the motor would have to turn for the ARM to revolve once. (Set
 
     int currentEncoderTarget = 0;
+    double targetDegrees = 0;
 
     Telemetry telemetry;
     Motor motorArm;
@@ -29,7 +30,7 @@ public class AutoArmController
 
 
     //For init button.
-    public void init(Motor motorArm, PIDSettings pidSettings, Telemetry telemetry)
+    public AutoArmController(Motor motorArm, PIDSettings pidSettings, Telemetry telemetry)
     {
         this.motorArm = motorArm;
         this.pidController = new PIDController(pidSettings);
@@ -52,11 +53,18 @@ public class AutoArmController
     {
         degrees = Range.clip(degrees, 0, MAX_DEGREES);
         currentEncoderTarget = degreesToEncoderTicks(degrees);
+
+        targetDegrees = degrees; //Not used in calculations, but stored for user's reference
     }
+    public double getTargetPositionDegrees() { return targetDegrees; }
+
 
     //Must be called in loop. Updates motor power based on current position and target position
     public void updatePosition()
     {
+        telemetry.addData("arm encoder target = ", currentEncoderTarget);
+        telemetry.addData("arm encoder position = ", motorArm.getCurrentPosition());
+
         double motorPower = pidController.calculate((double) motorArm.getCurrentPosition(), (double) currentEncoderTarget);
         telemetry.addData("motorArm raw power = ", motorPower);
 
