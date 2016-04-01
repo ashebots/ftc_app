@@ -20,7 +20,9 @@ public class AutoFullDrivingTest extends AutoBasketBase
     {
         super.init();
 
-        driveController = new AutoDriveController(motorDriveLeft, motorDriveRight, imu, headingPIDSettings, distancePIDSettings);
+        headingPIDSettings = new PIDSettings(0.055, 0, 0.002);
+        distancePIDSettings = new PIDSettings(0.004, 0, 1E-4);
+        driveController = new AutoDriveController(motorDriveLeft, motorDriveRight, imu, headingPIDSettings, distancePIDSettings, telemetry);
     }
 
     @Override
@@ -34,6 +36,8 @@ public class AutoFullDrivingTest extends AutoBasketBase
     @Override
     public void loop()
     {
+        imu.updateAngles();
+
         drive();
 
         tunePID(distancePIDSettings, gamepad2);

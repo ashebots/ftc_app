@@ -2,6 +2,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.components;
 
 
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.lib.IMU;
+import com.qualcomm.robotcore.robocol.Telemetry;
 import com.qualcomm.robotcore.util.Range;
 
 import org.ashebots.ftcandroidlib.control.PIDController;
@@ -18,10 +19,12 @@ public class AutoDriveController
     PIDController headingPIDController;
     PIDController distancePIDController;
 
+    Telemetry telemetry;
+
 
     //revolution of motor shaft, not treads
     int ticksPerRevolution;
-    double distancePerRevolution = 2; //Inches that the robot moves per shaft revolution. TODO: real value
+    double distancePerRevolution = 7.95; //Inches that the robot moves per shaft revolution. TODO: real value
 
 
     int targetEncoderTicks = 0;
@@ -30,7 +33,7 @@ public class AutoDriveController
     double targetHeading = 0;
 
 
-    public AutoDriveController(Motor motorDriveLeft, Motor motorDriveRight, IMU imu, PIDSettings headingPIDSettings, PIDSettings distancePIDSettings)
+    public AutoDriveController(Motor motorDriveLeft, Motor motorDriveRight, IMU imu, PIDSettings headingPIDSettings, PIDSettings distancePIDSettings, Telemetry telemetry)
     {
         this.motorDriveLeft = motorDriveLeft;
         this.motorDriveRight = motorDriveRight;
@@ -39,6 +42,8 @@ public class AutoDriveController
 
         this.headingPIDController = new PIDController(headingPIDSettings);
         this.distancePIDController = new PIDController(distancePIDSettings);
+
+        this.telemetry = telemetry;
 
 
         ticksPerRevolution = motorDriveLeft.getEncoderTicksPerRevolution(); //assume that motors are the same
@@ -65,13 +70,14 @@ public class AutoDriveController
     {
         power = Math.abs(power);
         power = Range.clip(power, 0, 1.0);
+        requestedDrivePower = power;
 
         motorDriveLeft.setCurrentPosition(0);
         motorDriveRight.setCurrentPosition(0);
 
         targetEncoderTicks = calcEncoderTicksForDistance(distance);
     }
-    public void setDriveDistanceRelative(double distance) { setDriveDistanceRelative(distance, 1); }
+    public void setDriveDistanceRelative(double distance) { setDriveDistanceRelative(distance, 1.0); }
 
 
 
@@ -80,12 +86,18 @@ public class AutoDriveController
     {
         //First calculate distance error. This will serve as our primary driving force
         double distanceError = distancePIDController.calculate(getCurrentEncoderTicks(), targetEncoderTicks);
+        if (Double.isNaN(distanceError)) {
+            distanceError = 0;
+        }
         Range.clip(distanceError, -1, 1);
         Range.scale(distanceError, -1, 1, -requestedDrivePower, requestedDrivePower);
 
         //Calculate heading error. This will serve as a weak driving force, when maintaining a heading,
         //and a strong and entirely overpowering force when getting to a new heading. Notice that it is NOT clipped
         double headingError = headingPIDController.calculate(imu.getContinuousYaw(), targetHeading);
+        if (Double.isNaN(headingError)) {
+            headingError = 0;
+        }
 
         //Add forces together
         double leftDrivePower = distanceError + headingError;
@@ -99,6 +111,14 @@ public class AutoDriveController
 
         motorDriveLeft.setPower(leftDrivePower);
         motorDriveRight.setPower(rightDrivePower);
+
+
+        //telemetry.addData("targetHeading", targetHeading);
+        //telemetry.addData("currentHeading", imu.getContinuousYaw());
+        //telemetry.addData("headingError", headingError);
+        telemetry.addData("current ticks", getCurrentEncoderTicks());
+        telemetry.addData("target ticks", targetEncoderTicks);
+        telemetry.addData("distanceError", distanceError);
     }
 
 
@@ -120,7 +140,7 @@ public class AutoDriveController
     private int calcEncoderTicksForDistance(double distance)
     {
         double revolutionsToTarget = distance / distancePerRevolution;
-        return (int) revolutionsToTarget * ticksPerRevolution;
+        return (int) (revolutionsToTarget * (double) ticksPerRevolution);
     }
 
     private double calcDistanceForEncoderTicks(int ticks)

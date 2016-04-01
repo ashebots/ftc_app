@@ -19,16 +19,16 @@ public class CalibrateDistance extends AutoBasketBase
     @Override
     public void loop()
     {
-        rotateSixTimes(motorDriveLeft);
-        rotateSixTimes(motorDriveRight);
+        rotateThreeTimes(motorDriveLeft);
+        rotateThreeTimes(motorDriveRight);
 
         telemetry.addData("left encoder = ", motorDriveLeft.getCurrentPosition());
         telemetry.addData("right encoder = ", motorDriveRight.getCurrentPosition());
     }
 
-    void rotateSixTimes(Motor motor)
+    void rotateThreeTimes(Motor motor)
     {
-        if (motor.getCurrentPosition() < motor.getEncoderTicksPerRevolution() * 6)
+        if (motor.getCurrentPosition() < motor.getEncoderTicksPerRevolution() * 3)
         {
             motor.setPower(0.3);
         }

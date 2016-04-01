@@ -38,6 +38,11 @@ public class AutoArmPIDTest extends AutoBasketBase
         tunePID(pidArmSettings, gamepad2);
 
 
+        telemetry.addData("Z: PID settings = {",
+                pidArmSettings.getProportionalTerm() + ", "
+                        + pidArmSettings.getIntegralTerm() + ", "
+                        + pidArmSettings.getDerivativeTerm() + "}");
+
         //Move arm
         double targetAngle = armController.getTargetPositionDegrees() + (gamepad1.right_stick_y / -10);
         if (gamepad1.a)
@@ -45,6 +50,8 @@ public class AutoArmPIDTest extends AutoBasketBase
             targetAngle = 90;
         }
         armController.setTargetPositionDegrees(targetAngle);
+
+        armController.updatePosition();
     }
 
 

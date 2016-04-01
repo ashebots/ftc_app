@@ -31,6 +31,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.test.AutoArmPIDTest;
+import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.test.AutoFullDrivingTest;
+import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.test.CalibrateDistance;
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.test.IMUDriveRotatePID;
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.teleop.TeleOp;
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.test.*;
@@ -58,20 +61,15 @@ public class FtcOpModeRegister implements OpModeRegister {
      * If two or more op modes are registered with the same name, the app will display an error.
      */
 
-    //manager.register("Atlas: TeleOp", AtlasTeleop.class);
-    //manager.register("Beacon: TeleOp", BeaconTeleop.class);
-
-    //manager.register("Cascade Effect TeleOp", CascadeEffectTeleop.class);
-    //manager.register("Telemetry Test", TelemetryTest.class);
+    manager.register("Auto Full Driving Test", AutoFullDrivingTest.class);
+    manager.register("Auto Arm PID Test", AutoArmPIDTest.class);
 
     manager.register("TeleOp", TeleOp.class);
-
-
 
     manager.register("Mountain Auto Blue",AutoBlue.class);
     manager.register("Mountain Auto Red",AutoRed.class);
 
-    manager.register("IMU PID Driving", IMUDriveRotatePID.class);
+    //manager.register("IMU PID Driving", IMUDriveRotatePID.class);
 
 
     manager.register("IMU Heading Test", IMUtest.class);

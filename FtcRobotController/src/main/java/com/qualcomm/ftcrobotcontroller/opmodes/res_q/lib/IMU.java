@@ -81,7 +81,7 @@ public abstract class IMU
 
     public void invertYaw(boolean shouldInvert)
     {
-        yawInversionFactor = (shouldInvert == true) ? -1 : 1;
+        yawInversionFactor = (shouldInvert == true) ? -1.0 : 1.0;
     }
 
     public double getRoll()

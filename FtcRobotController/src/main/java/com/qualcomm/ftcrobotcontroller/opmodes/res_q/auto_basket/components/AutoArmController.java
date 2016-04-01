@@ -15,8 +15,8 @@ public class AutoArmController
 {
     static final int MAX_DEGREES = 120; //TODO: figure out real value //This the maximum safe value that the arm can go to (relative to start) (while the robot is still) without flipping
 
-    static final int INPUT_GEAR_TEETH = 1; //TODO: value
-    static final int OUTPUT_GEAR_TEETH = 1; //TODO value
+    static final int INPUT_GEAR_TEETH = 8; //TODO: value
+    static final int OUTPUT_GEAR_TEETH = 40; //TODO value
     //static final double GEAR_RATIO = OUTPUT_GEAR_TEETH / (double) INPUT_GEAR_TEETH;
 
     int encoderTicksPerArmRev; //How many encoder ticks the motor would have to turn for the ARM to revolve once. (Set
@@ -71,7 +71,7 @@ public class AutoArmController
         motorPower = Range.clip(motorPower, -1.0, 1.0);
 
         telemetry.addData("motorArm power = ", motorPower);
-        //motorArm.setPower(motorPower);
+        motorArm.setPower(motorPower);
     }
 
 
