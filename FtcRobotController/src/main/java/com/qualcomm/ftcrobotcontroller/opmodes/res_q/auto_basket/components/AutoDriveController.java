@@ -89,14 +89,15 @@ public class AutoDriveController
         if (Double.isNaN(distanceError)) {
             distanceError = 0;
         }
-        Range.clip(distanceError, -1, 1);
-        Range.scale(distanceError, -1, 1, -requestedDrivePower, requestedDrivePower);
+        distanceError = Range.clip(distanceError, -1.0, 1.0);
+        distanceError = Range.scale(distanceError, -1.0, 1.0, -requestedDrivePower, requestedDrivePower);
 
         //Calculate heading error. This will serve as a weak driving force, when maintaining a heading,
         //and a strong and entirely overpowering force when getting to a new heading. Notice that it is NOT clipped
         double headingError = headingPIDController.calculate(imu.getContinuousYaw(), targetHeading);
         if (Double.isNaN(headingError)) {
             headingError = 0;
+            telemetry.addData("WARNING", "HEADING ERROR IS NaN");
         }
 
         //Add forces together
@@ -106,19 +107,22 @@ public class AutoDriveController
         //Once added, clip again.
         //Note that if distanceError is at max, then only the negative side of headingError will
         //affect the output, so it might work half as slow... :(
-        leftDrivePower = Range.clip(leftDrivePower, -1, 1);
-        rightDrivePower = Range.clip(rightDrivePower, -1, 1);
+        leftDrivePower = Range.clip(leftDrivePower, -1.0, 1.0);
+        rightDrivePower = Range.clip(rightDrivePower, -1.0, 1.0);
 
         motorDriveLeft.setPower(leftDrivePower);
         motorDriveRight.setPower(rightDrivePower);
 
 
+        telemetry.addData("requestedDrivePower = ", requestedDrivePower);
+        telemetry.addData("headingError = ", headingError);
+        telemetry.addData("distanceError = ", distanceError);
         //telemetry.addData("targetHeading", targetHeading);
         //telemetry.addData("currentHeading", imu.getContinuousYaw());
         //telemetry.addData("headingError", headingError);
-        telemetry.addData("current ticks", getCurrentEncoderTicks());
-        telemetry.addData("target ticks", targetEncoderTicks);
-        telemetry.addData("distanceError", distanceError);
+        //telemetry.addData("current ticks", getCurrentEncoderTicks());
+        //telemetry.addData("target ticks", targetEncoderTicks);
+        //telemetry.addData("distanceError", distanceError);
     }
 
 

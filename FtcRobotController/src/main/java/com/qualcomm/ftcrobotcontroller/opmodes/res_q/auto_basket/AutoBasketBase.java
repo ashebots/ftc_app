@@ -20,21 +20,26 @@ public abstract class AutoBasketBase extends ResQRobotBase
     //General overall current "stage" of the program
     enum ProgramState
     {
-        INITIALIZE,
+        POTENTIALLY_DELAY,
         DRIVE_AWAY_FROM_WALL,
         ROTATE_TOWARDS_BEACON,
-        DRIVE_TO_BEACON_AREA,
+        DRIVE_PAST_BEACON,
+        DRIVE_BACK_TO_BEACON,
         ROTATE_TOWARDS_BEACON_AGAIN,
         DRIVE_TO_BEACON,
-        DUMP_CLIMBERS
+        DUMP_CLIMBERS,
+        END
     }
-    ProgramState programState = ProgramState.INITIALIZE;
+    ProgramState programState = ProgramState.POTENTIALLY_DELAY;
 
     //programState agnostic, used in each individual programState case for more control
     int subState = 0;
 
     //All turn angles are multiplied by this, to invert them on one of the alliances
-    int allianceRotationFactor = 1; //Will be set by red and blue subclasses; BLUE is POSITIVE, RED is NEGATIVE.
+    public int allianceRotationFactor = 1; //Will be set by red and blue subclasses; BLUE is POSITIVE, RED is NEGATIVE.
+
+    //Seconds to wait before starting program. Set to a value in sub programs
+    public double startDelaySeconds = 0;
 
     //Used as a time-based fallback for actions completing //TODO: WRITE A BETTER GODDAMN DESCRIPTION
     ElapsedTime currentActionTimer;
@@ -57,13 +62,6 @@ public abstract class AutoBasketBase extends ResQRobotBase
         //Initialize shared components/hardware
         super.init();
 
-        //Initialize other autonomous specifics
-        headingPIDSettings = new PIDSettings(0.055, 0, 0.002);
-        distancePIDSettings = new PIDSettings(0.004, 0, 1E-4);
-        driveController = new AutoDriveController(motorDriveLeft, motorDriveRight, imu, headingPIDSettings, distancePIDSettings, telemetry);
-
-        currentActionTimer = new ElapsedTime();
-
 
         //IMU
         try {
@@ -76,6 +74,12 @@ public abstract class AutoBasketBase extends ResQRobotBase
         }
 
 
+        //Initialize other autonomous specifics
+        headingPIDSettings = new PIDSettings(0.055, 0, 0.002);
+        distancePIDSettings = new PIDSettings(0.004, 0, 1E-4);
+        driveController = new AutoDriveController(motorDriveLeft, motorDriveRight, imu, headingPIDSettings, distancePIDSettings, telemetry);
+
+        currentActionTimer = new ElapsedTime();
     }
 
     @Override
@@ -83,6 +87,7 @@ public abstract class AutoBasketBase extends ResQRobotBase
     {
         super.start();
         //Set up IMU
+
         imu.start();
         imu.invertYaw(true);
 
@@ -90,6 +95,9 @@ public abstract class AutoBasketBase extends ResQRobotBase
         resetStartTime();
 
         driveController.start();
+
+        //Makes sure servo arms are up and powered
+        stopMotorsAndServos();
     }
 
     @Override
@@ -99,6 +107,7 @@ public abstract class AutoBasketBase extends ResQRobotBase
         if (getRuntime() >= 30)
         {
             requestOpModeStop();
+            //telemetry.addData("STATUS = ", "OUT OF TIME");
         }
 
         //Refresh IMU data
@@ -107,28 +116,35 @@ public abstract class AutoBasketBase extends ResQRobotBase
         //Update motor powers to achieve target heading/position
         driveController.updatePosition();
 
-
-        //DEBUG PAUSE BETWEEN STATES //TODO REMOVE THIS
-        if (gamepad1.a && subState == -1)
-        {
-            subState = 0;
-        }
+        updateTelemetry();
 
 
         //Do actions based on greater programState and lesser subState
         switch (programState)
         {
-            case INITIALIZE:
-                //Can we make sure IMU is calibrated here??
-                goToNextProgramState();
-                break;
+            //Will delay program if startDelaySeconds has been set
+            case POTENTIALLY_DELAY:
+                switch (subState)
+                {
+                    case 0:
+                        currentActionTimer.reset();
+                        subState++;
+                        break;
 
+                    case 1:
+                        if (currentActionTimer.seconds() >= startDelaySeconds)
+                        {
+                            goToNextProgramState();
+                        }
+                        break;
+                }
+                break;
 
             case DRIVE_AWAY_FROM_WALL:
                 switch (subState)
                 {
                     case 0:
-                        driveController.setDriveDistanceRelative(6); //Drive 6 inches away from wall so we can turn
+                        driveController.setDriveDistanceRelative(18); //Drive 6 inches away from wall so we can turn
                         currentActionTimer.reset();
                         subState++; //Go to next subState
                         break;
@@ -154,7 +170,7 @@ public abstract class AutoBasketBase extends ResQRobotBase
 
                     case 1:
                         //Wait until arrived within 1.5 degrees (out of 360) of target heading, or too much time elapses
-                        if (driveController.degreesFromTargetHeading() < 1.5 || currentActionTimer.seconds() > 3)
+                        if (driveController.degreesFromTargetHeading() < 1.0 || currentActionTimer.seconds() > 3)
                         {
                             goToNextProgramState();
                         }
@@ -162,18 +178,36 @@ public abstract class AutoBasketBase extends ResQRobotBase
                 }
                 break;
 
-            case DRIVE_TO_BEACON_AREA:
+            case DRIVE_PAST_BEACON:
                 switch (subState)
                 {
                     case 0:
-                        driveController.setDriveDistanceRelative(67); //Made up value
+                        driveController.setDriveDistanceRelative(104); //Made up value
                         currentActionTimer.reset();
                         subState++;
                         break;
 
                     case 1:
                         //Wait until arrived within 0.5 inches of target, or too much time elapses
-                        if (driveController.distanceFromTargetDistance() < 0.5 || currentActionTimer.seconds() > 8)
+                        if (driveController.distanceFromTargetDistance() < 0.5 || currentActionTimer.seconds() > 16) //TODO: CHANGE FALLBACK TIME
+                        {
+                            goToNextProgramState();
+                        }
+                        break;
+                }
+                break;
+
+            case DRIVE_BACK_TO_BEACON:
+                switch (subState)
+                {
+                    case 0:
+                        driveController.setDriveDistanceRelative(-24);
+                        currentActionTimer.reset();
+                        subState++;
+                        break;
+
+                    case 1:
+                        if (driveController.distanceFromTargetDistance() < 0.3 || currentActionTimer.seconds() > 4) //TODO: CHANGE FALLBACK TIME
                         {
                             goToNextProgramState();
                         }
@@ -192,7 +226,7 @@ public abstract class AutoBasketBase extends ResQRobotBase
 
                     case 1:
                         //Wait until arrived within 1.5 degrees (out of 360) of target heading, or too much time elapses
-                        if (driveController.degreesFromTargetHeading() < 1.5 || currentActionTimer.seconds() > 3)
+                        if (driveController.degreesFromTargetHeading() < 0.5 || currentActionTimer.seconds() > 3)
                         {
                             goToNextProgramState();
                         }
@@ -204,14 +238,14 @@ public abstract class AutoBasketBase extends ResQRobotBase
                 switch (subState)
                 {
                     case 0:
-                        driveController.setDriveDistanceRelative(6); //Made up value
+                        driveController.setDriveDistanceRelative(24.5); //Made up value
                         currentActionTimer.reset();
                         subState++;
                         break;
 
                     case 1:
                         //Wait until arrived within 0.5 inches of target, or too much time elapses
-                        if (driveController.distanceFromTargetDistance() < 0.5 || currentActionTimer.seconds() > 3)
+                        if (driveController.distanceFromTargetDistance() < 0.2 || currentActionTimer.seconds() > 5)
                         {
                             goToNextProgramState();
                         }
@@ -224,7 +258,7 @@ public abstract class AutoBasketBase extends ResQRobotBase
                 {
                     //Start dumping
                     case 0:
-                        servoClimberDumper.setPosition(0.8); //Continuous servo
+                        servoClimberDumper.setPosition(0.7); //Continuous servo
                         currentActionTimer.reset();
                         subState++;
                         break;
@@ -237,7 +271,7 @@ public abstract class AutoBasketBase extends ResQRobotBase
                         break;
                     //Start returning
                     case 2:
-                        servoClimberDumper.setPosition(0.2); //Continuous servo
+                        servoClimberDumper.setPosition(0.3); //Continuous servo
                         currentActionTimer.reset();
                         subState++;
                         break;
@@ -251,7 +285,9 @@ public abstract class AutoBasketBase extends ResQRobotBase
                 }
                 break;
 
-
+            case END:
+                requestOpModeStop();
+                break;
 
             default:
                 requestOpModeStop();
@@ -270,18 +306,21 @@ public abstract class AutoBasketBase extends ResQRobotBase
     void goToNextProgramState()
     {
         //Get next value in ProgramState enum. Should go to default switch() case after enum ends.
-        programState = programState.values()[programState.ordinal() + 1];
+        ProgramState[] possibleStates = ProgramState.values();
+        int nextStateIndex = (programState.ordinal() + 1) % possibleStates.length;
+        programState = possibleStates[nextStateIndex];
 
         //Reset subState
-        //subState = 0;
+        subState = 0;
 
         //DEBUG
-        subState = -1; //TODO: REMOVE THIS, SET TO 0 INSTEAD
+        //subState = -1; //TODO: REMOVE THIS, SET TO 0 INSTEAD
     }
 
 
     void updateTelemetry()
     {
+        /*
         telemetry.addData("1: programState = ", programState);
         telemetry.addData("2: programState ordinal = ", programState.ordinal());
         telemetry.addData("3: subState = ", subState);
@@ -289,7 +328,8 @@ public abstract class AutoBasketBase extends ResQRobotBase
         telemetry.addData("4: currentActionTimer = ", currentActionTimer.seconds());
 
         telemetry.addData("5: Distance Error = ", driveController.distanceFromTargetDistance());
-        telemetry.addData("6: Heading Error = ", driveController.degreesFromTargetHeading());
+        */
+        telemetry.addData("6: Degree Error = ", driveController.degreesFromTargetHeading());
 
 
 
