@@ -70,8 +70,10 @@ public class FtcOpModeRegister implements OpModeRegister {
     //manager.register("Blue Autonomous Mountain 2ndPos", ClimbersToMountainBlueOffsetM.class);
     //manager.register("Red Autonomous Mountain 2ndPos", ClimbersToMountainRedOffsetM.class);
 
-    manager.register("Mountain Auto Blue",AutoBlue.class);
-    manager.register("Mountain Auto Red",AutoRed.class);
+    //manager.register("Mountain Auto Blue",AutoBlue.class);
+    //manager.register("Mountain Auto Red",AutoRed.class);
+
+    manager.register("AutoLib Test",TestAutonomousLoop.class);
 
     //manager.register("Mountain MidZone", MountainCharge.class);
     //manager.register("Blue Autonomous Climbers", ClimbersToMountainBlue.class);
@@ -83,7 +85,7 @@ public class FtcOpModeRegister implements OpModeRegister {
 
     //manager.register("Accelerometer Test", IMUtest.class);
 
-    //manager.register("IMU Heading Test", IMUtest.class);
+    manager.register("IMU Heading Test", IMUtest.class);
 
     //manager.register("Test Drive", TestDrive.class);
 
