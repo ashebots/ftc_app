@@ -55,8 +55,8 @@ public abstract class MountainSimple extends Driving
 
         waitForStart();
 
-        servoLeverHitterLeft.setPosition(0.9);
-        servoLeverHitterRight.setPosition(0.9);
+        servoLeverHitterLeft.setPosition(0.99);
+        servoLeverHitterRight.setPosition(0.99);
 
         servoAllClearLeft.setPosition(0.5);
         servoAllClearRight.setPosition(0.5);
@@ -65,31 +65,35 @@ public abstract class MountainSimple extends Driving
 
         //move toward button
         telemetry.addData("Plowing...", 0);
-        moveForwardCorrection(22,1,0.2,0.1,7.5,5);
+        moveForwardCorrection(26,1,0.2,0.1,7.5,5);
         /*moveForwardCorrectionBackInit(0);
         while(SonarSensor.getUltrasonicLevel()<push2Wall || SonarSensor.getUltrasonicLevel()==0 || SonarSensor.getUltrasonicLevel()==255) {
             moveForwardCorrectionBackground(0,1,0.05,10,5);
             telemetry.addData("Sonic",SonarSensor.getUltrasonicLevel());
             waitOneFullHardwareCycle();
         }*/
-        turnOnSpotPID(45 * neg, 2.5, 1, .15, .05, neg == -1);
         //insert mount code here
-        moveForwardCorrectionBackInit(45*neg);
+        turnOnSpotPID(45 * neg, 10, 5, 0.5, 0.25, neg==-1);
+        moveForwardCorrectionBackInit(45 * neg);
         telemetry.addData("On: STARTING     BNO", retrieveBNOData('p'));
         while (Math.abs(retrieveBNOData('p')) < 25) {
             moveForwardCorrectionBackground(1,-0.5,0.1,2.5,1);
             telemetry.addData("On: Floor        BNO", retrieveBNOData('p'));
+            if(motorPaused()) {
+                while (true) {changeMotorSpeed(0);}
+            }
         }
         moveForwardCorrectionBackInit(45 * neg);
-        while(Math.abs(retrieveBNOData('p')) < 30) {
+        while(Math.abs(retrieveBNOData('p')) < 35) {
             moveForwardCorrectionBackground(1,-0.35,0.1,2.5,1);
             telemetry.addData("On: Low Zone     BNO", retrieveBNOData('p'));
         }
-        moveForwardCorrectionBackInit(45*neg);
-        while(!forwardFinish) {
-            moveForwardCorrectionBackground(-24,-0.25, 0.1, 2.5, 1);
-            telemetry.addData("On: Mid Zone     BNO", retrieveBNOData('p'));
+        moveForwardCorrectionBackInit(45 * neg);
+        while(Math.abs(retrieveBNOData('p')) > 33) {
+            moveForwardCorrectionBackground(1,-0.25,0.1,2.5,1);
+            telemetry.addData("On: Mid Zone BNO", retrieveBNOData('p'));
         }
+        telemetry.addData("On: STOPPED      BNO", retrieveBNOData('p'));
         changeMotorSpeed(0);
     }
 }

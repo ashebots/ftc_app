@@ -26,10 +26,12 @@ public abstract class ResQRobotBase extends OpMode
 
     public Motor motorLockingBar;
 
-    public Servo servoClimberDumper;
+    public Servo servoClimberDumper; //continuous
 
-    public Servo servoAllClearLeft;
-    public Servo servoAllClearRight;
+    public Servo servoPlow; //continuous
+
+    public Servo servoAllClearLeft; //continuous
+    public Servo servoAllClearRight; //continuous
 
     public Servo servoLeverHitterLeft; //Refers to left "drive side"
     public Servo servoLeverHitterRight; //Refers to right "drive side"
@@ -45,18 +47,30 @@ public abstract class ResQRobotBase extends OpMode
         sensorAccelerometer = new AccelerometerSensor(appContext, sensorManager, SensorManager.SENSOR_DELAY_FASTEST, 7.0f);
         */
         motorDriveLeft = new Motor(hardwareMap.dcMotor.get("motorDriveLeft"));
+        motorDriveLeft.setEncoderTicksPerRevolution(1680); //NeveRest 60:1?
+
         motorDriveRight = new Motor(hardwareMap.dcMotor.get("motorDriveRight"));
+        motorDriveRight.setEncoderTicksPerRevolution(1680); //NeveRest 60:1?
         motorDriveRight.setDirection(DcMotor.Direction.REVERSE);
+
+        // SR COMPETITION TESTING
+        motorDriveLeft.setPower(0);
+        motorDriveRight.setPower(0);
+
+        //END SR COMP
 
 
         motorArm = new Motor(hardwareMap.dcMotor.get("armMotor"));
-        motorArm.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        //motorArm.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        motorArm.setEncoderTicksPerRevolution(1680); //NeveRest 60:1?
 
 
         motorLockingBar = new Motor(hardwareMap.dcMotor.get("motorLockingBar"));
 
 
         servoClimberDumper = hardwareMap.servo.get("climberDumper"); //continuous servo
+
+        servoPlow = hardwareMap.servo.get("plow"); //continuous servo. < 0.5 is down, > 0.5 is up
 
         servoAllClearLeft = hardwareMap.servo.get("allClearL");
         servoAllClearLeft.setDirection(Servo.Direction.REVERSE);
@@ -67,6 +81,41 @@ public abstract class ResQRobotBase extends OpMode
         servoLeverHitterLeft.setDirection(Servo.Direction.REVERSE); //Should be that 0 is down //Unsure which should be reversed
         servoLeverHitterRight = hardwareMap.servo.get("leverHitterR");
     }
+
+
+    @Override
+    public void start()
+    {
+        stopMotorsAndServos();
+    }
+
+
+    @Override
+    public void stop()
+    {
+        stopMotorsAndServos();
+    }
+
+
+    public void stopMotorsAndServos()
+    {
+        //Make sure all MOTORS are correctly stopped. This may not be necessary for motors, but best to be safe.
+        motorDriveLeft.setPower(0);
+        motorDriveRight.setPower(0);
+        motorArm.setPower(0);
+        motorLockingBar.setPower(0);
+
+        //Make sure all CONTINUOUS SERVOS are set to stop (0.5). We have had issues with continuous servos not stopping
+        servoAllClearLeft.setPosition(0.5);
+        servoAllClearRight.setPosition(0.5);
+        servoClimberDumper.setPosition(0.5);
+        servoPlow.setPosition(0.5);
+
+        //Make sure all REGULAR SERVOS are in a good ending position.
+        servoLeverHitterLeft.setPosition(0.99);
+        servoLeverHitterRight.setPosition(0.95);
+    }
+
 
     public double easeInCirc(double currentInput, double startOutput, double endOutput, double endInput) {
         currentInput /= endInput;

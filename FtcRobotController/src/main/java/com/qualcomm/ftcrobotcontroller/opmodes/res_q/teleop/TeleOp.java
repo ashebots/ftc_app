@@ -22,18 +22,6 @@ public class TeleOp extends ResQRobotBase
     PIDSettings armPIDSettings;
     ArmController armController;
 
-    //Both servos share position, 'cause one is software reversed
-    //TODO: add actual positons
-    /* USED FOR NON-CONTINUOUS SERVOS, SO NOT RIGHT NOW
-    static double plowPosMax = 0.9; //upper position bound
-    static double plowPosMin = 0.1; //lower position bound
-
-    static double plowPosUp = 0.6;  //automatic go-to-pos up position
-    static double plowPosDown = 0.4;//automatic go-to-pos down position
-
-    double plowPosCurrent = plowPosUp; //initial position
-    */
-
     AllClearGrabber leftAllClearGrabber;
     AllClearGrabber rightAllClearGrabber;
 
@@ -105,7 +93,7 @@ public class TeleOp extends ResQRobotBase
         double armDelta = easeInCirc(Math.abs(armInput), 0, 1, 1); //Get an (absolute) "eased" value from 0 to 1. It rises slowly at first then rises steeply at the end
         armDelta *= Math.signum(armInput); //signum = 1 if input positive, -1 if negative, 0 if zero. This turns back to negative if input negative.
 
-        armController.loop(armDelta, gamepad1.left_bumper);
+        armController.loop(armDelta, gamepad1.y);
 
         //endregion
 
@@ -122,6 +110,22 @@ public class TeleOp extends ResQRobotBase
             climberDumperPower -= 0.1;
         }
         servoClimberDumper.setPosition(climberDumperPower);
+
+        //endregion
+
+
+        //region === PLOW
+
+        double plowPower = 0.5;
+        if (gamepad1.left_bumper)
+        {
+            plowPower += 0.2;
+        }
+        if (gamepad1.left_trigger > 0.5)
+        {
+            plowPower -= 0.2;
+        }
+        servoPlow.setPosition(plowPower);
 
         //endregion
 
@@ -252,7 +256,7 @@ class ArmController
     */
     public void loop(double positionDelta, boolean isServoMode)
     {
-        if (isServoMode) //Control arm like continuous servo
+        if (isServoMode && !Double.isNaN(armMotor.getCurrentPosition())) //Control arm like continuous servo
         {
             //Update our target position
             currentEncoderTarget += positionDelta;
@@ -262,15 +266,21 @@ class ArmController
 
             //Figure out motor power
             double motorPower = pidController.calculate(currentEncoderPosition, currentEncoderTarget);
+            if (Double.isNaN(motorPower)) //Hopefully fixes weird competition issue
+            {
+                motorPower = 0;
+            }
             motorPower = Range.clip(motorPower, -1, 1); //Make sure within acceptable range
 
             armMotor.setPower(motorPower);
 
             //Debug
+            /*
             telemetry.addData("ArmController/positionDelta = ", positionDelta);
             telemetry.addData("ArmController/currentEncoderPositon = ", currentEncoderPosition);
             telemetry.addData("ArmController/currentEncoderTarget = ", currentEncoderTarget);
             telemetry.addData("ArmController/motorPower = ", motorPower);
+            */
         }
         else //Just give power (input still "eased")
         {
@@ -313,7 +323,7 @@ class AllClearGrabber
 }
 
 
-//NOTE: one motor should already be reversed
+//NOTE: one servo should already be reversed
 class LeverHitter
 {
     static double MAX_POS = 1.0;

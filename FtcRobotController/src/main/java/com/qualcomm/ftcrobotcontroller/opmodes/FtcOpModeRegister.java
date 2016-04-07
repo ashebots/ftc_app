@@ -31,11 +31,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.AutoBasketBlue;
+import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.AutoBasketRed;
+import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.test.AutoArmPIDTest;
+import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.test.AutoFullDrivingTest;
+import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.test.CalibrateDistance;
+import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.test.IMUDriveRotatePID;
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.teleop.TeleOp;
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.test.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 /**
  * Register Op Modes
@@ -58,23 +63,19 @@ public class FtcOpModeRegister implements OpModeRegister {
      * If two or more op modes are registered with the same name, the app will display an error.
      */
 
-    //manager.register("Atlas: TeleOp", AtlasTeleop.class);
-    //manager.register("Beacon: TeleOp", BeaconTeleop.class);
+    manager.register("Auto Basket Blue", AutoBasketBlue.class);
+    manager.register("Auto Basket Red", AutoBasketRed.class);
 
-    //manager.register("Cascade Effect TeleOp", CascadeEffectTeleop.class);
-    //manager.register("Telemetry Test", TelemetryTest.class);
+    manager.register("Auto Driving Test", AutoFullDrivingTest.class);
+
     manager.register("TeleOp", TeleOp.class);
-
-    //manager.register("Blue Autonomous Mountain", ClimbersToMountainBlueM.class);
-    //manager.register("Red Autonomous Mountain", ClimbersToMountainRedM.class);
-    //manager.register("Blue Autonomous Mountain 2ndPos", ClimbersToMountainBlueOffsetM.class);
-    //manager.register("Red Autonomous Mountain 2ndPos", ClimbersToMountainRedOffsetM.class);
 
     //manager.register("Mountain Auto Blue",AutoBlue.class);
     //manager.register("Mountain Auto Red",AutoRed.class);
 
     manager.register("AutoLib Test",TestAutonomousLoop.class);
 
+<<<<<<< HEAD
     //manager.register("Mountain MidZone", MountainCharge.class);
     //manager.register("Blue Autonomous Climbers", ClimbersToMountainBlue.class);
     //manager.register("Red Autonomous Climbers", ClimbersToMountainRed.class);
@@ -86,14 +87,14 @@ public class FtcOpModeRegister implements OpModeRegister {
     //manager.register("Accelerometer Test", IMUtest.class);
 
     manager.register("IMU Heading Test", IMUtest.class);
+=======
+    //manager.register("IMU PID Driving", IMUDriveRotatePID.class);
+>>>>>>> origin/master
 
-    //manager.register("Test Drive", TestDrive.class);
 
-    //manager.register("Background Movement", TestAutoMountainBCCopy.class);
+    manager.register("IMU Heading Test", IMUtest.class);
 
-    //manager.register("Strategy Test", StrategyTest.class);
 
-    //manager.register("Sonic", SonicRobotEyes.class);
 
     /*
      * The following op modes are example op modes provided by QualComm.
