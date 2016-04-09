@@ -5,6 +5,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
  */
 public class OrderedBoolChecker {
     //defines variables
+    boolean stop = false;
     int step;
     public OrderedBoolChecker() {
         step = 0;
@@ -14,10 +15,17 @@ public class OrderedBoolChecker {
     public void ifBool(boolean b) {
         if(b) {
             step++;
+            stop = true;
         }
     }
 
     public int getStep() {
         return step;
+    }
+
+    public boolean ifMoved () {
+        boolean placeholder = stop;
+        stop = false;
+        return placeholder;
     }
 }

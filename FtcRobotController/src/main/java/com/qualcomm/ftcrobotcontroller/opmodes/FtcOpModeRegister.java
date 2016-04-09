@@ -33,12 +33,8 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.AutoBasketBlue;
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.AutoBasketRed;
-import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.test.AutoArmPIDTest;
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.test.AutoFullDrivingTest;
-import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.test.CalibrateDistance;
-import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.test.IMUDriveRotatePID;
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.teleop.TeleOp;
-import com.qualcomm.ftcrobotcontroller.opmodes.res_q.test.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
@@ -63,6 +59,9 @@ public class FtcOpModeRegister implements OpModeRegister {
      * If two or more op modes are registered with the same name, the app will display an error.
      */
 
+    manager.register("Auto Midzone Blue",MountainBlue.class);
+    manager.register("Auto Midzone Red",MountainBlue.class);
+
     manager.register("Auto Basket Blue", AutoBasketBlue.class);
     manager.register("Auto Basket Red", AutoBasketRed.class);
 
@@ -73,9 +72,6 @@ public class FtcOpModeRegister implements OpModeRegister {
     //manager.register("Mountain Auto Blue",AutoBlue.class);
     //manager.register("Mountain Auto Red",AutoRed.class);
 
-    manager.register("AutoLib Test",TestAutonomousLoop.class);
-
-<<<<<<< HEAD
     //manager.register("Mountain MidZone", MountainCharge.class);
     //manager.register("Blue Autonomous Climbers", ClimbersToMountainBlue.class);
     //manager.register("Red Autonomous Climbers", ClimbersToMountainRed.class);
@@ -86,16 +82,9 @@ public class FtcOpModeRegister implements OpModeRegister {
 
     //manager.register("Accelerometer Test", IMUtest.class);
 
-    manager.register("IMU Heading Test", IMUtest.class);
-=======
+    //manager.register("IMU Heading Test", IMUtest.class);
+
     //manager.register("IMU PID Driving", IMUDriveRotatePID.class);
->>>>>>> origin/master
-
-
-    manager.register("IMU Heading Test", IMUtest.class);
-
-
-
     /*
      * The following op modes are example op modes provided by QualComm.
      * Uncomment the lines to make the op modes available to the driver station.

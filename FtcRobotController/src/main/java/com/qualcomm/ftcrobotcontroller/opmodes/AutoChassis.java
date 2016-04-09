@@ -82,15 +82,15 @@ public class AutoChassis{
         aStand = angle;
     }
     //stays in a straight line
-    public String straightMotors(double x, double y) {
+    public String straightMotors(double x, double y, double r) {
         String c = "Idle";
-        if (!(aRange(-30+aStand,25)||aRange(30+aStand,25))) {
+        if (!(aRange(-30+aStand,30-r)||aRange(30+aStand,30-r))) {
             c = setMotors(x);
         }
-        if (aRange(-30+aStand,25)) {
+        if (aRange(-30+aStand,30-r)) {
             c = turnMotors(y);
         }
-        if (aRange(30+aStand,25)) {
+        if (aRange(30+aStand,30-r)) {
             c = turnMotors(-y);
         }
         return c;
