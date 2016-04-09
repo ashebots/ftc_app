@@ -60,7 +60,7 @@ public class FtcOpModeRegister implements OpModeRegister {
      */
 
     manager.register("Auto Midzone Blue",MountainBlue.class);
-    manager.register("Auto Midzone Red",MountainBlue.class);
+    manager.register("Auto Midzone Red",MountainRed.class);
 
     manager.register("Auto Basket Blue", AutoBasketBlue.class);
     manager.register("Auto Basket Red", AutoBasketRed.class);
