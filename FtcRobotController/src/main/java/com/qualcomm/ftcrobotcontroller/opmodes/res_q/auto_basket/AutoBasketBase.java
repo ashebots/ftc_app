@@ -116,13 +116,14 @@ public abstract class AutoBasketBase extends ResQRobotBase
         //Update motor powers to achieve target heading/position
         driveController.updatePosition();
 
+        //Update debug info. Should this be disabled for competition?
         updateTelemetry();
 
 
         //Do actions based on greater programState and lesser subState
         switch (programState)
         {
-            //Will delay program if startDelaySeconds has been set
+            //Will delay program if startDelaySeconds has been set (ideally to AutoBasketStartDelay.getTimeDelay())
             case POTENTIALLY_DELAY:
                 switch (subState)
                 {
@@ -182,7 +183,7 @@ public abstract class AutoBasketBase extends ResQRobotBase
                 switch (subState)
                 {
                     case 0:
-                        driveController.setDriveDistanceRelative(104); //Made up value
+                        driveController.setDriveDistanceRelative(104, 0.5); //Made up value
                         currentActionTimer.reset();
                         subState++;
                         break;
@@ -201,7 +202,7 @@ public abstract class AutoBasketBase extends ResQRobotBase
                 switch (subState)
                 {
                     case 0:
-                        driveController.setDriveDistanceRelative(-24);
+                        driveController.setDriveDistanceRelative(-26);
                         currentActionTimer.reset();
                         subState++;
                         break;
@@ -238,15 +239,31 @@ public abstract class AutoBasketBase extends ResQRobotBase
                 switch (subState)
                 {
                     case 0:
-                        driveController.setDriveDistanceRelative(24.5); //Made up value
+                        //Start driving
+                        driveController.setDriveDistanceRelative(27); //Made up value
+
+                        //Start plow moving up
+                        //servoPlow.setPosition(0.8); //continuous servo
+
+                        //Move to next state
                         currentActionTimer.reset();
                         subState++;
                         break;
 
                     case 1:
-                        //Wait until arrived within 0.5 inches of target, or too much time elapses
-                        if (driveController.distanceFromTargetDistance() < 0.2 || currentActionTimer.seconds() > 5)
+                        //Stop plow moving up, before going on to next programState
+                        if (currentActionTimer.seconds() > 2.5)
                         {
+                            servoPlow.setPosition(0.5);
+                        }
+
+                        //Wait until arrived within x inches of target, or too much time elapses
+                        if (driveController.distanceFromTargetDistance() < 0.1 || currentActionTimer.seconds() > 5)
+                        {
+                            //Make sure to stop plow just in case we got to destination early
+                            servoPlow.setPosition(0.5);
+
+                            //Move on
                             goToNextProgramState();
                         }
                         break;
@@ -329,7 +346,9 @@ public abstract class AutoBasketBase extends ResQRobotBase
 
         telemetry.addData("5: Distance Error = ", driveController.distanceFromTargetDistance());
         */
-        telemetry.addData("6: Degree Error = ", driveController.degreesFromTargetHeading());
+        telemetry.addData("1: Degree Error = ", driveController.degreesFromTargetHeading());
+
+        telemetry.addData("2: Run time = ", getRuntime());
 
 
 

@@ -32,7 +32,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.AutoBasketBlue;
+import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.AutoBasketBlueDelay;
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.AutoBasketRed;
+import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.AutoBasketRedDelay;
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.test.AutoFullDrivingTest;
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.teleop.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
@@ -64,6 +66,9 @@ public class FtcOpModeRegister implements OpModeRegister {
 
     manager.register("Auto Basket Blue", AutoBasketBlue.class);
     manager.register("Auto Basket Red", AutoBasketRed.class);
+    manager.register("Auto Basket Blue DELAYED", AutoBasketBlueDelay.class);
+    manager.register("Auto Basket Red DELAYED", AutoBasketRedDelay.class);
+
 
     manager.register("Auto Driving Test", AutoFullDrivingTest.class);
 
