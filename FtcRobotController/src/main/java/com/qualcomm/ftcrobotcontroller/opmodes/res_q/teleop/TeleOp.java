@@ -1,6 +1,7 @@
 package com.qualcomm.ftcrobotcontroller.opmodes.res_q.teleop;
 
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.shared.ResQRobotBase;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.robocol.Telemetry;
 import com.qualcomm.robotcore.util.Range;
@@ -18,6 +19,7 @@ public class TeleOp extends ResQRobotBase
     ChassisArcade chassis;
 
     Toggle driveOrientationToggle;
+    Toggle rotatedDriveToggle;
 
     PIDSettings armPIDSettings;
     ArmController armController;
@@ -38,6 +40,7 @@ public class TeleOp extends ResQRobotBase
         chassis = new ChassisArcade(motorDriveLeft, motorDriveRight);
 
         driveOrientationToggle = new Toggle();
+        rotatedDriveToggle = new Toggle();
 
         armPIDSettings = new PIDSettings(0.001, 0, 0);
         armController = new ArmController(motorArm, armPIDSettings, telemetry);
@@ -80,6 +83,19 @@ public class TeleOp extends ResQRobotBase
         {
             driveY *= -1;
         }
+        //Toggle rotated driving fix
+        rotatedDriveToggle.toggleState(gamepad1.b);
+        if (rotatedDriveToggle.getState())
+        {
+            motorDriveLeft.setDirection(DcMotor.Direction.REVERSE);
+            telemetry.addData("Drive rotation fix:", "ENABLED");
+        }
+        else
+        {
+            motorDriveLeft.setDirection(DcMotor.Direction.FORWARD);
+            telemetry.addData("Drive rotation fix:", "DISABLED");
+        }
+        //Drive
         chassis.Drive(driveX, driveY);
         telemetry.addData("Left motor power = ", motorDriveLeft.getPower());
         telemetry.addData("Right motor power = ", motorDriveRight.getPower());
