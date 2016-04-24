@@ -24,7 +24,7 @@ public class AutoDriveController
 
     //revolution of motor shaft, not treads
     int ticksPerRevolution;
-    double distancePerRevolution = 7.95; //Inches that the robot moves per shaft revolution. TODO: real value
+    double distancePerRevolution = 7.95; //Inches that the robot moves per shaft revolution.
 
 
     int targetEncoderTicks = 0;
@@ -93,7 +93,7 @@ public class AutoDriveController
         distanceError = Range.scale(distanceError, -1.0, 1.0, -requestedDrivePower, requestedDrivePower);
 
         //Calculate heading error. This will serve as a weak driving force, when maintaining a heading,
-        //and a strong and entirely overpowering force when getting to a new heading. Notice that it is NOT clipped
+        //and a strong and entirely overpowering force when getting to a new heading. Notice that it is NOT clipped YET
         double headingError = headingPIDController.calculate(imu.getContinuousYaw(), targetHeading);
         if (Double.isNaN(headingError)) {
             headingError = 0;

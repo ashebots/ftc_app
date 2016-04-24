@@ -41,7 +41,7 @@ public abstract class AutoBasketBase extends ResQRobotBase
     //Seconds to wait before starting program. Set to a value in sub programs
     public double startDelaySeconds = 0;
 
-    //Used as a time-based fallback for actions completing //TODO: WRITE A BETTER GODDAMN DESCRIPTION
+    //Used as a time-based fallback for actions completing //TODO: WRITE A BETTER DESCRIPTION
     ElapsedTime currentActionTimer;
 
 
@@ -86,13 +86,14 @@ public abstract class AutoBasketBase extends ResQRobotBase
     public void start()
     {
         super.start();
-        //Set up IMU
-
-        imu.start();
-        imu.invertYaw(true);
 
         //Reset getRuntime() which is used to stop program after 30 sec
         resetStartTime();
+
+        //Set up IMU
+        imu.start();
+        imu.invertYaw(true); //The yaw appears to be backwards from logic, perhaps we have it mounted upside down?
+
 
         driveController.start();
 
@@ -127,7 +128,7 @@ public abstract class AutoBasketBase extends ResQRobotBase
             case POTENTIALLY_DELAY:
                 switch (subState)
                 {
-                    case 0:
+                    case 0://Make sure that the currentActionTimer is reset, just in case we end up delaying the program
                         currentActionTimer.reset();
                         subState++;
                         break;
@@ -145,7 +146,7 @@ public abstract class AutoBasketBase extends ResQRobotBase
                 switch (subState)
                 {
                     case 0:
-                        driveController.setDriveDistanceRelative(18); //Drive 6 inches away from wall so we can turn
+                        driveController.setDriveDistanceRelative(18); //Drive x inches away from wall so we can turn
                         currentActionTimer.reset();
                         subState++; //Go to next subState
                         break;
@@ -170,7 +171,7 @@ public abstract class AutoBasketBase extends ResQRobotBase
                         break;
 
                     case 1:
-                        //Wait until arrived within 1.5 degrees (out of 360) of target heading, or too much time elapses
+                        //Wait until arrived within 1 degree (out of 360) of target heading, or too much time elapses
                         if (driveController.degreesFromTargetHeading() < 1.0 || currentActionTimer.seconds() > 3)
                         {
                             goToNextProgramState();
@@ -183,7 +184,7 @@ public abstract class AutoBasketBase extends ResQRobotBase
                 switch (subState)
                 {
                     case 0:
-                        driveController.setDriveDistanceRelative(104, 0.5); //Made up value
+                        driveController.setDriveDistanceRelative(104, 0.6);
                         currentActionTimer.reset();
                         subState++;
                         break;
@@ -226,7 +227,7 @@ public abstract class AutoBasketBase extends ResQRobotBase
                         break;
 
                     case 1:
-                        //Wait until arrived within 1.5 degrees (out of 360) of target heading, or too much time elapses
+                        //Wait until arrived within 0.5 degrees (out of 360) of target heading, or too much time elapses
                         if (driveController.degreesFromTargetHeading() < 0.5 || currentActionTimer.seconds() > 3)
                         {
                             goToNextProgramState();
@@ -240,9 +241,9 @@ public abstract class AutoBasketBase extends ResQRobotBase
                 {
                     case 0:
                         //Start driving
-                        driveController.setDriveDistanceRelative(27); //Made up value
+                        driveController.setDriveDistanceRelative(27);
 
-                        //Start plow moving up
+                        //Start plow moving up (CURRENTLY DISABLED)
                         //servoPlow.setPosition(0.8); //continuous servo
 
                         //Move to next state
@@ -320,6 +321,8 @@ public abstract class AutoBasketBase extends ResQRobotBase
     }
 
 
+    //This is used to increment the programState enum. programState++ doesn't work because Java.
+    //(also resets subState)
     void goToNextProgramState()
     {
         //Get next value in ProgramState enum. Should go to default switch() case after enum ends.
@@ -329,9 +332,6 @@ public abstract class AutoBasketBase extends ResQRobotBase
 
         //Reset subState
         subState = 0;
-
-        //DEBUG
-        //subState = -1; //TODO: REMOVE THIS, SET TO 0 INSTEAD
     }
 
 

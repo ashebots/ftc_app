@@ -148,10 +148,21 @@ public class TeleOp extends ResQRobotBase
 
         //region === ALL CLEAR GRABBERS
 
-        //LEFT all clear
-        leftAllClearGrabber.loop(gamepad2.left_bumper, gamepad2.left_trigger);
-        //RIGHT all clear
-        rightAllClearGrabber.loop(gamepad2.right_bumper, gamepad2.right_trigger);
+        //While holding b, sides are NOT synced
+        if (gamepad2.b) //true means both are synced
+        {
+            //LEFT all clear
+            leftAllClearGrabber.loop(gamepad2.left_bumper, gamepad2.left_trigger);
+            //RIGHT all clear
+            rightAllClearGrabber.loop(gamepad2.right_bumper, gamepad2.right_trigger);
+        }
+        else //If not holding b, then synced
+        {
+            //LEFT all clear
+            leftAllClearGrabber.loop(gamepad2.right_bumper, gamepad2.right_trigger);
+            //RIGHT all clear
+            rightAllClearGrabber.loop(gamepad2.right_bumper, gamepad2.right_trigger);
+        }
 
         //endregion
 

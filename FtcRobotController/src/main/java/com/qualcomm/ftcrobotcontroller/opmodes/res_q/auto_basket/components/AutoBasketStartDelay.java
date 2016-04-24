@@ -3,7 +3,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.components;
 
 public class AutoBasketStartDelay
 {
-    private static double delaySeconds = 10;
+    private static double delaySeconds = 8;
 
     //Time in seconds that basket autonomous should be delayed.
     //Only used in 2 program variations. The other 2 variations don't have any delay

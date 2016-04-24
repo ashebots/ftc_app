@@ -53,7 +53,7 @@ public abstract class ResQRobotBase extends OpMode
         motorDriveRight.setEncoderTicksPerRevolution(1680); //NeveRest 60:1?
         motorDriveRight.setDirection(DcMotor.Direction.REVERSE);
 
-        // SR COMPETITION TESTING
+        // SR COMPETITION TESTING // WMSD?
         motorDriveLeft.setPower(0);
         motorDriveRight.setPower(0);
 
