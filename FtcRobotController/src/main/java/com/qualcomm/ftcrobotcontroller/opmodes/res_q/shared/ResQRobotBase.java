@@ -113,7 +113,7 @@ public abstract class ResQRobotBase extends OpMode
 
         //Make sure all REGULAR SERVOS are in a good ending position.
         servoLeverHitterLeft.setPosition(0.99);
-        servoLeverHitterRight.setPosition(0.95);
+        servoLeverHitterRight.setPosition(0.63);
     }
 
 

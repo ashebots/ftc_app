@@ -60,6 +60,7 @@ public class FtcOpModeRegister implements OpModeRegister {
      *
      * If two or more op modes are registered with the same name, the app will display an error.
      */
+    manager.register("TeleOp", TeleOp.class);
 
     manager.register("Auto Midzone Blue",MountainBlue.class);
     manager.register("Auto Midzone Red",MountainRed.class);
@@ -70,9 +71,8 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("Auto Basket Red DELAYED", AutoBasketRedDelay.class);
 
 
-    manager.register("Auto Driving Test", AutoFullDrivingTest.class);
+    //manager.register("Auto Driving Test", AutoFullDrivingTest.class);
 
-    manager.register("TeleOp", TeleOp.class);
 
     //manager.register("Mountain Auto Blue",AutoBlue.class);
     //manager.register("Mountain Auto Red",AutoRed.class);

@@ -57,7 +57,7 @@ public class MountainBlue extends OpMode {
         lH1.setDirection(Servo.Direction.REVERSE);
         plow.setPosition(0.5);
         lH1.setPosition(0.99);
-        lH2.setPosition(0.99);
+        lH2.setPosition(0.63);
         cs3.setPosition(0.5);
         cs2.setPosition(0.5);
         cs1.setPosition(0.5);

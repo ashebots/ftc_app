@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.util.Range;
 import org.ashebots.ftcandroidlib.control.PIDController;
 import org.ashebots.ftcandroidlib.control.PIDSettings;
 import org.ashebots.ftcandroidlib.drive.ChassisArcade;
-import org.ashebots.ftcandroidlib.easing.easetypes.CircEase;
 import org.ashebots.ftcandroidlib.misc.Toggle;
 import org.ashebots.ftcandroidlib.motor.Motor;
 
@@ -48,8 +47,8 @@ public class TeleOp extends ResQRobotBase
         leftAllClearGrabber = new AllClearGrabber(servoAllClearLeft);
         rightAllClearGrabber = new AllClearGrabber(servoAllClearRight);
 
-        leverHitterLeft = new LeverHitter("Left", servoLeverHitterLeft);
-        leverHitterRight = new LeverHitter("Right", servoLeverHitterRight);
+        leverHitterLeft = new LeverHitter("Left", servoLeverHitterLeft, 0.36, 0.99);
+        leverHitterRight = new LeverHitter("Right", servoLeverHitterRight, 0.22, 0.63);
     }
 
 
@@ -97,8 +96,8 @@ public class TeleOp extends ResQRobotBase
         }
         //Drive
         chassis.Drive(driveX, driveY);
-        telemetry.addData("Left motor power = ", motorDriveLeft.getPower());
-        telemetry.addData("Right motor power = ", motorDriveRight.getPower());
+        //telemetry.addData("Left motor power = ", motorDriveLeft.getPower());
+        //telemetry.addData("Right motor power = ", motorDriveRight.getPower());
 
         //endregion
 
@@ -205,44 +204,6 @@ public class TeleOp extends ResQRobotBase
 
         //endregion
 
-    }
-
-
-    void tunePID(PIDSettings pidSettings)
-    {
-        //pTerm
-        if (gamepad2.dpad_up)
-        {
-            pidSettings.setProportionalTerm(pidSettings.getProportionalTerm() + 0.00001);
-        }
-        else if (gamepad2.dpad_down)
-        {
-            pidSettings.setProportionalTerm(pidSettings.getProportionalTerm() - 0.00001);
-        }
-
-        //iTerm
-        if (gamepad2.left_stick_y < -0.3)
-        {
-            pidSettings.setIntegralTerm(pidSettings.getIntegralTerm() + 0.00001);
-        }
-        else if (gamepad2.left_stick_y > 0.3)
-        {
-            pidSettings.setIntegralTerm(pidSettings.getIntegralTerm() - 0.00001);
-        }
-
-        //iTerm
-        if (gamepad2.right_stick_y < -0.3)
-        {
-            pidSettings.setDerivativeTerm(pidSettings.getDerivativeTerm() + 0.00001);
-        }
-        else if (gamepad2.right_stick_y > 0.3)
-        {
-            pidSettings.setDerivativeTerm(pidSettings.getDerivativeTerm() - 0.00001);
-        }
-
-        telemetry.addData("1: pTerm=", pidSettings.getProportionalTerm());
-        telemetry.addData("2: iTerm=", pidSettings.getIntegralTerm());
-        telemetry.addData("3: dTerm=", pidSettings.getDerivativeTerm());
     }
 }
 
@@ -353,9 +314,9 @@ class AllClearGrabber
 //NOTE: one servo should already be reversed
 class LeverHitter
 {
-    static double MAX_POS = 1.0;
-    static double MIN_POS = 0.0;
-    static double START_POS = 0.99;
+    double max_pos;
+    double min_pos;
+    double start_pos;
 
     double currentPos; //will be initialized
 
@@ -364,12 +325,17 @@ class LeverHitter
     //Refence should be passed already initialized and possibly reversed
     Servo servo;
 
-    public LeverHitter(String readableName, Servo servo)
+    public LeverHitter(String readableName, Servo servo, double min_pos, double max_pos)
     {
         this.readableName = readableName;
         this.servo = servo;
 
-        this.currentPos = LeverHitter.START_POS;
+
+        this.min_pos = min_pos;
+
+        this.max_pos = max_pos;
+        this.start_pos = max_pos;
+        this.currentPos = max_pos;
     }
 
     //variableInput: positive is up, negative is down
@@ -377,11 +343,11 @@ class LeverHitter
     {
         if (upOverride)
         {
-            this.currentPos = LeverHitter.START_POS;
+            this.currentPos = this.start_pos;
         }
 
         this.currentPos += 0.005 * variableInput;
-        this.currentPos = Range.clip(this.currentPos, LeverHitter.MIN_POS, LeverHitter.MAX_POS);
+        this.currentPos = Range.clip(this.currentPos, this.min_pos, this.max_pos);
 
         this.servo.setPosition(currentPos);
     }
