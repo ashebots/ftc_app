@@ -6,7 +6,7 @@ AUTHOR = Art (2015-11-10)
 
 package com.qualcomm.ftcrobotcontroller.opmodes.res_q.test;
 
-import com.qualcomm.ftcrobotcontroller.opmodes.Driving;
+import com.qualcomm.ftcrobotcontroller.opmodes.res_q.art.Driving;
 
 public abstract class TestAutoMountainCopy extends Driving
 {

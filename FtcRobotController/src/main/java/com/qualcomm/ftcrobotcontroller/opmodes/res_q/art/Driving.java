@@ -1,4 +1,4 @@
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package com.qualcomm.ftcrobotcontroller.opmodes.res_q.art;
 
 /**
  * Created by Art Schell on 12/8/2015.
@@ -9,8 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.ftcrobotcontroller.opmodes.BNO055LIB;
-import com.qualcomm.robotcore.hardware.Servo;
 
 
 public abstract class Driving extends LinearOpMode {

@@ -31,12 +31,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.ftcrobotcontroller.opmodes.res_q.art.MountainBlue;
+import com.qualcomm.ftcrobotcontroller.opmodes.res_q.art.MountainRed;
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.AutoBasketBlue;
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.AutoBasketBlueDelay;
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.AutoBasketRed;
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.AutoBasketRedDelay;
-import com.qualcomm.ftcrobotcontroller.opmodes.res_q.auto_basket.test.AutoFullDrivingTest;
 import com.qualcomm.ftcrobotcontroller.opmodes.res_q.teleop.TeleOp;
+import com.qualcomm.ftcrobotcontroller.opmodes.summer2016.SummerSimpleDave;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
@@ -60,6 +62,12 @@ public class FtcOpModeRegister implements OpModeRegister {
      *
      * If two or more op modes are registered with the same name, the app will display an error.
      */
+
+
+    manager.register("David is simpe, yo", SummerSimpleDave.class);
+
+
+
     manager.register("TeleOp", TeleOp.class);
 
     manager.register("Auto Midzone Blue",MountainBlue.class);

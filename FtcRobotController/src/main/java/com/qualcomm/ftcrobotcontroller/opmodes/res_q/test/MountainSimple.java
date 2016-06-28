@@ -6,14 +6,8 @@ AUTHOR = Art (2015-11-10)
 
 package com.qualcomm.ftcrobotcontroller.opmodes.res_q.test;
 
-import com.qualcomm.ftcrobotcontroller.opmodes.Driving;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.LegacyModule;
+import com.qualcomm.ftcrobotcontroller.opmodes.res_q.art.Driving;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.UltrasonicSensor;
-
-import org.ashebots.ftcandroidlib.motor.Motor;
 
 public abstract class MountainSimple extends Driving
 {

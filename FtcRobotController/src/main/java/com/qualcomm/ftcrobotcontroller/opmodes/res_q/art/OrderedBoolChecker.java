@@ -1,4 +1,4 @@
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package com.qualcomm.ftcrobotcontroller.opmodes.res_q.art;
 
 /**
  * Created by Art Schell on 3/17/2016.

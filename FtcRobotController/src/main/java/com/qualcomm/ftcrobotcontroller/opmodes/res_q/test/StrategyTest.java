@@ -6,7 +6,7 @@ AUTHOR = Art (2015-11-10)
 
 package com.qualcomm.ftcrobotcontroller.opmodes.res_q.test;
 
-import com.qualcomm.ftcrobotcontroller.opmodes.StrategyBlocks;
+import com.qualcomm.ftcrobotcontroller.opmodes.res_q.art.StrategyBlocks;
 
 public class StrategyTest extends StrategyBlocks
 {
