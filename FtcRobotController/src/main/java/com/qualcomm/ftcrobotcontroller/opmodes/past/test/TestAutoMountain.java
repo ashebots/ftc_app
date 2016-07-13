@@ -1,0 +1,30 @@
+/*
+=========================
+AUTHOR = Art (2015-11-10)
+=========================
+*/
+
+package com.qualcomm.ftcrobotcontroller.opmodes.past.test;
+
+public abstract class TestAutoMountain extends Driving
+{
+    double floorDistance;
+    double mountAngle;
+    boolean leftMotorNeg;
+    double mountDistance = 100000;
+
+    @Override
+    public void runOpMode() throws InterruptedException
+    {
+        initMotors();
+        initBNO055();
+        systemTimeSetup();
+
+        waitForStart();
+
+        readBNO();
+
+        Thread.sleep(2000);
+    }
+}
+
