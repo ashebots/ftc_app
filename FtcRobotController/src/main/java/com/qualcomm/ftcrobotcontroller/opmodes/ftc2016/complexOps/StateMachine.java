@@ -1,19 +1,19 @@
 package com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps;
 
 //The core of the AutoRoutine object.
-public class BooleanList {
+public class StateMachine {
     //defines variables
     boolean stop = false;
     int step;
     //It starts at step 0
-    public BooleanList() {
+    public StateMachine() {
         step = 0;
     }
 
-    //if the boolean is true, it moves to the next step
-    public void ifBool(boolean b) {
+    //if the boolean is true, it moves to the specified step
+    public void state(boolean b, int sp) {
         if(b) {
-            step++;
+            step = sp;
             stop = true;
         }
     }
