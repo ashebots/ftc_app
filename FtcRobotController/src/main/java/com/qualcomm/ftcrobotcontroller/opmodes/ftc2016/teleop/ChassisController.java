@@ -1,17 +1,15 @@
 package com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.teleop;
 
-import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps.AdvMotor;
 import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps.AdvOpMode;
 import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps.Chassis;
-import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps.IMUChassis;
 import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps.JoyEvent;
-import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps.PressEvent;
+import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps.BoolEvent;
 
 public class ChassisController extends AdvOpMode {
     Chassis chassis;
     JoyEvent n = new JoyEvent(0.4,0.55,0.35,0.2);
     JoyEvent s = new JoyEvent(0.08,0.11,0.35,0.2);
-    PressEvent p = new PressEvent();
+    BoolEvent p = new BoolEvent();
     int JoyMode = 0;
     double[] motorPowers;
     @Override
