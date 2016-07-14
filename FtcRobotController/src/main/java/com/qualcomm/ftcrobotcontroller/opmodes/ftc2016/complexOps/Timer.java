@@ -27,6 +27,4 @@ public class Timer extends HardwareComponent{
     public void resetTimer() {
         systemTime = 0;
     }
-    @Override
-    public void stop() {}
 }

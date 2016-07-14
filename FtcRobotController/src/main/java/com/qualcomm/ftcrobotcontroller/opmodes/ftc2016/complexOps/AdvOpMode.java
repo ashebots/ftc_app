@@ -46,4 +46,7 @@ public abstract class AdvOpMode extends OpMode {
         }
         return false;
     }
+    public AdvUltrasonic sonic(String name, String legacy, int port) {
+        return new AdvUltrasonic(hardwareMap.ultrasonicSensor.get(name),hardwareMap.legacyModule.get(legacy),port);
+    }
 }
