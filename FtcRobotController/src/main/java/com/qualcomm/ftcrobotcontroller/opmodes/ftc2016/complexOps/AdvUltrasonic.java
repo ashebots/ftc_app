@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 public class AdvUltrasonic extends HardwareComponent {
     LegacyModule legacy;
     UltrasonicSensor sonar;
-    double distance = 0;
+    public double distance = 0;
 
     public AdvUltrasonic(UltrasonicSensor s, LegacyModule l, int port) {
         legacy = l;
