@@ -57,8 +57,15 @@ public class FtcOpModeRegister implements OpModeRegister {
      *
      * If two or more op modes are registered with the same name, the app will display an error.
      */
+    /*
     manager.register("Test TeleOp", ChassisController.class);
     manager.register("Ultrasonic Test", UltrasonicTest.class);
     manager.register("Tank Drive", TankDrive.class);
+    */
+
+    manager.register("Tread Robot", SummerRobot1.class);
+    manager.register("Chain Robot", SummerRobot2.class);
+
+    manager.register("FAR Scrimmage", FARScrimmage.class);
   }
 }
