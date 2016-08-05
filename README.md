@@ -18,6 +18,22 @@ For technical questions regarding the SDK, please visit the FTC Technology forum
 
   http://ftcforum.usfirst.org/forumdisplay.php?156-FTC-Technology
 
+**************************************************************************************
+
+Release 16.07.08
+
+ * For the ftc_app project, the gradle files have been modified to support Android Studio 2.1.x.
+
+
+
+**************************************************************************************
+
+Release 16.03.30
+
+ * For the MIT App Inventor, the design blocks have new icons that better represent the function of each design component.
+ * Some changes were made to the shutdown logic to ensure the robust shutdown of some of our USB services.
+ * A change was made to LinearOpMode so as to allow a given instance to be executed more than once, which is required for the App Inventor.
+ * Javadoc improved/updated.
 
 **************************************************************************************
 
