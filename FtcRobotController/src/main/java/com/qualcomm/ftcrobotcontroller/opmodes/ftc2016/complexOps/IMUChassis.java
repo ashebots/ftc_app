@@ -10,7 +10,7 @@ public class IMUChassis extends HardwareComponent{
     //defines hardware
     public DcMotor motorRight;
     public DcMotor motorLeft;
-    BNO055LIB imu;
+    public BNO055LIB imu;
     //defines variables
     double encLOld = 0;
     double encROld = 0;
@@ -18,6 +18,7 @@ public class IMUChassis extends HardwareComponent{
     public double encoderRight = 0;
     public double loff = 0;
     public double roff = 0;
+    boolean running = false;
     //bno angles
     volatile double[] rollAngle = new double[2], pitchAngle = new double[2], yawAngle = new double[2];
     long systemTime;
@@ -37,14 +38,18 @@ public class IMUChassis extends HardwareComponent{
 
     @Override
     public void calibrate() { //sets the current encoder values as 'old' such that getValues can see the difference
-        encLOld = motorLeft.getCurrentPosition();
-        encROld = motorRight.getCurrentPosition();
+        if (running) {
+            encLOld = motorLeft.getCurrentPosition();
+            encROld = motorRight.getCurrentPosition();
+        }
     }
     @Override
     public void getValues() {
-        imu.getIMUGyroAngles(rollAngle, pitchAngle, yawAngle);
-        encoderLeft += motorLeft.getCurrentPosition() - encLOld;
-        encoderRight += motorRight.getCurrentPosition() - encROld;
+        if (running) {
+            imu.getIMUGyroAngles(rollAngle, pitchAngle, yawAngle);
+            encoderLeft += motorLeft.getCurrentPosition() - encLOld;
+            encoderRight += motorRight.getCurrentPosition() - encROld;
+        }
     }
     //resets encoders
     public void resetEncs() {
@@ -69,26 +74,27 @@ public class IMUChassis extends HardwareComponent{
 
     //BOOLEANS - return if a sensor value is in a range
 
-    public boolean aRange(double targ, double range) {
-        return (r(yawAngle[0]-aStand) < r(targ+range) && r(yawAngle[0]-aStand) > r(targ-range));
+    public boolean aRange(double min, double max) {
+        return (r(yawAngle[0]-aStand) < r(max) && r(yawAngle[0]-aStand) > r(min));
     }
-    public boolean pRange(double targ, double range) {
-        return (pitchAngle[0] < targ+range && pitchAngle[0] > targ-range);
+    public boolean pRange(double min, double max) {
+        return (pitchAngle[0] < max && pitchAngle[0] > min);
     }
-    public boolean lRange(double targ, double range) {
-        return (Math.abs(encoderLeft) < targ+range && Math.abs(encoderLeft) > targ-range);
+    public boolean lRange(double min, double max) {
+        return (Math.abs(encoderLeft) < max && Math.abs(encoderLeft) > min);
     }
-    public boolean rRange(double targ, double range) {
-        return (Math.abs(encoderRight) < targ+range && Math.abs(encoderRight) > targ-range);
+    public boolean rRange(double min, double max) {
+        return (Math.abs(encoderRight) < max && Math.abs(encoderRight) > min);
     }
-    public boolean mRange(double targ, double range) {
-        return ((Math.abs(encoderLeft)+Math.abs(encoderRight))/2 < targ+range && (Math.abs(encoderLeft)+Math.abs(encoderRight))/2 > targ-range);
+    public boolean mRange(double min, double max) {
+        return ((Math.abs(encoderLeft)+Math.abs(encoderRight))/2 < max && (Math.abs(encoderLeft)+Math.abs(encoderRight))/2 > min);
     }
 
     //FUNCTIONS - move the object
 
     //moves forward or back
     public String setMotors(double x) {
+        running = true;
         motorLeft.setPower(x);
         motorRight.setPower(x);
         return "Moving forward";
@@ -96,11 +102,13 @@ public class IMUChassis extends HardwareComponent{
 
     //turns
     public String turnMotors(double x) {
+        running = true;
         motorLeft.setPower(x);
         motorRight.setPower(-x);
         return "Turning";
     }
     public String moveMotors(double l, double r) {
+        running = true;
         motorLeft.setPower(l);
         motorRight.setPower(r);
         return "Moving";
@@ -109,6 +117,7 @@ public class IMUChassis extends HardwareComponent{
     public void stop() {
         motorLeft.setPower(0);
         motorRight.setPower(0);
+        running = false;
     }
 
     //function used to convert a number into a valid angle.

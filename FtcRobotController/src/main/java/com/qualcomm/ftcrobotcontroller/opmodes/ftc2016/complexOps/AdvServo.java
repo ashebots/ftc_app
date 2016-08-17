@@ -10,7 +10,7 @@ public class AdvServo extends HardwareComponent {
     double position;
     double posOld;
     double offset;
-
+    boolean running = false;
     public AdvServo(Servo s) {
         servo = s;
     }
@@ -19,11 +19,15 @@ public class AdvServo extends HardwareComponent {
 
     @Override
     public void calibrate() { //sets the current encoder value as 'old' such that getValues can see the difference
-        posOld = servo.getPosition();
+        if (running) {
+            posOld = servo.getPosition();
+        }
     }
     @Override
     public void getValues() {
-        position += servo.getPosition() - posOld;
+        if (running) {
+            position += servo.getPosition() - posOld;
+        }
     }
     //resets encoders
     public void resetEncs() {
@@ -33,21 +37,23 @@ public class AdvServo extends HardwareComponent {
 
     //BOOLEANS - return if a sensor value is in a range
 
-    public boolean sRange (double targ, double range) { //relative
-        return (position < targ+range && position > targ-range);
+    public boolean sRange (double min, double max) { //relative
+        return (position < max && position > min);
     }
-    public boolean aRange (double targ, double range) { //absolute
-        return (servo.getPosition()-offset < targ+range && servo.getPosition()-offset > targ-range);
+    public boolean aRange (double min, double max) { //absolute
+        return (servo.getPosition()-offset < max && servo.getPosition()-offset > min);
     }
 
     //FUNCTIONS - move the object
 
     public String setServo(double x) {
+        running = true;
         servo.setPosition(x);
         return "Moving Servo";
     }
     @Override
     public void stop() {
+        running = false;
         position = servo.getPosition();
     }
 }

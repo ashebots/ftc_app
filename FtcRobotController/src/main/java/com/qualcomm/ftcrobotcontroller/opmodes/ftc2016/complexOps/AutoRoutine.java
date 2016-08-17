@@ -7,7 +7,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps;
 //In between steps, it will run the Between function. You can run it like a normal component, using .run();
 public abstract class AutoRoutine extends HardwareComponent{
     Timer timer = new Timer();
-    StateMachine blCheck = new StateMachine();
+    public StateMachine state = new StateMachine();
     //unused status variable - can be called for telemetry
     String s;
 
@@ -15,9 +15,9 @@ public abstract class AutoRoutine extends HardwareComponent{
         //outputs step number
         s = "Idle";
         //action to execute after step switches
-        if (blCheck.ifMoved()) {between();}
+        if (state.ifMoved()) {between();}
         //executes the action specified by the step number, as well as checking if it should move to the next step
-        if (states()) {
+        if (states(state.step)) {
             stop();
         }
         return true;
@@ -25,15 +25,15 @@ public abstract class AutoRoutine extends HardwareComponent{
 
     //shuts motors off or whatever
     public abstract void stop();
-    public abstract boolean states();
+    public abstract boolean states(int step);
     public abstract void getValues();
     public abstract void between();
     public abstract void calibrate();
     public int getStep() {
-        return blCheck.getStep();
+        return state.getStep();
     }
     public void reset() {
-        blCheck = new StateMachine();
+        state = new StateMachine();
     }
 
     public boolean buttonPressed(HardwareComponent h, String s) {

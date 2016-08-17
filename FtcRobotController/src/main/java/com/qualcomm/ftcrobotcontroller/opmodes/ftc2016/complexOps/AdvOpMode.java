@@ -24,7 +24,7 @@ public abstract class AdvOpMode extends OpMode {
                     //addressing
                     , (byte)BNO055LIB.OPERATION_MODE_IMU);
         } catch (RobotCoreException e){
-            Log.i("FtcRobotController", "Exception: IMU UNREACHABLE");
+            Log.i("FtcRobotController", "Exception: IMU UNREACHABLE, error message: "+e.getMessage() + ", localized: " +e.getLocalizedMessage());
         }
         return new IMUChassis(hardwareMap.dcMotor.get(lName),hardwareMap.dcMotor.get(rName),bno);
     }

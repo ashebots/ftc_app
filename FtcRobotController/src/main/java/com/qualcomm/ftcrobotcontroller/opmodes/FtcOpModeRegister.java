@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.auto.MainRobotAutonomous;
 import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.teleop.ChassisController;
 import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.teleop.TankDrive;
 import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.teleop.UltrasonicTest;
@@ -57,8 +58,6 @@ public class FtcOpModeRegister implements OpModeRegister {
      *
      * If two or more op modes are registered with the same name, the app will display an error.
      */
-    manager.register("Test TeleOp", ChassisController.class);
-    manager.register("Ultrasonic Test", UltrasonicTest.class);
-    manager.register("Tank Drive", TankDrive.class);
+    manager.register("IR Seeker Autonomous (Left)", MainRobotAutonomous.class);
   }
 }
