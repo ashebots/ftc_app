@@ -8,6 +8,9 @@ import com.qualcomm.robotcore.util.Range;
 /**
  * Created by jezebelquit on 7/26/16.
  */
+
+//THIS IS a test FOR a AWESOME COMMIT!
+
 public class SummerRobot1 extends OpMode {
 
     //The variables:
