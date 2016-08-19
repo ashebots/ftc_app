@@ -6,6 +6,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps;
 //It automatically runs provided steps and moves on from one when TRUE is inputted into the StateMachine.
 //In between steps, it will run the Between function. You can run it like a normal component, using .run();
 public abstract class AutoRoutine extends HardwareComponent{
+    public double INF = Double.MAX_VALUE;
     Timer timer = new Timer();
     public StateMachine state = new StateMachine();
     //unused status variable - can be called for telemetry
@@ -19,6 +20,7 @@ public abstract class AutoRoutine extends HardwareComponent{
         //executes the action specified by the step number, as well as checking if it should move to the next step
         if (states(state.step)) {
             stop();
+            state.state(true,-1);
         }
         return true;
     }

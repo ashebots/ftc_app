@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.exception.RobotCoreException;
 
 //AdvOpMode adds a few new functions to the original OpMode.
 public abstract class AdvOpMode extends OpMode {
+    public double INF = Double.MAX_VALUE;
     //A faster way to generate a motor.
     public AdvMotor mtr(String name) {
         return new AdvMotor(hardwareMap.dcMotor.get(name));
