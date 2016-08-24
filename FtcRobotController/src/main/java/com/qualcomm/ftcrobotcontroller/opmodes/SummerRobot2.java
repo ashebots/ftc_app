@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.util.Range;
 public class SummerRobot2 extends OpMode {
 
     Servo sweeper;
+    Servo basketRaiser;
 
     DcMotor left;
     DcMotor right;
@@ -23,6 +24,7 @@ public class SummerRobot2 extends OpMode {
     @Override
     public void init(){
         sweeper = hardwareMap.servo.get("sweeper");
+        basketRaiser = hardwareMap.servo.get("basketRaiser");
 
         left = hardwareMap.dcMotor.get("leftWheel");
         right = hardwareMap.dcMotor.get("rightWheel");
@@ -91,6 +93,19 @@ public class SummerRobot2 extends OpMode {
             winch.setPower(0);
         }
 
+        //For the extra basket raiser
+        if (gamepad1.y)
+        {
+            basketRaiser.setPosition(1);
+        }
+        else if (gamepad1.a)
+        {
+            basketRaiser.setPosition(0);
+        }
+        else
+        {
+            basketRaiser.setPosition(.5);
+        }
     }
 
     @Override
