@@ -14,7 +14,6 @@ public class Chassis extends HardwareComponent{
     public double encoderRight = 0;
     public double loff = 0;
     public double roff = 0;
-    boolean running = false;
     //sets settings for hardware
     public Chassis(DcMotor l, DcMotor r) {
         motorLeft = l;
@@ -28,17 +27,13 @@ public class Chassis extends HardwareComponent{
 
     @Override
     public void calibrate() { //sets the current encoder values as 'old' such that getValues can see the difference
-        if (running) {
-            encLOld = motorLeft.getCurrentPosition();
-            encROld = motorRight.getCurrentPosition();
-        }
+        encLOld = motorLeft.getCurrentPosition();
+        encROld = motorRight.getCurrentPosition();
     }
     @Override
     public void getValues() {
-        if (running) {
-            encoderLeft += motorLeft.getCurrentPosition() - encLOld;
-            encoderRight += motorRight.getCurrentPosition() - encROld;
-        }
+        encoderLeft += motorLeft.getCurrentPosition() - encLOld;
+        encoderRight += motorRight.getCurrentPosition() - encROld;
     }
     //resets encoders
     public void resetEncs() {
@@ -69,7 +64,6 @@ public class Chassis extends HardwareComponent{
 
     //moves forward or back
     public String setMotors(double x) {
-        running = true;
         motorLeft.setPower(x);
         motorRight.setPower(x);
         return "Moving forward";
@@ -77,13 +71,11 @@ public class Chassis extends HardwareComponent{
 
     //turns
     public String turnMotors(double x) {
-        running = true;
         motorLeft.setPower(x);
         motorRight.setPower(-x);
         return "Turning";
     }
     public String moveMotors(double l, double r) {
-        running = true;
         motorLeft.setPower(l);
         motorRight.setPower(r);
         return "Moving";
@@ -92,6 +84,6 @@ public class Chassis extends HardwareComponent{
     public void stop() {
         motorLeft.setPower(0);
         motorRight.setPower(0);
-        running = false;
+        getValues();
     }
 }

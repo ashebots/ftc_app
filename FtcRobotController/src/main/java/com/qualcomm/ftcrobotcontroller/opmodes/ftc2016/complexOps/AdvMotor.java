@@ -13,7 +13,6 @@ public class AdvMotor extends HardwareComponent {
     double encOld = 0;
     double enc = 0;
     double offset = 0;
-    boolean running = false;
     //sets settings for hardware
     public AdvMotor(DcMotor m) {
         motor = m;
@@ -24,15 +23,11 @@ public class AdvMotor extends HardwareComponent {
 
     @Override
     public void calibrate() { //sets the current encoder value as 'old' such that getValues can see the difference
-        if (running) {
-            encOld = motor.getCurrentPosition();
-        }
+        encOld = motor.getCurrentPosition();
     }
     @Override
     public void getValues() {
-        if (running) {
-            enc += motor.getCurrentPosition() - encOld;
-        }
+        enc += motor.getCurrentPosition() - encOld;
     }
 
     //resets encoders
@@ -53,13 +48,12 @@ public class AdvMotor extends HardwareComponent {
     //FUNCTIONS - move the object
 
     public String setMotor(double x) {
-        running = true;
         motor.setPower(x);
         return "Moving motor";
     }
 
     public void stop() {
-        running = false;
         motor.setPower(0);
+        getValues();
     }
 }

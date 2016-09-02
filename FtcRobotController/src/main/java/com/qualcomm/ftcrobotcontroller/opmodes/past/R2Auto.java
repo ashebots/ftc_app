@@ -1,4 +1,4 @@
-package com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.auto;
+package com.qualcomm.ftcrobotcontroller.opmodes.past;
 
 import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps.AutoRoutine;
 import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps.IMUChassis;

@@ -4,17 +4,19 @@ import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.exception.RobotCoreException;
+import com.qualcomm.robotcore.hardware.Servo;
 
 //AdvOpMode adds a few new functions to the original OpMode.
 public abstract class AdvOpMode extends OpMode {
+    public Logger l = new Logger();
     public double INF = Double.MAX_VALUE;
     //A faster way to generate a motor.
     public AdvMotor mtr(String name) {
         return new AdvMotor(hardwareMap.dcMotor.get(name));
     }
     //A faster way to generate a servo.
-    public AdvServo srv(String name) {
-        return new AdvServo(hardwareMap.servo.get(name));
+    public Servo srv(String name) {
+        return hardwareMap.servo.get(name);
     }
     //A faster way to generate an IMU Chassis.
     public IMUChassis imuchassis(String lName, String rName, String bName) {
@@ -38,6 +40,7 @@ public abstract class AdvOpMode extends OpMode {
         telemetry.addData("Status",s);
         if (s.equals("PRESSED")) {
             h.calibrate();
+            return true;
         } else if (s.equals("HELD")) {
             h.getValues();
             h.calibrate();

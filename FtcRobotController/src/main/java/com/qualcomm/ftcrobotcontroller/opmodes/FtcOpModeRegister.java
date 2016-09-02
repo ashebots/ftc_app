@@ -31,10 +31,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.auto.MainRobotAutonomous;
-import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.teleop.ChassisController;
-import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.teleop.TankDrive;
-import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.teleop.UltrasonicTest;
+import com.qualcomm.ftcrobotcontroller.opmodes.past.BNOTest;
+import com.qualcomm.ftcrobotcontroller.opmodes.past.CorbinTeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
@@ -51,23 +49,8 @@ public class FtcOpModeRegister implements OpModeRegister {
    */
   public void register(OpModeManager manager) {
 
-    /*
-     * register your op modes here.
-     * The first parameter is the name of the op mode
-     * The second parameter is the op mode class property
-     *
-     * If two or more op modes are registered with the same name, the app will display an error.
-     */
-    manager.register("IR Seeker Autonomous (Left)", MainRobotAutonomous.class);
-    /*
-    manager.register("Test TeleOp", ChassisController.class);
-    manager.register("Ultrasonic Test", UltrasonicTest.class);
-    manager.register("Tank Drive", TankDrive.class);
-    */
+    //Register opmodes using manager.register("Name",Filename.class);
 
-    manager.register("Tread Robot", SummerRobot1.class);
-    manager.register("Chain Robot", SummerRobot2.class);
-
-    manager.register("FAR Scrimmage", FARScrimmage.class);
+    
   }
 }

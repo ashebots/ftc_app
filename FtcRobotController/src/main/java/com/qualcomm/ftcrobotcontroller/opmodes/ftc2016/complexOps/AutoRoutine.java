@@ -41,6 +41,7 @@ public abstract class AutoRoutine extends HardwareComponent{
     public boolean buttonPressed(HardwareComponent h, String s) {
         if (s.equals("PRESSED")) {
             h.calibrate();
+            return true;
         } else if (s.equals("HELD")) {
             h.getValues();
             h.calibrate();

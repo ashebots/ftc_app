@@ -18,7 +18,6 @@ public class IMUChassis extends HardwareComponent{
     public double encoderRight = 0;
     public double loff = 0;
     public double roff = 0;
-    boolean running = false;
     //bno angles
     volatile double[] rollAngle = new double[2], pitchAngle = new double[2], yawAngle = new double[2];
     long systemTime;
@@ -38,18 +37,14 @@ public class IMUChassis extends HardwareComponent{
 
     @Override
     public void calibrate() { //sets the current encoder values as 'old' such that getValues can see the difference
-        if (running) {
-            encLOld = motorLeft.getCurrentPosition();
-            encROld = motorRight.getCurrentPosition();
-        }
+        encLOld = motorLeft.getCurrentPosition();
+        encROld = motorRight.getCurrentPosition();
     }
     @Override
     public void getValues() {
-        if (running) {
-            imu.getIMUGyroAngles(rollAngle, pitchAngle, yawAngle);
-            encoderLeft += motorLeft.getCurrentPosition() - encLOld;
-            encoderRight += motorRight.getCurrentPosition() - encROld;
-        }
+        imu.getIMUGyroAngles(rollAngle, pitchAngle, yawAngle);
+        encoderLeft += motorLeft.getCurrentPosition() - encLOld;
+        encoderRight += motorRight.getCurrentPosition() - encROld;
     }
     //resets encoders
     public void resetEncs() {
@@ -94,7 +89,6 @@ public class IMUChassis extends HardwareComponent{
 
     //moves forward or back
     public String setMotors(double x) {
-        running = true;
         motorLeft.setPower(x);
         motorRight.setPower(x);
         return "Moving forward";
@@ -102,13 +96,11 @@ public class IMUChassis extends HardwareComponent{
 
     //turns
     public String turnMotors(double x) {
-        running = true;
         motorLeft.setPower(x);
         motorRight.setPower(-x);
         return "Turning";
     }
     public String moveMotors(double l, double r) {
-        running = true;
         motorLeft.setPower(l);
         motorRight.setPower(r);
         return "Moving";
@@ -117,7 +109,7 @@ public class IMUChassis extends HardwareComponent{
     public void stop() {
         motorLeft.setPower(0);
         motorRight.setPower(0);
-        running = false;
+        getValues();
     }
 
     //function used to convert a number into a valid angle.
