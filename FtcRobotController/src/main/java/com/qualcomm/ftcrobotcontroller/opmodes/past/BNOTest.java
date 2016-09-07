@@ -1,6 +1,6 @@
 package com.qualcomm.ftcrobotcontroller.opmodes.past;
 
-import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps.*;
+import com.qualcomm.ftcrobotcontroller.opmodes.teleop.complexOps.*;
 
 public class BNOTest extends AdvOpMode {
     IMUChassis c;

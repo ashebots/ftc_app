@@ -1,4 +1,4 @@
-package com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps;
+package com.qualcomm.ftcrobotcontroller.opmodes.complexOps;
 
 //The core of the AutoRoutine object.
 public class StateMachine {

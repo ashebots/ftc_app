@@ -1,4 +1,4 @@
-package com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps;
+package com.qualcomm.ftcrobotcontroller.opmodes.complexOps;
 
 //Returns if a joystick is being used or not, also the motor values associated with the joystick x and y.
 public class JoyEvent {

@@ -1,8 +1,8 @@
 package com.qualcomm.ftcrobotcontroller.opmodes.past;
 
-import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps.AdvMotor;
-import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps.AdvOpMode;
-import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps.IMUChassis;
+import com.qualcomm.ftcrobotcontroller.opmodes.teleop.complexOps.AdvMotor;
+import com.qualcomm.ftcrobotcontroller.opmodes.teleop.complexOps.AdvOpMode;
+import com.qualcomm.ftcrobotcontroller.opmodes.teleop.complexOps.IMUChassis;
 import com.qualcomm.robotcore.hardware.IrSeekerSensor;
 
 /**

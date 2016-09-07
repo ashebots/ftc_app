@@ -1,9 +1,9 @@
 package com.qualcomm.ftcrobotcontroller.opmodes.past;
 
-import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps.AdvOpMode;
-import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps.Chassis;
-import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps.JoyEvent;
-import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps.BoolEvent;
+import com.qualcomm.ftcrobotcontroller.opmodes.teleop.complexOps.AdvOpMode;
+import com.qualcomm.ftcrobotcontroller.opmodes.teleop.complexOps.Chassis;
+import com.qualcomm.ftcrobotcontroller.opmodes.teleop.complexOps.JoyEvent;
+import com.qualcomm.ftcrobotcontroller.opmodes.teleop.complexOps.BoolEvent;
 
 public class ChassisController extends AdvOpMode {
     Chassis chassis;

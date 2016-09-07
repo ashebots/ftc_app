@@ -1,16 +1,12 @@
-package com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps;
+package com.qualcomm.ftcrobotcontroller.opmodes.complexOps;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 
-/**
- * Created by Art Schell on 3/17/2016.
- */
-public class IMUChassis extends HardwareComponent{
+public class Chassis extends HardwareComponent {
     //defines hardware
     public DcMotor motorRight;
     public DcMotor motorLeft;
-    public BNO055LIB imu;
     //defines variables
     double encLOld = 0;
     double encROld = 0;
@@ -18,19 +14,13 @@ public class IMUChassis extends HardwareComponent{
     public double encoderRight = 0;
     public double loff = 0;
     public double roff = 0;
-    //bno angles
-    volatile double[] rollAngle = new double[2], pitchAngle = new double[2], yawAngle = new double[2];
-    long systemTime;
     //sets settings for hardware
-    public IMUChassis(DcMotor l, DcMotor r, BNO055LIB b) {
+    public Chassis(DcMotor l, DcMotor r) {
         motorLeft = l;
         motorRight = r;
-        imu = b;
         motorLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         motorRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         motorLeft.setDirection(DcMotor.Direction.REVERSE);
-        systemTime = System.nanoTime();
-        imu.startIMU();//Set up the IMU as needed for a continual stream of I2C reads.
     }
 
     //SENSORS - control encoder's or sensor's relative (and absolute) positions.
@@ -42,7 +32,6 @@ public class IMUChassis extends HardwareComponent{
     }
     @Override
     public void getValues() {
-        imu.getIMUGyroAngles(rollAngle, pitchAngle, yawAngle);
         encoderLeft += motorLeft.getCurrentPosition() - encLOld;
         encoderRight += motorRight.getCurrentPosition() - encROld;
     }
@@ -59,22 +48,8 @@ public class IMUChassis extends HardwareComponent{
         aStand = angle;
     }
 
-    //values
-    public double angle() {
-        return yawAngle[0];
-    }
-    public double pitch() {
-        return pitchAngle[0];
-    }
-
     //BOOLEANS - return if a sensor value is in a range
 
-    public boolean aRange(double min, double max) {
-        return (r(yawAngle[0]-aStand) < r(max) && r(yawAngle[0]-aStand) > r(min));
-    }
-    public boolean pRange(double min, double max) {
-        return (pitchAngle[0] < max && pitchAngle[0] > min);
-    }
     public boolean lRange(double min, double max) {
         return (Math.abs(encoderLeft) < max && Math.abs(encoderLeft) > min);
     }
@@ -83,6 +58,10 @@ public class IMUChassis extends HardwareComponent{
     }
     public boolean mRange(double min, double max) {
         return ((Math.abs(encoderLeft)+Math.abs(encoderRight))/2 < max && (Math.abs(encoderLeft)+Math.abs(encoderRight))/2 > min);
+    }
+    public boolean aRange(double min, double max) {
+        double enc = (motorLeft.getCurrentPosition()-+motorRight.getCurrentPosition()+loff+roff)/2;
+        return enc < max && enc > min;
     }
 
     //FUNCTIONS - move the object
@@ -110,10 +89,5 @@ public class IMUChassis extends HardwareComponent{
         motorLeft.setPower(0);
         motorRight.setPower(0);
         getValues();
-    }
-
-    //function used to convert a number into a valid angle.
-    public double r(double i) {
-        return ((i+180)%360)-180;
     }
 }

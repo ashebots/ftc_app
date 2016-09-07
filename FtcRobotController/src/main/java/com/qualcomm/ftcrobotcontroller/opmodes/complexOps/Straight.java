@@ -1,10 +1,4 @@
-package com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps;
-
-import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps.AdvMotor;
-import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps.AutoRoutine;
-import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps.Chassis;
-import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps.IMUChassis;
-import com.qualcomm.robotcore.hardware.IrSeekerSensor;
+package com.qualcomm.ftcrobotcontroller.opmodes.complexOps;
 
 /**
  * Created by apple on 8/6/16.
@@ -21,7 +15,7 @@ public class Straight extends AutoRoutine {
         switch (step) {
             case 0:
                 chassis.setMotors(0.5);
-                state.state(chassis.aRange(-179,-5)||chassis.aRange(5,179),1);
+                state.state(chassis.ARange(-179,-5)||chassis.ARange(5,179),1);
                 break;
             case 1:
                 if (chassis.pitch()<0) {
@@ -29,7 +23,7 @@ public class Straight extends AutoRoutine {
                 } else {
                     turning.turnMotors(0.1);
                 }
-                state.state(chassis.aRange(-5,5),0);
+                state.state(chassis.ARange(-5,5),0);
                 break;
         }
         return true;

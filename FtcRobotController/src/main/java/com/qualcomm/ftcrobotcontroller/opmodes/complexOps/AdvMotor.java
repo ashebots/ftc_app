@@ -1,4 +1,4 @@
-package com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps;
+package com.qualcomm.ftcrobotcontroller.opmodes.complexOps;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;

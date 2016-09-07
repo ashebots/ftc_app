@@ -1,12 +1,13 @@
-package com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps;
+package com.qualcomm.ftcrobotcontroller.opmodes.complexOps;
 
 //An object used to return four separate states of a button.
-public class BoolEvent {
+public class TriggerEvent {
     boolean old;
-    public BoolEvent() {
+    public TriggerEvent() {
         old = false;
     }
-    public String parse(boolean b) {
+    public String parse(double d) {
+        boolean b = d!=0.0;
         String a = "UNPRESSED"; //The button is not pressed.
         if (b&&old) a = "HELD"; //The button is pressed.
         if (!b&&old) a = "RELEASED"; //The button just got released.

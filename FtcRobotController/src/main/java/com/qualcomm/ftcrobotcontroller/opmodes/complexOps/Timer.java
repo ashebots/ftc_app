@@ -1,9 +1,9 @@
-package com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps;
+package com.qualcomm.ftcrobotcontroller.opmodes.complexOps;
 
 /**
  * Created by Art Schell on 3/17/2016.
  */
-public class Timer extends HardwareComponent{
+public class Timer extends HardwareComponent {
     double systemTime = 0;
     double oldT = 0;
 

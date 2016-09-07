@@ -1,7 +1,7 @@
 package com.qualcomm.ftcrobotcontroller.opmodes.past;
 
-import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps.AdvOpMode;
-import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps.IMUChassis;
+import com.qualcomm.ftcrobotcontroller.opmodes.teleop.complexOps.AdvOpMode;
+import com.qualcomm.ftcrobotcontroller.opmodes.teleop.complexOps.IMUChassis;
 
 /**
  * Created by apple on 8/18/16.

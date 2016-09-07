@@ -1,11 +1,11 @@
-package com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps;
+package com.qualcomm.ftcrobotcontroller.opmodes.complexOps;
 
 //import required things
 
 //AutoRoutine is a special HardwareComponent used to create autonomous programs easily.
 //It automatically runs provided steps and moves on from one when TRUE is inputted into the StateMachine.
 //In between steps, it will run the Between function. You can run it like a normal component, using .run();
-public abstract class AutoRoutine extends HardwareComponent{
+public abstract class AutoRoutine extends HardwareComponent {
     public double INF = Double.MAX_VALUE;
     Timer timer = new Timer();
     public StateMachine state = new StateMachine();

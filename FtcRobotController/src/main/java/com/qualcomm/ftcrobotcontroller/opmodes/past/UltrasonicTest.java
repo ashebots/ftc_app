@@ -1,6 +1,6 @@
 package com.qualcomm.ftcrobotcontroller.opmodes.past;
 
-import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps.*;
+import com.qualcomm.ftcrobotcontroller.opmodes.teleop.complexOps.*;
 
 /**
  * Created by apple on 7/14/16.

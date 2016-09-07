@@ -51,6 +51,6 @@ public class FtcOpModeRegister implements OpModeRegister {
 
     //Register opmodes using manager.register("Name",Filename.class);
 
-    
+
   }
 }

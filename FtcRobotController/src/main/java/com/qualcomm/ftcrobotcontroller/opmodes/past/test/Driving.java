@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.ftcrobotcontroller.opmodes.ftc2016.complexOps.BNO055LIB;
+import com.qualcomm.ftcrobotcontroller.opmodes.teleop.complexOps.BNO055LIB;
 
 
 public abstract class Driving extends LinearOpMode {
